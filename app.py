@@ -31,7 +31,7 @@ TPL_LAYOUT = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <style>
 :root{
   --bg:#FFFFFF; --bg2:#F8F7F4; --txt:#1A1A1A; --txt2:#6B6B6B; --mut:#9B9B9B;
-  --line:#EAEAEA; --coral:#D85A30; --teal:#1D9E75; --teal2:#0F6E56;
+  --line:#EAEAEA; --coral:#5B3A8E; --coral-bg:#F1EBFA; --teal:#1D9E75; --teal2:#0F6E56;
   --amber-bg:#FAEEDA; --amber-tx:#854F0B; --black:#111111; --black2:#2A2A2A;
   --gray:#9B9B9B;
 }
@@ -66,7 +66,9 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .stats .stat b{font-size:30px;font-weight:800;color:var(--coral)}
 .stats .stat span{font-size:12.5px;color:var(--txt2);margin-top:3px}
 
-.card{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0}
+.card{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0;
+  box-shadow:0 1px 3px rgba(26,26,26,.06);transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease}
+.card:hover{box-shadow:0 6px 16px rgba(91,58,142,.12);border-color:var(--coral);transform:translateY(-2px)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
 .section{background:var(--bg2)}
 
@@ -88,7 +90,7 @@ textarea{min-height:72px;resize:vertical}
   padding:3px 10px;border-radius:999px;border:1px solid var(--teal);color:var(--teal);
   margin:3px 4px 3px 0;text-transform:lowercase}
 .vbadge .ck{font-size:11px}
-.vbadge.unverified{border-color:var(--line);color:var(--gray);background:var(--bg2)}
+.vbadge.unverified{border-color:var(--line);color:var(--gray);background:transparent;opacity:.7}
 
 .tag{display:inline-block;background:var(--bg2);border:1px solid var(--line);color:var(--txt2);
   font-size:12px;padding:3px 9px;border-radius:10px;margin:2px}
@@ -100,7 +102,7 @@ textarea{min-height:72px;resize:vertical}
 .vote:hover{border-color:var(--coral)}
 .vote .arr{font-size:16px;line-height:1}
 .vote .cnt{font-size:14px;font-weight:700;margin-top:2px}
-.vote.active{color:var(--coral);border-color:var(--coral);background:#FCEEE7}
+.vote.active{color:var(--coral);border-color:var(--coral);background:var(--coral-bg)}
 
 /* Speech-bubble (teal gradient, tail bottom-left) — founder-voice ONLY */
 .quote{position:relative;background:linear-gradient(135deg,var(--teal),var(--teal2));
@@ -263,10 +265,10 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
     <div class="small"><b>Opportunity:</b> {{ pc.opportunity_size or c.structured.opportunity_size }}</div>
     <div class="small"><b>Differentiator:</b> {{ pc.differentiator or c.structured.differentiator }}</div>
     <div class="small"><b>Ask:</b> {{ pc.ask or c.structured.ask }}</div>
-    <div style="margin-top:10px">
+    <div style="margin-top:14px">
       {% for b in badges %}<span class="vbadge {{ b.status }}"><span class="ck">✓</span>{{ b.label }} · {{ b.status }}</span>{% endfor %}
     </div>
-    <div style="margin-top:6px">
+    <div style="margin-top:12px">
       {% for t in (pc.subtheme_tags or c.structured.subtheme_tags or c.raw.subtheme_tags or []) %}<span class="tag">{{ t }}</span>{% endfor %}
     </div>
     <div class="btnrow"><a class="pill" href="/trace/{{ c.id }}" style="color:var(--txt2)">View agent trace →</a></div>
@@ -444,7 +446,8 @@ TPL_WHITESPACE = _page("Whitespace — MoonshotHunt", """
   </div>
 
   <div id="stage" style="position:relative;height:clamp(560px,72vh,760px);border:1px solid var(--line);border-radius:12px;
-       overflow:hidden;background:var(--bg)">
+       overflow:hidden;background:var(--bg);
+       background-image:linear-gradient(#F0F0F0 1px,transparent 1px),linear-gradient(90deg,#F0F0F0 1px,transparent 1px);background-size:28px 28px">
     <div id="zoneTint" style="position:absolute;inset:0;pointer-events:none;
       background:linear-gradient(105deg, rgba(216,90,48,.05) 0%, rgba(216,90,48,.02) 42%, rgba(29,158,117,.02) 58%, rgba(29,158,117,.05) 100%)"></div>
     <div id="divider" style="position:absolute;top:6%;bottom:6%;left:50%;width:1px;
