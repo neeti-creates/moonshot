@@ -146,7 +146,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
 .modal .err{color:var(--coral);font-size:13px;margin-top:8px;min-height:16px}
 .x{float:right;cursor:pointer;color:var(--mut);font-size:20px;line-height:1}
 </style></head><body>
-<nav><span class="brand">⬡ MoonshotHunt</span>
+<nav><a class="brand" href="/" style="text-decoration:none;color:inherit">⬡ MoonshotHunt</a>
 <a href="/">Directory</a><a href="/whitespace">Whitespace</a><a href="/submit">Submit</a>
 <span class="navspacer"></span>
 {% if user_email %}<span class="pill">{{ user_name or user_email }}</span>
@@ -470,7 +470,7 @@ TPL_WHITESPACE = _page("Whitespace — MoonshotHunt", """
 
 <script>
 const STAGE_FILTER=()=>document.getElementById('stageFilter').value;
-let DATA=null, expanded=new Set(), scale=1;
+let DATA=null, expanded=new Set(), manual={}, scale=1;
 const W=()=>document.getElementById('stage').clientWidth, H=()=>document.getElementById('stage').clientHeight;
 
 function bubbleR(count){ return count<=1 ? 22 : Math.min(22+count*6, 50); }
@@ -526,6 +526,8 @@ function layout(){
         x=Math.max(40, Math.min(W()-40, x));
         const ly=y+rr+6;
         y=Math.max(cy-H()/2+pad+rr, Math.min(cy+H()/2-pad-rr-14, y));
+        // honor manual drag override (set live, not recomputed)
+        if(manual[b.key]){ x=manual[b.key].x; y=manual[b.key].y; }
         positions[b.key]={x:x, y:y, r:rr};
       }
     }
@@ -545,26 +547,53 @@ function render(){
   DATA.zones.forEach(z=>{
     z.bubbles.forEach(b=>{
       const p=positions[b.key], r=p.r||bubbleR(b.count), active=expanded.has(b.key);
+      const px=p.x, py=p.y;  // live position (honors manual drag)
       // edge center->bubble
-      line(svg,cx,cy,p.x,p.y, b.sparse?'var(--line)':'#E3E3E3', b.sparse);
+      line(svg,cx,cy,px,py, b.sparse?'var(--line)':'#E3E3E3', b.sparse);
       // bubble
       const border = active ? '2px solid var(--coral)'
                    : b.sparse ? '1.5px dashed var(--line)'
                    : b.verified_heavy ? '1.5px solid var(--teal)' : '1px solid #D9D9D9';
-      const bg = active ? '#FCEEE7' : b.sparse ? 'var(--bg)' : 'var(--bg2)';
+      const bg = active ? 'var(--coral-bg)' : b.sparse ? 'var(--bg)' : 'var(--bg2)';
       const op = b.sparse ? 'opacity:.7' : '';
-      const el=node(p.x,p.y,
+      const el=node(px,py,
         '<div style="text-align:center;line-height:1.15">'+
         '<div style="font-size:'+(b.count>3?18:15)+'px;font-weight:700;color:'+
           (active?'var(--coral)':'var(--txt)')+'">'+b.count+'</div></div>',
-        r*2, 'background:'+bg+';border:'+border+';cursor:pointer;'+op);
-      el.onclick=()=>{ if(expanded.has(b.key)) expanded.delete(b.key); else expanded.add(b.key); render(); };
+        r*2, 'background:'+bg+';border:'+border+';cursor:grab;touch-action:none;'+op);
+      // drag vs click: pointerdown -> move beyond threshold = drag (manual reposition);
+      // release without move = toggle expand
+      let drag=null;
+      el.addEventListener('pointerdown',(e)=>{
+        e.stopPropagation();
+        const st=document.getElementById('stage').getBoundingClientRect();
+        const sx=e.clientX, sy=e.clientY;
+        drag={sx,sy,moved:false};
+        const mv=(ev)=>{
+          const dx=ev.clientX-sx, dy=ev.clientY-sy;
+          if(!drag.moved && Math.hypot(dx,dy)>5) drag.moved=true;
+          if(drag.moved){
+            let nx=ev.clientX-st.left, ny=ev.clientY-st.top;
+            nx=Math.max(r, Math.min(W()-r, nx)); ny=Math.max(r, Math.min(H()-r, ny));
+            manual[b.key]={x:nx,y:ny}; render();
+          }
+        };
+        const up=(ev)=>{
+          el.releasePointerCapture && el.releasePointerCapture(ev.pointerId);
+          document.removeEventListener('pointermove',mv);
+          document.removeEventListener('pointerup',up);
+          if(drag && !drag.moved){ if(expanded.has(b.key)) expanded.delete(b.key); else expanded.add(b.key); render(); }
+        };
+        el.setPointerCapture && el.setPointerCapture(e.pointerId);
+        document.addEventListener('pointermove',mv);
+        document.addEventListener('pointerup',up);
+      });
       // floating cluster label near bubble (clamped inside canvas)
       const lab=document.createElement('div');
       lab.textContent=b.label+(b.sparse?' · whitespace':'');
       const lw=Math.min(b.label.length*6.2+ (b.sparse?54:0), W()-40);
-      let lx=Math.max(40, Math.min(W()-40, p.x));
-      let ly=p.y+r+6;
+      let lx=Math.max(40, Math.min(W()-40, px));
+      let ly=py+r+6;
       lab.style.cssText='position:absolute;left:'+lx+'px;top:'+ly+'px;transform:translateX(-50%);'+
         'max-width:'+lw+'px;font-size:10px;color:'+(b.sparse?'var(--mut)':'var(--txt2)')+';'+
         'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none';
