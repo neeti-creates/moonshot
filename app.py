@@ -4,10 +4,10 @@ Agents make REAL live LLM calls to the Nous Research inference endpoint.
 
 Design system: light, Product-Hunt-style (see DESIGN_SPEC.md).
 """
-import os, json, threading, uuid
+import os, json, threading, uuid, tempfile, shutil
 from flask import (Flask, request, render_template_string, redirect, url_for,
                    jsonify, session)
-import store, agents
+import store, agents, extract
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "moonshothunt-dev-key")
@@ -286,57 +286,77 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
 
 TPL_SUBMIT = _page("Submit — MoonshotHunt", """
 <h2>Submit your startup</h2>
-<p class="muted small">Section 5 fields. The VC Agent expands this into a structured card —
-you approve the result before it's published. This is self-reported, not due diligence.</p>
-<form method="post" action="/submit">
+<p class="muted small">Upload whatever you have — deck, one-pager, tech spec, product doc. Our agent reads it like a VC would and drafts your listing. You'll review everything before it goes live.</p>
+<form method="post" action="/submit" enctype="multipart/form-data" id="subForm">
   <div class="card">
-    <div class="seclabel">Identity</div>
+    <div class="seclabel">Identity <span class="sub">you type these directly — they're authoritative</span></div>
     <label>Startup name *</label><input name="startup_name" required>
-    <label>One-line tagline <span class="sub">outcome-framed, e.g. "cuts kiln emissions 40%"</span></label><input name="tagline">
     <label>Founder name(s) *</label><input name="founder_names" required>
-    <label>Founder LinkedIn *</label><input name="founder_linkedin" placeholder="https://linkedin.com/in/..." required>
+    <label>Founder LinkedIn * <span class="sub">needed for the mechanical verifier check</span></label><input name="founder_linkedin" placeholder="https://linkedin.com/in/..." required>
+    <label>Founder email * <span class="sub">for your session; we won't spam</span></label><input name="founder_email" type="email" placeholder="you@startup.com" required>
     <label>Website / product link</label><input name="website" placeholder="https://">
-    <label>Sub-theme tag(s) <span class="sub">pick all that apply</span></label>
-    <select name="subtheme_tags" multiple size="6">
-      {% for s in subthemes %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
-    </select>
   </div>
+
   <div class="card">
-    <div class="seclabel">Why this matters</div>
-    <label>Problem (2–3 sentences) *</label><textarea name="problem" required></textarea>
-    <label>Opportunity size (number/scale + basis) *</label><textarea name="opportunity_size" required></textarea>
-    <label>Why now *</label><textarea name="why_now" required></textarea>
-  </div>
-  <div class="card">
-    <div class="seclabel">Where you are</div>
-    <div class="seclabel" style="margin-top:0">Stage *</div>
-    <div class="seg">
-      {% for s in stages %}
-      <label><input type="radio" name="stage" value="{{ s }}" {% if loop.first %}checked{% endif %}><span>{{ s }}</span></label>
-      {% endfor %}
+    <div class="seclabel">Uploads <span class="sub">PDF / PPTX / DOCX · max 5 files · 20MB each · the agent reads these</span></div>
+    <div id="drop" style="border:2px dashed var(--coral);border-radius:12px;padding:28px;text-align:center;color:var(--txt2);
+         background:var(--bg2);cursor:pointer;transition:background .15s">
+      <div style="font-size:30px">⬆</div>
+      <div style="font-weight:600;color:var(--txt)">Drag &amp; drop files here</div>
+      <div class="small">or click to browse</div>
+      <input id="fileInput" type="file" name="files" multiple accept=".pdf,.pptx,.docx" style="display:none">
     </div>
-    <label>Proof-of-work (pilot data, LOIs, demo, patent)</label><textarea name="proof_of_work"></textarea>
-    <label>Early adopters / customers</label><input name="early_adopters">
-    <label>GTM (high-level)</label><textarea name="gtm"></textarea>
+    <div id="chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
   </div>
+
   <div class="card">
-    <div class="seclabel">Why bet on this</div>
-    <label>Success scenario / what must be true</label><textarea name="success_scenario"></textarea>
-    <label>Team's relevant edge</label><textarea name="team_edge"></textarea>
-    <label>What you're looking for *</label>
-    <select name="looking_for">
-      <option>funding</option><option>pilot partners</option><option>co-founder</option>
-      <option>visibility only</option><option>customers</option>
-    </select>
+    <div class="seclabel">Links <span class="sub">press / article / extra URLs</span></div>
+    <div id="linkRows" style="display:flex;flex-direction:column;gap:8px">
+      <input class="linkinp" name="url1" placeholder="https://article-or-press-link">
+    </div>
+    <button type="button" class="pill" id="addLink" style="cursor:pointer;margin-top:8px">+ add another link</button>
   </div>
+
   <div class="btnrow"><button type="submit" class="cta">Run agent pipeline <span class="arw">→</span></button></div>
 </form>
+<script>
+const MAXF=5, MAXL=5, drop=document.getElementById('drop'), fi=document.getElementById('fileInput');
+const chips=document.getElementById('chips'); let files=[];
+function renderChips(){
+  chips.innerHTML='';
+  files.forEach((f,i)=>{
+    const sz=(f.size/1024/1024).toFixed(1)+'MB';
+    const c=document.createElement('div');
+    c.style.cssText='display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:13px';
+    c.innerHTML='<span style="font-weight:600;color:var(--coral)">📎</span>'+f.name+' <span class="muted small">'+sz+'</span> <span style="cursor:pointer;color:var(--mut)" onclick="rmFile('+i+')">✕</span>';
+    chips.appendChild(c);
+  });
+  const dt=new DataTransfer(); files.forEach(f=>dt.items.add(f)); fi.files=dt.files;
+}
+function rmFile(i){ files.splice(i,1); renderChips(); }
+drop.onclick=()=>fi.click();
+fi.onchange=e=>{ addFiles(e.target.files); };
+['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.style.background='#F1EBFA';}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.style.background='var(--bg2)';}));
+drop.addEventListener('drop',e=>{ addFiles(e.dataTransfer.files); });
+function addFiles(list){
+  for(const f of list){ if(files.length>=MAXF) break;
+    const ext=f.name.rsplit('.',1)[-1].toLowerCase();
+    if(['pdf','pptx','docx'].includes(ext) && f.size<=20*1024*1024) files.push(f); }
+  files=files.slice(0,MAXF); renderChips();
+}
+let links=1;
+document.getElementById('addLink').onclick=()=>{ if(links>=MAXL) return;
+  links++; const inp=document.createElement('input'); inp.className='linkinp';
+  inp.name='url'+links; inp.placeholder='https://article-or-press-link';
+  document.getElementById('linkRows').appendChild(inp); };
+</script>
 """)
 
 
 TPL_PROCESSING = _page("Processing — MoonshotHunt", """
 <div class="card"><h2>Running the agent pipeline…</h2>
-<p class="muted">This runs two real LLM agents on your submission. Please wait, it takes ~30–60s.</p>
+<p class="muted">This runs two real LLM agents on your uploads. Please wait, it takes ~30–60s.</p>
 <pre id="log">Initializing…</pre></div>
 <script>
 const sid="{{ sid }}";
@@ -354,25 +374,45 @@ poll();
 
 TPL_REVIEW = _page("Founder review — MoonshotHunt", """
 <h2>Founder review &amp; approve</h2>
-<p class="muted">Our agents drafted this card from your submission. Edit any field, then publish.
-You — the human — are the approval gate. Nothing goes live until you click publish.</p>
+<p class="muted">Our agent drafted this card from your uploads. Fields marked <span style="color:var(--coral);font-weight:700">auto-drafted</span>
+were inferred by the agent — edit anything before publishing. You — the human — are the approval gate.</p>
 <form method="post" action="/publish/{{ sid }}">
   <div class="card">
-    <div class="seclabel">VC Agent structured card</div>
+    <div class="seclabel">Identity <span class="sub">what you typed — authoritative</span></div>
     <div class="fieldrow">
       <div><label>Startup name</label><input name="startup_name" value="{{ sc.startup_name }}"></div>
-      <div><label>Stage</label>
-        <select name="stage">{% for s in stages %}
+      <div><label>Stage <span style="color:var(--coral);font-weight:700">auto-drafted</span></label>
+        <select name="stage">
+          {% for s in ['idea','prototype','pilot','early revenue','scaling'] %}
           <option value="{{ s }}" {% if s==sc.stage %}selected{% endif %}>{{ s }}</option>{% endfor %}
         </select></div>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="seclabel">Agent-drafted card <span style="color:var(--coral);font-weight:700">auto-drafted</span> — review &amp; edit</div>
     <label>Tagline (outcome-framed)</label><input name="tagline" value="{{ sc.tagline }}">
     <label>Problem (one line)</label><textarea name="problem">{{ sc.problem }}</textarea>
     <label>Opportunity size (one line)</label><textarea name="opportunity_size">{{ sc.opportunity_size }}</textarea>
     <label>Differentiator (one line)</label><textarea name="differentiator">{{ sc.differentiator }}</textarea>
     <label>Solution (one line)</label><textarea name="solution">{{ sc.solution }}</textarea>
     <label>Ask (one line)</label><textarea name="ask">{{ sc.ask }}</textarea>
+    <label>Sub-theme tags <span class="sub">auto-inferred — adjust</span></label>
+    <div class="seg">{% for s in subthemes %}
+      <label><input type="checkbox" name="subtheme_tags" value="{{ s }}" {% if s in sc.subtheme_tags %}checked{% endif %}><span>{{ s }}</span></label>
+    {% endfor %}</div>
   </div>
+
+  {% if conflicts %}
+  <div class="card" style="border-color:var(--coral)">
+    <div class="seclabel" style="color:var(--coral)">⚠ Source conflicts the agent flagged</div>
+    {% for c in conflicts %}
+    <div class="disclaimer" style="margin:6px 0">• <b>{{ c.field }}</b>: {{ c.note }}</div>
+    {% endfor %}
+    <div class="small muted">The agent picked the more authoritative source for the field above — confirm or override.</div>
+  </div>
+  {% endif %}
+
   <div class="card">
     <div class="seclabel">Verification badges · lightweight public-signal check</div>
     {% for b in badges %}<span class="vbadge {{ b.status }}"><span class="ck">✓</span>{{ b.label | lower }} · {{ b.status }}</span>{% endfor %}
@@ -738,27 +778,79 @@ def directory():
 @app.route("/submit", methods=["GET"])
 def submit_get():
     user = _current_user()
-    return render_template_string(TPL_SUBMIT, stages=STAGES, subthemes=SUBTHEMES,
+    # reuse identified email/name from the upvote-gate session if present (don't duplicate capture)
+    return render_template_string(TPL_SUBMIT,
                                   user_email=user["email"] if user else "",
                                   user_name=user["name"] if user else "")
 
 
+ALLOWED_EXT = {"pdf", "pptx", "docx"}
+MAX_FILE_BYTES = 20 * 1024 * 1024   # 20MB / file
+MAX_FILES = 5
+MAX_URLS = 5
+
+
 @app.route("/submit", methods=["POST"])
 def submit_post():
-    keys = ["startup_name", "tagline", "founder_names", "founder_linkedin", "website",
-            "problem", "opportunity_size", "why_now", "stage", "proof_of_work",
-            "early_adopters", "gtm", "success_scenario", "team_edge", "looking_for"]
-    raw = {k: (request.form.get(k) or "").strip() for k in keys}
-    raw["subtheme_tags"] = request.form.getlist("subtheme_tags")
+    # --- identity fields the founder types directly (authoritative) ---
+    raw = {
+        "startup_name": (request.form.get("startup_name") or "").strip(),
+        "founder_names": (request.form.get("founder_names") or "").strip(),
+        "founder_linkedin": (request.form.get("founder_linkedin") or "").strip(),
+        "founder_email": (request.form.get("founder_email") or "").strip(),
+        "website": (request.form.get("website") or "").strip(),
+    }
+    if not raw["startup_name"]:
+        return "Startup name is required.", 400
+
+    # --- uploaded files: save to a temp dir, extract text ---
+    upload_dir = tempfile.mkdtemp(prefix="moonshot-up-")
+    saved = []
+    try:
+        files = request.files.getlist("files")
+        for f in files[:MAX_FILES]:
+            if not f or not f.filename:
+                continue
+            ext = f.filename.rsplit(".", 1)[-1].lower()
+            if ext not in ALLOWED_EXT:
+                continue
+            f.seek(0, 2)
+            size = f.tell()
+            f.seek(0)
+            if size > MAX_FILE_BYTES:
+                continue
+            path = os.path.join(upload_dir, f.filename)
+            f.save(path)
+            saved.append({"filename": f.filename, "filepath": path})
+    except Exception as e:
+        shutil.rmtree(upload_dir, ignore_errors=True)
+        return f"Upload error: {e}", 400
+
+    # --- URL links (website already captured above; plus extra press/article links) ---
+    urls = []
+    if raw["website"]:
+        urls.append(raw["website"])
+    for i in range(1, MAX_URLS + 1):
+        u = (request.form.get(f"url{i}") or "").strip()
+        if u:
+            urls.append(u)
+    urls = urls[:MAX_URLS]
+
+    # --- multi-source extraction ---
+    context = extract.build_context(saved, urls)
+    raw["extracted_context"] = context
+    raw["source_files"] = [s["filename"] for s in saved]
+    raw["source_urls"] = urls
+
     rec = store.create_submission(raw)
-    store.update(rec["id"], {"log": "queued"})
-    threading.Thread(target=_run_pipeline_bg, args=(rec["id"],), daemon=True).start()
+    store.update(rec["id"], {"log": "queued", "upload_dir": upload_dir})
+    threading.Thread(target=_run_pipeline_bg, args=(rec["id"], upload_dir), daemon=True).start()
     return redirect(url_for("processing", sid=rec["id"]))
 
 
-def _run_pipeline_bg(sid):
+def _run_pipeline_bg(sid, upload_dir=None):
     rec = store.get(sid)
-    store.update(sid, {"log": "VC Agent: reading submission…"})
+    store.update(sid, {"log": "VC Agent: reading uploads…"})
     res = agents.run_pipeline(rec)
     rec = store.get(sid)
     rec["structured"] = res["structured"]
@@ -768,6 +860,9 @@ def _run_pipeline_bg(sid):
     rec["status"] = "review" if res["structured"] and "_raw" not in res["structured"] else "error"
     rec["log"] = "done"
     store.update(sid, rec)
+    # uploaded temp files are no longer needed once extracted
+    if upload_dir:
+        shutil.rmtree(upload_dir, ignore_errors=True)
 
 
 @app.route("/processing/<sid>")
@@ -795,11 +890,20 @@ def review(sid):
     for k in ["startup_name", "tagline", "problem", "opportunity_size",
               "differentiator", "solution", "ask", "stage"]:
         sc.setdefault(k, "")
+    sc.setdefault("subtheme_tags", [])
+    sc.setdefault("conflicts", [])
     user = _current_user()
+    # identity fields the founder typed directly; everything else is agent-inferred
+    identity_fields = {"startup_name", "founder_names", "founder_linkedin", "founder_email"}
+    inferred_fields = [k for k in ["tagline", "problem", "opportunity_size", "differentiator",
+                                   "solution", "stage", "ask"] if k in sc]
     return render_template_string(TPL_REVIEW, sid=sid, sc=sc, raw=rec["raw"],
                                   badges=_lower_badges(rec.get("badges", [])),
                                   disclaimer=rec.get("disclaimer", ""),
-                                  stages=STAGES,
+                                  conflicts=sc.get("conflicts", []),
+                                  identity_fields=identity_fields,
+                                  inferred_fields=inferred_fields,
+                                  subthemes=SUBTHEMES,
                                   user_email=user["email"] if user else "",
                                   user_name=user["name"] if user else "")
 
@@ -820,7 +924,7 @@ def publish(sid):
         "differentiator": request.form.get("differentiator", ""),
         "solution": request.form.get("solution", ""),
         "ask": request.form.get("ask", ""),
-        "subtheme_tags": rec.get("raw", {}).get("subtheme_tags", []),
+        "subtheme_tags": request.form.getlist("subtheme_tags") or rec.get("raw", {}).get("subtheme_tags", []),
         "badges": rec.get("badges", []),
         "published_at": store.now_iso(),
     }

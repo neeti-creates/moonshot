@@ -95,25 +95,44 @@ def _safe_json(text):
 # VC Agent — synthesis / structuring (NOT due diligence)
 # ---------------------------------------------------------------------------
 VC_SYSTEM = (
-    "You are the MoonshotHunt VC Agent. You read a founder's raw, messy "
-    "submission and render it into crisp, VC-legible one-liners for a discovery "
-    "card. This is STRUCTURING / SYNTHESIS, never investment due diligence.\n\n"
+    "You are the MoonshotHunt VC Agent. A founder uploaded raw assets (deck, one-pager, "
+    "tech spec, website, press) and you read them like a VC doing first-pass diligence, "
+    "then draft a crisp discovery card. This is STRUCTURING / SYNTHESIS, never investment "
+    "due diligence. You are organizing founder-provided material, NOT verifying its truth.\n\n"
+    "You will receive IDENTITY fields the founder typed directly (treat as authoritative: "
+    "startup_name, founder_names, founder_linkedin, founder_email) plus one or more SOURCE "
+    "BLOCKS labelled [FROM: filename/url]. Each block is a different document or link about "
+    "the same startup.\n\n"
     "Rules:\n"
-    "1. Read the SPECIFIC input. Do not use generic filler ('a promising startup'). "
-    "Each line must reflect this founder's actual words.\n"
-    "2. Condense, don't invent. If the submission does not support a field, write "
-    "a short honest 'Not specified by founder' rather than fabricating.\n"
-    "3. Outcome-framed language where possible (what changes in the world), not "
-    "feature-listing.\n"
-    "4. Respect the per-field length guidance.\n\n"
+    "1. Read the SPECIFIC sources. Do not use generic filler ('a promising startup'). Each "
+    "line must reflect this founder's actual words/claims.\n"
+    "2. Condense, don't invent. If a field is not supported by ANY provided source, write a "
+    "short honest 'Not specified by founder' rather than fabricating.\n"
+    "3. CONFLICTS: sources may disagree (e.g. deck says one market size, website says another). "
+    "When they conflict, pick the more authoritative-seeming source, fill the field with that "
+    "value, AND add an entry to 'conflicts' describing the discrepancy and the choice, so the "
+    "founder sees it during review. Never silently pick one and hide the other.\n"
+    "4. Infer STAGE from context (idea|prototype|pilot|early revenue|scaling) — founder can "
+    "override in review.\n"
+    "5. Infer SUBTHEME TAGS (2-4, lowercase, hyphenated, from: energy-storage, "
+    "industrial-decarbonization, carbon-capture, resilience-adaptation, sustainable-agriculture, "
+    "circular-economy, sustainable-mobility, built-environment, robotics-automation, "
+    "advanced-materials, nanorobotics, ai-infrastructure, biotech, space-tech, semiconductors, "
+    "quantum) — founder can override in review.\n"
+    "6. Outcome-framed language where possible (what changes in the world), not feature-listing.\n"
+    "7. Respect per-field length guidance.\n\n"
     "Return STRICT JSON with exactly these keys:\n"
-    "  tagline        : one line, outcome-framed (keep founder's if good, else rewrite). <= 14 words\n"
+    "  startup_name   : from identity (echo exactly)\n"
+    "  tagline        : one line, outcome-framed. <= 14 words\n"
     "  problem        : one line, the problem in the founder's own domain. <= 22 words\n"
     "  opportunity_size: one line, the scale/number claim + its basis. <= 22 words\n"
     "  differentiator : one line, what makes this distinct. <= 22 words\n"
     "  solution       : one line, what they built. <= 18 words\n"
     "  stage          : exactly one of idea|prototype|pilot|early revenue|scaling\n"
+    "  subtheme_tags  : array of 2-4 lowercase hyphenated tags (see allowed list)\n"
     "  ask            : one line, what they want (funding/partners/pilots/visibility). <= 18 words\n"
+    "  conflicts      : array of {field, note} for any cross-source discrepancies you resolved "
+    "(empty array if none)\n"
 )
 
 
@@ -128,19 +147,32 @@ def _call_with_retry(build_messages, max_tokens, n=3):
     return last or {"error": "all attempts returned empty"}
 
 
-def run_vc_agent(raw):
+def run_vc_agent(raw, context=""):
     def msgs():
+        parts = []
+        if context:
+            parts.append("SOURCE MATERIAL (uploaded by founder):\n" + context)
+        parts.append("IDENTITY (founder typed directly — authoritative):\n" +
+                     json.dumps({k: raw.get(k, "") for k in
+                                 ["startup_name", "founder_names", "founder_linkedin",
+                                  "founder_email"]}, indent=2, ensure_ascii=False))
+        if not context:
+            # legacy path: raw structured fields still present
+            parts.append("SUBMISSION FIELDS:\n" + json.dumps(raw, indent=2, ensure_ascii=False))
+        user = ("Return ONLY a JSON object (no markdown, no commentary) for this startup:\n"
+                + "\n\n".join(parts))
         return [{"role": "system", "content": VC_SYSTEM},
-                {"role": "user", "content":
-                 ("Return ONLY a JSON object (no markdown, no commentary) for this submission:\n"
-                  + json.dumps(raw, indent=2, ensure_ascii=False))}]
+                {"role": "user", "content": user}]
     out = _call_with_retry(msgs, max_tokens=2000)
     if "error" in out or not out.get("content"):
         return {"ok": False, "error": out.get("error", "empty"),
                 "trace": out, "structured": {}}
     structured = _safe_json(out["content"])
     structured["startup_name"] = raw.get("startup_name", "")
-    structured["subtheme_tags"] = raw.get("subtheme_tags", [])
+    structured["founder_names"] = raw.get("founder_names", "")
+    structured["founder_linkedin"] = raw.get("founder_linkedin", "")
+    structured["founder_email"] = raw.get("founder_email", "")
+    structured["subtheme_tags"] = structured.get("subtheme_tags", raw.get("subtheme_tags", []))
     return {"ok": True, "structured": structured, "llm": out}
 
 
@@ -226,15 +258,16 @@ def run_pipeline(sub):
     raw = sub["raw"]
     trace = []
 
-    vc = run_vc_agent(raw)
+    vc = run_vc_agent(raw, context=raw.get("extracted_context", ""))
     trace.append({
         "agent": "VC Agent (Synthesis)",
-        "role": "Structures raw submission into Layer-1 card fields",
+        "role": "Reads uploaded sources + identity, drafts card fields, infers stage/subthemes, flags conflicts",
         "model": vc.get("llm", {}).get("model"),
         "latency": vc.get("llm", {}).get("latency"),
         "prompt_tokens": vc.get("llm", {}).get("prompt_tokens"),
         "completion_tokens": vc.get("llm", {}).get("completion_tokens"),
-        "input_summary": _summarize(raw),
+        "input_summary": (_summarize(raw)
+                          + f"; sources_chars={len(raw.get('extracted_context',''))}"),
         "raw_output": vc.get("llm", {}).get("content"),
         "ok": vc.get("ok", False),
         "error": vc.get("error"),
