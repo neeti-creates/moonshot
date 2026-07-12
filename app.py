@@ -45,6 +45,7 @@ h3{font-size:16px;margin:0 0 10px}
 a{color:var(--coral);text-decoration:none}
 a:hover{text-decoration:underline}
 .wrap{max-width:1080px;margin:0 auto;padding:24px}
+.wrap-full{max-width:none;margin:0;padding:0}
 nav{display:flex;gap:20px;align-items:center;padding:14px 24px;border-bottom:1px solid var(--line);
   background:var(--bg);position:sticky;top:0;z-index:20}
 nav .brand{font-weight:700;font-size:18px;color:var(--txt);letter-spacing:-.2px}
@@ -147,7 +148,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
 .x{float:right;cursor:pointer;color:var(--mut);font-size:20px;line-height:1}
 </style></head><body>
 <nav><a class="brand" href="/" style="text-decoration:none;color:inherit">⬡ MoonshotHunt</a>
-<a href="/">Directory</a><a href="/whitespace">Whitespace</a><a href="/submit">Submit</a>
+<a href="/directory">Directory</a><a href="/whitespace">Whitespace</a><a href="/submit">Submit</a>
 <span class="navspacer"></span>
 {% if user_email %}<span class="pill">{{ user_name or user_email }}</span>
 {% else %}<a class="pill" href="#" onclick="return openLogin()">sign in to vote</a>{% endif %}
@@ -206,9 +207,13 @@ async function submitLogin(){
 </body></html>"""
 
 
-def _page(title, body):
+def _page(title, body, fullbleed=None):
+    if fullbleed is None:
+        fullbleed = 'id="wsroot"' in body  # whitespace map opts in automatically
     t = TPL_LAYOUT.replace("{% block title %}MoonshotHunt{% endblock %}",
                           "{% block title %}" + title + "{% endblock %}")
+    t = t.replace('<div class="wrap">{% block body %}{% endblock %}</div>',
+                  '<div class="wrap' + (' wrap-full' if fullbleed else '') + '">{% block body %}{% endblock %}</div>')
     t = t.replace("{% block body %}{% endblock %}", body)
     return t
 
@@ -408,13 +413,13 @@ TPL_TRACE = _page("Agent trace — MoonshotHunt", """
   <pre>{{ t.raw_output or '(none)' }}</pre></details>
 </div>
 {% endfor %}
-<div class="btnrow"><a class="pill" href="/" style="color:var(--txt2)">← Directory</a>
+<div class="btnrow"><a class="pill" href="/directory" style="color:var(--txt2)">← Directory</a>
 {% if rec.status=='review' %}<a class="cta" href="/review/{{ sid }}">Go to review <span class="arw">→</span></a>{% endif %}</div>
 """)
 
 
 TPL_WHITESPACE = _page("Whitespace — MoonshotHunt", """
-<div id="wsroot" style="position:relative">
+<div id="wsroot" style="position:relative;padding:14px 16px">
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px">
     <div>
       <h2 style="margin-bottom:2px">Whitespace map</h2>
@@ -430,7 +435,7 @@ TPL_WHITESPACE = _page("Whitespace — MoonshotHunt", """
       <button class="pill" style="cursor:pointer" onclick="zoom(0.1)">+</button>
       <button class="pill" style="cursor:pointer" onclick="zoom(-0.1)">−</button>
       <button class="pill" style="cursor:pointer" onclick="toggleHelp()">how to</button>
-      <a class="pill" href="/" style="color:var(--txt2)">← directory</a>
+      <a class="pill" href="/directory" style="color:var(--txt2)">← directory</a>
     </div>
   </div>
 
@@ -445,7 +450,7 @@ TPL_WHITESPACE = _page("Whitespace — MoonshotHunt", """
     </ul>
   </div>
 
-  <div id="stage" style="position:relative;height:clamp(560px,72vh,760px);border:1px solid var(--line);border-radius:12px;
+  <div id="stage" style="position:relative;height:calc(100vh - 150px);min-height:520px;border:none;border-radius:0;
        overflow:hidden;background:var(--bg);
        background-image:linear-gradient(#F0F0F0 1px,transparent 1px),linear-gradient(90deg,#F0F0F0 1px,transparent 1px);background-size:28px 28px">
     <div id="zoneTint" style="position:absolute;inset:0;pointer-events:none;
@@ -473,7 +478,7 @@ const STAGE_FILTER=()=>document.getElementById('stageFilter').value;
 let DATA=null, expanded=new Set(), manual={}, scale=1;
 const W=()=>document.getElementById('stage').clientWidth, H=()=>document.getElementById('stage').clientHeight;
 
-function bubbleR(count){ return count<=1 ? 22 : Math.min(22+count*6, 50); }
+function bubbleR(count){ return count<=1 ? 15 : Math.min(15+count*4, 36); }
 
 async function load(){
   const r=await fetch('/api/whitespace?stage='+encodeURIComponent(STAGE_FILTER()));
@@ -487,8 +492,8 @@ async function load(){
 function layout(){
   const cx=W()/2, cy=H()/2, positions={};
   const halfW = W()*0.46, halfH = H()*0.42;     // max ring radius bounds
-  const pad = 70;                                // outer margin for labels
-  const gap = 14;                                // min spacing between bubbles
+  const pad = 52;                                // outer margin for labels
+  const gap = 12;                                // min spacing between bubbles
   DATA.zones.forEach(z=>{
     const left=(z.side==='climate');
     const n=z.bubbles.length;
@@ -603,7 +608,7 @@ function render(){
       if(active && b.startups.length){
         b.startups.forEach((s,i)=>{
           const a=(i/b.startups.length)*Math.PI*2 - Math.PI/2;
-          const orad=r+58;
+          const orad=r+44;
           const sx=p.x+Math.cos(a)*orad, sy=p.y+Math.sin(a)*orad;
           line(svg,p.x,p.y,sx,sy,'#ECECEC',false);
           const card=node(sx,sy,
@@ -704,12 +709,16 @@ def _visitor_id():
 
 @app.route("/")
 def home():
+    return redirect(url_for("whitespace"))
+
+
+@app.route("/directory")
+def directory():
     cards = []
     for s in store.published():
         rec = store.get(s["id"])
         if rec:
             cards.append(rec)
-    # default sort: most-upvoted first, then newest
     cards.sort(key=lambda c: (len(c.get("voters", [])), c.get("created_at", "")), reverse=True)
     user = _current_user()
     stats = store.record_visit(_visitor_id())
