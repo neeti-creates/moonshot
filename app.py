@@ -200,6 +200,7 @@ async function submitLogin(){
   } else { err.textContent=d.error||'Could not sign in.'; }
 }
 </script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b74ce3e4fe6b442483b3551635d49c17"}'></script><!-- End Cloudflare Web Analytics -->
 </body></html>"""
 
 
