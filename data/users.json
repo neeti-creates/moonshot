@@ -18,5 +18,11 @@
     "email": "arjunsdeep@gmail.com",
     "name": "Arjun",
     "created_at": "2026-07-12T09:32:42.700441Z"
+  },
+  "jane@x.com": {
+    "email": "jane@x.com",
+    "name": "Jane Doe",
+    "role": "founder",
+    "created_at": "2026-07-12T10:43:43.763938Z"
   }
 }

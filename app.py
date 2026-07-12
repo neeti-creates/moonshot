@@ -648,7 +648,7 @@ def home():
                 voted.add(c["id"])
     return render_template_string(TPL_HOME, cards=cards, voted=voted, stats=stats,
                                   metrics={"startups": len(cards),
-                                           "builders": store.role_counts()["founder"],
+                                           "builders": store.builder_count(),
                                            "vcs": store.role_counts()["vc"]},
                                   user_email=user["email"] if user else "",
                                   user_name=user["name"] if user else "")

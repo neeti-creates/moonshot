@@ -112,6 +112,43 @@ def role_counts():
     return out
 
 
+def _norm_identity(name, linkedin):
+    """Return a stable key for a founder: linkedin slug if present, else lowercased name."""
+    if linkedin:
+        slug = linkedin.rstrip("/").split("/")[-1].lower()
+        if slug:
+            return "li:" + slug
+    if name:
+        return "nm:" + name.strip().lower()
+    return None
+
+
+def builder_count():
+    """Distinct builders = founders who actually submitted a startup.
+
+    Derived from each submission's founder identity (founder_names / founder_linkedin),
+    deduped by normalized linkedin slug or name. Login-modal 'founder' users are NOT
+    added here: the modal is a voting identity, not a submission, and a founder who
+    later votes would otherwise be double-counted. Builders = people who built something.
+    """
+    seen = set()
+    with _lock:
+        for s in all_statuses():
+            rec = get(s["id"])
+            if not rec:
+                continue
+            raw = rec.get("raw", {}) or {}
+            names = raw.get("founder_names") or []
+            if isinstance(names, str):
+                names = [names]
+            li = raw.get("founder_linkedin") or ""
+            for n in names:
+                key = _norm_identity(n, li if len(names) == 1 else "")
+                if key:
+                    seen.add(key)
+    return len(seen)
+
+
 def get_user(email):
     email = (email or "").strip().lower()
     p = _users_path()
