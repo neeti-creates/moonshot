@@ -1,0 +1,165 @@
+{
+  "id": "fa42868133",
+  "status": "published",
+  "created_at": "2026-07-12T08:57:37.927270Z",
+  "raw": {
+    "startup_name": "FlowMobility",
+    "tagline": "",
+    "founder_names": "Dev Varma",
+    "founder_linkedin": "https://linkedin.com/in/devvarma",
+    "website": "https://flowmobility.in",
+    "subtheme_tags": [
+      "sustainable-mobility",
+      "energy-storage"
+    ],
+    "problem": "Last-mile freight in cities still runs on diesel autos.",
+    "opportunity_size": "Last-mile logistics ~$5B; electrification ~$1.5B.",
+    "why_now": "City EV mandates + charging density crossed a threshold.",
+    "stage": "early revenue",
+    "proof_of_work": "60 vehicles deployed, $140k revenue.",
+    "early_adopters": "E-commerce fleets",
+    "gtm": "Lease + charge model.",
+    "success_scenario": "If diesel bans expand, switch is forced.",
+    "team_edge": "Auto-MBAs + EV ops veterans.",
+    "looking_for": "funding"
+  },
+  "structured": {
+    "tagline": "Zero-emission last-mile freight replaces diesel in cities.",
+    "problem": "Last-mile freight in cities still runs on diesel autos.",
+    "opportunity_size": "Last-mile logistics ~$5B; electrification ~$1.5B; basis not specified by founder.",
+    "differentiator": "Lease+charge EV fleet model backed by Auto-MBAs and EV ops veterans.",
+    "solution": "Electric last-mile freight fleet with lease+charge model, 60 deployed.",
+    "stage": "early revenue",
+    "ask": "Funding to scale deployed EV last-mile freight fleet.",
+    "startup_name": "FlowMobility",
+    "subtheme_tags": [
+      "sustainable-mobility",
+      "energy-storage"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "Website not live (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed linkedin.com/in/ URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Business claims are self-reported and not independently verified"
+    }
+  ],
+  "disclaimer": "Only mechanically checkable public signals were assessed; all non-mechanical claims are self-reported and not independently verified.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 35.78,
+      "prompt_tokens": 565,
+      "completion_tokens": 1945,
+      "input_summary": "name=FlowMobility; stage=early revenue; subthemes=['sustainable-mobility', 'energy-storage']; problem=Last-mile freight in cities still runs on diesel autos.",
+      "raw_output": "{\n  \"tagline\": \"Zero-emission last-mile freight replaces diesel in cities.\",\n  \"problem\": \"Last-mile freight in cities still runs on diesel autos.\",\n  \"opportunity_size\": \"Last-mile logistics ~$5B; electrification ~$1.5B; basis not specified by founder.\",\n  \"differentiator\": \"Lease+charge EV fleet model backed by Auto-MBAs and EV ops veterans.\",\n  \"solution\": \"Electric last-mile freight fleet with lease+charge model, 60 deployed.\",\n  \"stage\": \"early revenue\",\n  \"ask\": \"Funding to scale deployed EV last-mile freight fleet.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 18.64,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/devvarma\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/devvarma"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"website\", \"status\": \"unverified\", \"detail\": \"Website not live (URLError)\"},\n    {\"label\": \"linkedin\", \"status\": \"verified\", \"detail\": \"Well-formed linkedin.com/in/ URL\"},\n    {\"label\": \"founder identity\", \"status\": \"verified\", \"detail\": \"Founder name present\"},\n    {\"label\": \"self-reported claims\", \"status\": \"unverified\", \"detail\": \"Business claims are self-reported and not independently verified\"}\n  ],\n  \"disclaimer\": \"Only mechanically checkable public signals were assessed; all non-mechanical claims are self-reported and not independently verified.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "Website not live (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed linkedin.com/in/ URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Business claims are self-reported and not independently verified"
+        }
+      ],
+      "disclaimer": "Only mechanically checkable public signals were assessed; all non-mechanical claims are self-reported and not independently verified."
+    }
+  ],
+  "published_card": {
+    "startup_name": "FlowMobility",
+    "tagline": "Zero-emission last-mile freight replaces diesel in cities.",
+    "stage": "early revenue",
+    "problem": "Last-mile freight in cities still runs on diesel autos.",
+    "opportunity_size": "Last-mile logistics ~$5B; electrification ~$1.5B; basis not specified by founder.",
+    "differentiator": "Lease+charge EV fleet model backed by Auto-MBAs and EV ops veterans.",
+    "solution": "Electric last-mile freight fleet with lease+charge model, 60 deployed.",
+    "ask": "Funding to scale deployed EV last-mile freight fleet.",
+    "subtheme_tags": [
+      "sustainable-mobility",
+      "energy-storage"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "Website not live (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed linkedin.com/in/ URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Business claims are self-reported and not independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T08:58:32.422746Z"
+  },
+  "voters": [
+    "ar.neetipatel@gmail.com",
+    "arjunsdeep@gmail.com"
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "id": "9ef1870b5d",
+  "status": "published",
+  "created_at": "2026-07-12T08:53:30.066260Z",
+  "raw": {
+    "startup_name": "SkyHarvest",
+    "tagline": "",
+    "founder_names": "Aditya Joshi",
+    "founder_linkedin": "https://linkedin.com/in/adityajoshi",
+    "website": "https://skyharvest.agri",
+    "subtheme_tags": [
+      "agritech-climate",
+      "robotics-in-healthcare"
+    ],
+    "problem": "Standing crops are damaged by disease detected too late by scouting.",
+    "opportunity_size": "India loses ~$10B/yr to crop disease.",
+    "why_now": "Cheap drones + vision models enable weekly scouting.",
+    "stage": "pilot",
+    "proof_of_work": "Sprayed 1,200 acres, cut fungicide 30%.",
+    "early_adopters": "Contract farmers",
+    "gtm": "Per-acre scouting subscription.",
+    "success_scenario": "If input savings beat fee, adoption is automatic.",
+    "team_edge": "Agri-engineers + CV researchers.",
+    "looking_for": "pilot partners"
+  },
+  "structured": {
+    "tagline": "Eliminate avoidable crop loss from disease with early drone-vision scouting.",
+    "problem": "Standing crops are damaged by disease detected too late by scouting.",
+    "opportunity_size": "India loses ~$10B/yr to crop disease.",
+    "differentiator": "Combines agri-engineers with CV researchers for cheap weekly drone-based crop scouting.",
+    "solution": "Weekly drone-vision scouting service that reduces fungicide use by 30%.",
+    "stage": "pilot",
+    "ask": "Looking for pilot partners.",
+    "startup_name": "SkyHarvest",
+    "subtheme_tags": [
+      "agritech-climate",
+      "robotics-in-healthcare"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "Website not live or unreachable (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed LinkedIn URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Business claims are self-reported and not independently verified"
+    }
+  ],
+  "disclaimer": "All non-mechanical claims are self-reported and have not been independently verified by MoonshotHunt.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 20.92,
+      "prompt_tokens": 578,
+      "completion_tokens": 1506,
+      "input_summary": "name=SkyHarvest; stage=pilot; subthemes=['agritech-climate', 'robotics-in-healthcare']; problem=Standing crops are damaged by disease detected too late by scouting.",
+      "raw_output": "{\n  \"tagline\": \"Eliminate avoidable crop loss from disease with early drone-vision scouting.\",\n  \"problem\": \"Standing crops are damaged by disease detected too late by scouting.\",\n  \"opportunity_size\": \"India loses ~$10B/yr to crop disease.\",\n  \"differentiator\": \"Combines agri-engineers with CV researchers for cheap weekly drone-based crop scouting.\",\n  \"solution\": \"Weekly drone-vision scouting service that reduces fungicide use by 30%.\",\n  \"stage\": \"pilot\",\n  \"ask\": \"Looking for pilot partners.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 13.58,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/adityajoshi\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/adityajoshi"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"website\", \"status\": \"unverified\", \"detail\": \"Website not live or unreachable (URLError)\"},\n    {\"label\": \"linkedin\", \"status\": \"verified\", \"detail\": \"Well-formed LinkedIn URL\"},\n    {\"label\": \"founder identity\", \"status\": \"verified\", \"detail\": \"Founder name present\"},\n    {\"label\": \"self-reported claims\", \"status\": \"unverified\", \"detail\": \"Business claims are self-reported and not independently verified\"}\n  ],\n  \"disclaimer\": \"All non-mechanical claims are self-reported and have not been independently verified by MoonshotHunt.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "Website not live or unreachable (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed LinkedIn URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Business claims are self-reported and not independently verified"
+        }
+      ],
+      "disclaimer": "All non-mechanical claims are self-reported and have not been independently verified by MoonshotHunt."
+    }
+  ],
+  "published_card": {
+    "startup_name": "SkyHarvest",
+    "tagline": "Eliminate avoidable crop loss from disease with early drone-vision scouting.",
+    "stage": "pilot",
+    "problem": "Standing crops are damaged by disease detected too late by scouting.",
+    "opportunity_size": "India loses ~$10B/yr to crop disease.",
+    "differentiator": "Combines agri-engineers with CV researchers for cheap weekly drone-based crop scouting.",
+    "solution": "Weekly drone-vision scouting service that reduces fungicide use by 30%.",
+    "ask": "Looking for pilot partners.",
+    "subtheme_tags": [
+      "agritech-climate",
+      "robotics-in-healthcare"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "Website not live or unreachable (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed LinkedIn URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Business claims are self-reported and not independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T08:54:04.614259Z"
+  }
+}

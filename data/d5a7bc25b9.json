@@ -1,0 +1,161 @@
+{
+  "id": "d5a7bc25b9",
+  "status": "published",
+  "created_at": "2026-07-12T08:43:27.102957Z",
+  "raw": {
+    "startup_name": "Ticent Energy",
+    "tagline": "",
+    "founder_names": "Arjun Rao",
+    "founder_linkedin": "https://linkedin.com/in/arjunrao",
+    "website": "https://ticent.energy",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "waste-to-value"
+    ],
+    "problem": "Cement kilns vent waste heat that could decarbonize nearby industry.",
+    "opportunity_size": "India adds 100Mt cement/yr; recoverable waste-heat value ~$2B/yr.",
+    "why_now": "Carbon border taxes make embedded emissions costly for exporters.",
+    "stage": "prototype",
+    "proof_of_work": "Lab demo at 30kW thermal recovery.",
+    "early_adopters": "Cement majors",
+    "gtm": "Heat-recovery systems sold on performance contracts.",
+    "success_scenario": "If CBAM bites, payback drops below 2 years.",
+    "team_edge": "Thermodynamics PhDs ex-IIT with kiln OEM ties.",
+    "looking_for": "seed funding"
+  },
+  "structured": {
+    "tagline": "Decarbonizing nearby industry by recovering cement kiln waste heat.",
+    "problem": "Cement kilns vent waste heat that could decarbonize nearby industry.",
+    "opportunity_size": "India adds 100Mt cement/yr; recoverable waste-heat value ~$2B/yr.",
+    "differentiator": "Thermodynamics PhDs ex-IIT with kiln OEM ties.",
+    "solution": "Lab-demonstrated 30kW thermal recovery system for cement kiln waste heat.",
+    "stage": "prototype",
+    "ask": "Seed funding.",
+    "startup_name": "Ticent Energy",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "waste-to-value"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "Website not live (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed linkedin.com/in/ URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Business claims are self-reported and not independently verified"
+    }
+  ],
+  "disclaimer": "All non-mechanical claims are self-reported and not independently verified by this agent.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 29.11,
+      "prompt_tokens": 590,
+      "completion_tokens": 1564,
+      "input_summary": "name=Ticent Energy; stage=prototype; subthemes=['industrial-decarbonization', 'waste-to-value']; problem=Cement kilns vent waste heat that could decarbonize nearby industry.",
+      "raw_output": "{\n  \"tagline\": \"Decarbonizing nearby industry by recovering cement kiln waste heat.\",\n  \"problem\": \"Cement kilns vent waste heat that could decarbonize nearby industry.\",\n  \"opportunity_size\": \"India adds 100Mt cement/yr; recoverable waste-heat value ~$2B/yr.\",\n  \"differentiator\": \"Thermodynamics PhDs ex-IIT with kiln OEM ties.\",\n  \"solution\": \"Lab-demonstrated 30kW thermal recovery system for cement kiln waste heat.\",\n  \"stage\": \"prototype\",\n  \"ask\": \"Seed funding.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 13.24,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/arjunrao\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/arjunrao"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"Website\", \"status\": \"unverified\", \"detail\": \"Website not live (URLError)\"},\n    {\"label\": \"LinkedIn\", \"status\": \"verified\", \"detail\": \"Well-formed linkedin.com/in/ URL\"},\n    {\"label\": \"Founder Identity\", \"status\": \"verified\", \"detail\": \"Founder name present\"},\n    {\"label\": \"Self-Reported Claims\", \"status\": \"unverified\", \"detail\": \"Business claims are self-reported and not independently verified\"}\n  ],\n  \"disclaimer\": \"All non-mechanical claims are self-reported and not independently verified by this agent.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "Website not live (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed linkedin.com/in/ URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Business claims are self-reported and not independently verified"
+        }
+      ],
+      "disclaimer": "All non-mechanical claims are self-reported and not independently verified by this agent."
+    }
+  ],
+  "published_card": {
+    "startup_name": "Ticent Energy",
+    "tagline": "Decarbonizing nearby industry by recovering cement kiln waste heat.",
+    "stage": "prototype",
+    "problem": "Cement kilns vent waste heat that could decarbonize nearby industry.",
+    "opportunity_size": "India adds 100Mt cement/yr; recoverable waste-heat value ~$2B/yr.",
+    "differentiator": "Thermodynamics PhDs ex-IIT with kiln OEM ties.",
+    "solution": "Lab-demonstrated 30kW thermal recovery system for cement kiln waste heat.",
+    "ask": "Seed funding.",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "waste-to-value"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "Website not live (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed linkedin.com/in/ URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Business claims are self-reported and not independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T08:44:09.520269Z"
+  }
+}

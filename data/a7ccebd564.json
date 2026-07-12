@@ -1,0 +1,160 @@
+{
+  "id": "a7ccebd564",
+  "status": "published",
+  "created_at": "2026-07-12T08:45:37.429525Z",
+  "raw": {
+    "startup_name": "MediGence",
+    "tagline": "",
+    "founder_names": "Dr. Anita Bose",
+    "founder_linkedin": "https://linkedin.com/in/anitabose",
+    "website": "https://medigence.health",
+    "subtheme_tags": [
+      "robotics-in-healthcare",
+      "deep-tech-other"
+    ],
+    "problem": "Rural India lacks specialist diagnostics within reachable distance.",
+    "opportunity_size": "600k villages, ~1 doctor per 1,500 people in rural belts.",
+    "why_now": "Telemedicine rails are now mature enough to extend with robotics.",
+    "stage": "prototype",
+    "proof_of_work": "Robotic sample-handling kiosk validated in 2 PHCs.",
+    "early_adopters": "State health missions",
+    "gtm": "OEM + outcomes-based deployment with governments.",
+    "success_scenario": "If reimbursement clears, rollout is statewide.",
+    "team_edge": "Roboticist + public-health physician co-founders.",
+    "looking_for": "seed funding"
+  },
+  "structured": {
+    "tagline": "Delivering specialist diagnostics to rural India via robotic sample-handling kiosks.",
+    "problem": "Rural India lacks specialist diagnostics within reachable distance.",
+    "opportunity_size": "600k villages, ~1 doctor per 1,500 people in rural belts.",
+    "differentiator": "Roboticist + public-health physician co-founders; robotic sample-handling kiosk validated in PHCs.",
+    "solution": "Built a robotic sample-handling kiosk validated in 2 PHCs.",
+    "stage": "prototype",
+    "ask": "Seeking seed funding.",
+    "startup_name": "MediGence",
+    "subtheme_tags": [
+      "robotics-in-healthcare",
+      "deep-tech-other"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "verified",
+      "detail": "Website is live (HTTP 200)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed LinkedIn URL provided"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name is present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Business claims are self-reported and NOT independently verified"
+    }
+  ],
+  "disclaimer": "Only mechanical signals were checked; all business claims remain self-reported and unverified.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 22.64,
+      "prompt_tokens": 585,
+      "completion_tokens": 1688,
+      "input_summary": "name=MediGence; stage=prototype; subthemes=['robotics-in-healthcare', 'deep-tech-other']; problem=Rural India lacks specialist diagnostics within reachable distance.",
+      "raw_output": "{\n  \"tagline\": \"Delivering specialist diagnostics to rural India via robotic sample-handling kiosks.\",\n  \"problem\": \"Rural India lacks specialist diagnostics within reachable distance.\",\n  \"opportunity_size\": \"600k villages, ~1 doctor per 1,500 people in rural belts.\",\n  \"differentiator\": \"Roboticist + public-health physician co-founders; robotic sample-handling kiosk validated in PHCs.\",\n  \"solution\": \"Built a robotic sample-handling kiosk validated in 2 PHCs.\",\n  \"stage\": \"prototype\",\n  \"ask\": \"Seeking seed funding.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 15.7,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/anitabose\"}, \"website_live\": {\"checked\": true, \"status\": 200, \"live\": true}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/anitabose"
+        },
+        "website_live": {
+          "checked": true,
+          "status": 200,
+          "live": true
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"website\", \"status\": \"verified\", \"detail\": \"Website is live (HTTP 200)\"},\n    {\"label\": \"linkedin\", \"status\": \"verified\", \"detail\": \"Well-formed LinkedIn URL provided\"},\n    {\"label\": \"founder identity\", \"status\": \"verified\", \"detail\": \"Founder name is present\"},\n    {\"label\": \"self-reported claims\", \"status\": \"unverified\", \"detail\": \"Business claims are self-reported and NOT independently verified\"}\n  ],\n  \"disclaimer\": \"Only mechanical signals were checked; all business claims remain self-reported and unverified.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "verified",
+          "detail": "Website is live (HTTP 200)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed LinkedIn URL provided"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name is present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Business claims are self-reported and NOT independently verified"
+        }
+      ],
+      "disclaimer": "Only mechanical signals were checked; all business claims remain self-reported and unverified."
+    }
+  ],
+  "published_card": {
+    "startup_name": "MediGence",
+    "tagline": "Delivering specialist diagnostics to rural India via robotic sample-handling kiosks.",
+    "stage": "prototype",
+    "problem": "Rural India lacks specialist diagnostics within reachable distance.",
+    "opportunity_size": "600k villages, ~1 doctor per 1,500 people in rural belts.",
+    "differentiator": "Roboticist + public-health physician co-founders; robotic sample-handling kiosk validated in PHCs.",
+    "solution": "Built a robotic sample-handling kiosk validated in 2 PHCs.",
+    "ask": "Seeking seed funding.",
+    "subtheme_tags": [
+      "robotics-in-healthcare",
+      "deep-tech-other"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "verified",
+        "detail": "Website is live (HTTP 200)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed LinkedIn URL provided"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name is present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Business claims are self-reported and NOT independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T08:46:46.070079Z"
+  }
+}

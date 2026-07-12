@@ -1,0 +1,161 @@
+{
+  "id": "ea916e1a52",
+  "status": "published",
+  "created_at": "2026-07-12T08:52:50.941129Z",
+  "raw": {
+    "startup_name": "VoltRural",
+    "tagline": "",
+    "founder_names": "Sana Khan",
+    "founder_linkedin": "https://linkedin.com/in/sanakhan",
+    "website": "https://voltrural.in",
+    "subtheme_tags": [
+      "energy-storage",
+      "sustainable-mobility"
+    ],
+    "problem": "Rural micro-enterprises have no affordable backup when grids fail.",
+    "opportunity_size": "Rural power cuts cost SMEs ~$1.5B/yr in downtime.",
+    "why_now": "Lithium cell prices fell 80% in a decade.",
+    "stage": "early revenue",
+    "proof_of_work": "400 units sold, $90k revenue.",
+    "early_adopters": "Rural SMEs",
+    "gtm": "Direct + dealer network.",
+    "success_scenario": "If reliability matters more than capex, swap accelerates.",
+    "team_edge": "Power-electronics team ex-Bajaj.",
+    "looking_for": "funding"
+  },
+  "structured": {
+    "tagline": "Keeps rural micro-enterprises powered through grid failures.",
+    "problem": "Rural micro-enterprises have no affordable backup when grids fail.",
+    "opportunity_size": "Rural power cuts cost SMEs ~$1.5B/yr in downtime.",
+    "differentiator": "Ex-Bajaj power-electronics team building affordable backup as lithium costs drop.",
+    "solution": "Affordable backup power units for rural micro-enterprises.",
+    "stage": "early revenue",
+    "ask": "Funding",
+    "startup_name": "VoltRural",
+    "subtheme_tags": [
+      "energy-storage",
+      "sustainable-mobility"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "website not live (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "well-formed linkedin.com/in/ URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "business claims are self-reported and not independently verified"
+    }
+  ],
+  "disclaimer": "Only mechanically checkable public signals were assessed; all other claims remain self-reported and unverified.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 22.8,
+      "prompt_tokens": 573,
+      "completion_tokens": 1232,
+      "input_summary": "name=VoltRural; stage=early revenue; subthemes=['energy-storage', 'sustainable-mobility']; problem=Rural micro-enterprises have no affordable backup when grids fail.",
+      "raw_output": "{\n  \"tagline\": \"Keeps rural micro-enterprises powered through grid failures.\",\n  \"problem\": \"Rural micro-enterprises have no affordable backup when grids fail.\",\n  \"opportunity_size\": \"Rural power cuts cost SMEs ~$1.5B/yr in downtime.\",\n  \"differentiator\": \"Ex-Bajaj power-electronics team building affordable backup as lithium costs drop.\",\n  \"solution\": \"Affordable backup power units for rural micro-enterprises.\",\n  \"stage\": \"early revenue\",\n  \"ask\": \"Funding\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 16.23,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/sanakhan\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/sanakhan"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"website\", \"status\": \"unverified\", \"detail\": \"website not live (URLError)\"},\n    {\"label\": \"linkedin\", \"status\": \"verified\", \"detail\": \"well-formed linkedin.com/in/ URL\"},\n    {\"label\": \"founder identity\", \"status\": \"verified\", \"detail\": \"founder name present\"},\n    {\"label\": \"self-reported claims\", \"status\": \"unverified\", \"detail\": \"business claims are self-reported and not independently verified\"}\n  ],\n  \"disclaimer\": \"Only mechanically checkable public signals were assessed; all other claims remain self-reported and unverified.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "website not live (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "well-formed linkedin.com/in/ URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "business claims are self-reported and not independently verified"
+        }
+      ],
+      "disclaimer": "Only mechanically checkable public signals were assessed; all other claims remain self-reported and unverified."
+    }
+  ],
+  "published_card": {
+    "startup_name": "VoltRural",
+    "tagline": "Keeps rural micro-enterprises powered through grid failures.",
+    "stage": "early revenue",
+    "problem": "Rural micro-enterprises have no affordable backup when grids fail.",
+    "opportunity_size": "Rural power cuts cost SMEs ~$1.5B/yr in downtime.",
+    "differentiator": "Ex-Bajaj power-electronics team building affordable backup as lithium costs drop.",
+    "solution": "Affordable backup power units for rural micro-enterprises.",
+    "ask": "Funding",
+    "subtheme_tags": [
+      "energy-storage",
+      "sustainable-mobility"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "website not live (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "well-formed linkedin.com/in/ URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "business claims are self-reported and not independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T08:53:30.064893Z"
+  }
+}

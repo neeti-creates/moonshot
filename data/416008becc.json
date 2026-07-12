@@ -1,0 +1,161 @@
+{
+  "id": "416008becc",
+  "status": "published",
+  "created_at": "2026-07-12T08:52:06.802988Z",
+  "raw": {
+    "startup_name": "BioBind",
+    "tagline": "",
+    "founder_names": "Karthik S.",
+    "founder_linkedin": "https://linkedin.com/in/karthiks",
+    "website": "https://biobind.bio",
+    "subtheme_tags": [
+      "materials-science",
+      "waste-to-value"
+    ],
+    "problem": "Mine tailings and red mud are stored as dead liability.",
+    "opportunity_size": "200Mt/yr of red mud globally; India holds ~60Mt.",
+    "why_now": "Circular-material mandates push builders to seek substitutes.",
+    "stage": "prototype",
+    "proof_of_work": "Bricks from 70% red mud pass load tests.",
+    "early_adopters": "Cement / brick makers",
+    "gtm": "Licensed formulations to plants.",
+    "success_scenario": "If green-building codes spread, offtake is large.",
+    "team_edge": "Ceramics researchers ex-NCL.",
+    "looking_for": "seed funding"
+  },
+  "structured": {
+    "tagline": "Turning red mud and mine tailings into green building materials.",
+    "problem": "Mine tailings and red mud are stored as dead liability.",
+    "opportunity_size": "200Mt/yr of red mud globally; India holds ~60Mt.",
+    "differentiator": "Ceramics researchers ex-NCL formulated bricks with 70% red mud passing load tests.",
+    "solution": "Built prototype bricks from 70% red mud passing load tests.",
+    "stage": "prototype",
+    "ask": "Seeking seed funding.",
+    "startup_name": "BioBind",
+    "subtheme_tags": [
+      "materials-science",
+      "waste-to-value"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "Website not live (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed LinkedIn URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Claims are self-reported and not independently verified"
+    }
+  ],
+  "disclaimer": "Only mechanically checkable public signals were assessed; business claims are unverified.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 25.76,
+      "prompt_tokens": 571,
+      "completion_tokens": 1632,
+      "input_summary": "name=BioBind; stage=prototype; subthemes=['materials-science', 'waste-to-value']; problem=Mine tailings and red mud are stored as dead liability.",
+      "raw_output": "{\n  \"tagline\": \"Turning red mud and mine tailings into green building materials.\",\n  \"problem\": \"Mine tailings and red mud are stored as dead liability.\",\n  \"opportunity_size\": \"200Mt/yr of red mud globally; India holds ~60Mt.\",\n  \"differentiator\": \"Ceramics researchers ex-NCL formulated bricks with 70% red mud passing load tests.\",\n  \"solution\": \"Built prototype bricks from 70% red mud passing load tests.\",\n  \"stage\": \"prototype\",\n  \"ask\": \"Seeking seed funding.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 18.0,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/karthiks\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/karthiks"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\"badges\":[{\"label\":\"website\",\"status\":\"unverified\",\"detail\":\"Website not live (URLError)\"},{\"label\":\"linkedin\",\"status\":\"verified\",\"detail\":\"Well-formed LinkedIn URL\"},{\"label\":\"founder identity\",\"status\":\"verified\",\"detail\":\"Founder name present\"},{\"label\":\"self-reported claims\",\"status\":\"unverified\",\"detail\":\"Claims are self-reported and not independently verified\"}],\"disclaimer\":\"Only mechanically checkable public signals were assessed; business claims are unverified.\"}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "Website not live (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed LinkedIn URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Claims are self-reported and not independently verified"
+        }
+      ],
+      "disclaimer": "Only mechanically checkable public signals were assessed; business claims are unverified."
+    }
+  ],
+  "published_card": {
+    "startup_name": "BioBind",
+    "tagline": "Turning red mud and mine tailings into green building materials.",
+    "stage": "prototype",
+    "problem": "Mine tailings and red mud are stored as dead liability.",
+    "opportunity_size": "200Mt/yr of red mud globally; India holds ~60Mt.",
+    "differentiator": "Ceramics researchers ex-NCL formulated bricks with 70% red mud passing load tests.",
+    "solution": "Built prototype bricks from 70% red mud passing load tests.",
+    "ask": "Seeking seed funding.",
+    "subtheme_tags": [
+      "materials-science",
+      "waste-to-value"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "Website not live (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed LinkedIn URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Claims are self-reported and not independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T08:52:50.939608Z"
+  }
+}

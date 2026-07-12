@@ -1,0 +1,161 @@
+{
+  "id": "db07b8d15f",
+  "status": "published",
+  "created_at": "2026-07-12T08:56:32.769579Z",
+  "raw": {
+    "startup_name": "GreenFoundry",
+    "tagline": "",
+    "founder_names": "Arnav Gupta",
+    "founder_linkedin": "https://linkedin.com/in/arnavgupta",
+    "website": "https://greenfoundry.earth",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "carbon-capture"
+    ],
+    "problem": "Foundries burn coke; switching to green reductants is unproven at scale.",
+    "opportunity_size": "India ~10k foundries; decarbonization spend ~$4B.",
+    "why_now": "Buyers now demand scope-3 low-carbon castings.",
+    "stage": "idea",
+    "proof_of_work": "Lab reductant cuts emissions 60% in test.",
+    "early_adopters": "Auto / engineering OEMs",
+    "gtm": "Licensed process to foundries.",
+    "success_scenario": "If OEMs mandate low-carbon, offtake follows.",
+    "team_edge": "Metallurgists ex-Tata.",
+    "looking_for": "co-founder"
+  },
+  "structured": {
+    "tagline": "Enabling foundries to cut emissions 60% with green reductants.",
+    "problem": "Foundries burn coke; switching to green reductants is unproven at scale.",
+    "opportunity_size": "India ~10k foundries; decarbonization spend ~$4B.",
+    "differentiator": "Ex-Tata metallurgists developed lab reductant cutting emissions 60%, licensed to foundries.",
+    "solution": "Lab-proven green reductant cutting emissions 60% for foundries.",
+    "stage": "idea",
+    "ask": "Seeking a co-founder for green foundry reductant licensing.",
+    "startup_name": "GreenFoundry",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "carbon-capture"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "Website not reachable (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed LinkedIn URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Business claims are self-reported and not independently verified."
+    }
+  ],
+  "disclaimer": "Only mechanically checkable public signals were assessed; all other claims remain self-reported and unverified.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 14.7,
+      "prompt_tokens": 580,
+      "completion_tokens": 2000,
+      "input_summary": "name=GreenFoundry; stage=idea; subthemes=['industrial-decarbonization', 'carbon-capture']; problem=Foundries burn coke; switching to green reductants is unproven at scale.",
+      "raw_output": "{\n  \"tagline\": \"Enabling foundries to cut emissions 60% with green reductants.\",\n  \"problem\": \"Foundries burn coke; switching to green reductants is unproven at scale.\",\n  \"opportunity_size\": \"India ~10k foundries; decarbonization spend ~$4B.\",\n  \"differentiator\": \"Ex-Tata metallurgists developed lab reductant cutting emissions 60%, licensed to foundries.\",\n  \"solution\": \"Lab-proven green reductant cutting emissions 60% for foundries.\",\n  \"stage\": \"idea\",\n  \"ask\": \"Seeking a co-founder for green foundry reductant licensing.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 11.5,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/arnavgupta\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/arnavgupta"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"website\", \"status\": \"unverified\", \"detail\": \"Website not reachable (URLError)\"},\n    {\"label\": \"linkedin\", \"status\": \"verified\", \"detail\": \"Well-formed LinkedIn URL\"},\n    {\"label\": \"founder identity\", \"status\": \"verified\", \"detail\": \"Founder name present\"},\n    {\"label\": \"self-reported claims\", \"status\": \"unverified\", \"detail\": \"Business claims are self-reported and not independently verified.\"}\n  ],\n  \"disclaimer\": \"Only mechanically checkable public signals were assessed; all other claims remain self-reported and unverified.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "Website not reachable (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed LinkedIn URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Business claims are self-reported and not independently verified."
+        }
+      ],
+      "disclaimer": "All non-mechanical claims are self-reported and have not been independently verified."
+    }
+  ],
+  "published_card": {
+    "startup_name": "GreenFoundry",
+    "tagline": "Enabling foundries to cut emissions 60% with green reductants.",
+    "stage": "idea",
+    "problem": "Foundries burn coke; switching to green reductants is unproven at scale.",
+    "opportunity_size": "India ~10k foundries; decarbonization spend ~$4B.",
+    "differentiator": "Ex-Tata metallurgists developed lab reductant cutting emissions 60%, licensed to foundries.",
+    "solution": "Lab-proven green reductant cutting emissions 60% for foundries.",
+    "ask": "Seeking a co-founder for green foundry reductant licensing.",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "carbon-capture"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "Website not reachable (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed LinkedIn URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Business claims are self-reported and not independently verified."
+      }
+    ],
+    "published_at": "2026-07-12T09:09:01.180296Z"
+  }
+}

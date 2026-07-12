@@ -1,0 +1,22 @@
+{
+  "voter@test.com": {
+    "email": "voter@test.com",
+    "name": "Test Voter",
+    "created_at": "2026-07-12T09:18:31.397583Z"
+  },
+  "voter2@test.com": {
+    "email": "voter2@test.com",
+    "name": "Voter2",
+    "created_at": "2026-07-12T09:18:43.918957Z"
+  },
+  "ar.neetipatel@gmail.com": {
+    "email": "ar.neetipatel@gmail.com",
+    "name": "Neeti Patel",
+    "created_at": "2026-07-12T09:25:39.884632Z"
+  },
+  "arjunsdeep@gmail.com": {
+    "email": "arjunsdeep@gmail.com",
+    "name": "Arjun",
+    "created_at": "2026-07-12T09:32:42.700441Z"
+  }
+}

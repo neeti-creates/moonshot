@@ -1,0 +1,164 @@
+{
+  "id": "99cc7f0a6b",
+  "status": "published",
+  "created_at": "2026-07-12T08:44:09.522236Z",
+  "raw": {
+    "startup_name": "Mistify AI",
+    "tagline": "",
+    "founder_names": "Kavya Singh",
+    "founder_linkedin": "https://linkedin.com/in/kavyasingh",
+    "website": "https://mistify.ai",
+    "subtheme_tags": [
+      "climate-ai",
+      "agritech-climate"
+    ],
+    "problem": "Farmers cannot see micro-climate risk until crops have already failed.",
+    "opportunity_size": "250M Indian farmers; ~$6B climate-advisory TAM.",
+    "why_now": "Cheap IoT sensors and better models make per-field forecasting viable.",
+    "stage": "pilot",
+    "proof_of_work": "3,000-farm pilot in Maharashtra showing 8% yield lift.",
+    "early_adopters": "Farmer producer orgs",
+    "gtm": "B2B2C via cooperatives and input retailers.",
+    "success_scenario": "If yields rise 8%, retention compounds annually.",
+    "team_edge": "Agronomy + ML team from IIT Kharagpur.",
+    "looking_for": "pilot partners"
+  },
+  "structured": {
+    "tagline": "Farmers foresee micro-climate risk before crop failure, lifting yields.",
+    "problem": "Farmers cannot see micro-climate risk until crops have already failed.",
+    "opportunity_size": "250M Indian farmers; ~$6B climate-advisory TAM.",
+    "differentiator": "Per-field micro-climate forecasts with pilot-proven 8% yield lift by agronomy+ML team.",
+    "solution": "Per-field micro-climate risk forecasting via IoT sensors and ML models.",
+    "stage": "pilot",
+    "ask": "Seeking pilot partners for climate-advisory rollout to farmer orgs.",
+    "startup_name": "Mistify AI",
+    "subtheme_tags": [
+      "climate-ai",
+      "agritech-climate"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "Website not live (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed LinkedIn URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Business claims are self-reported and not independently verified"
+    }
+  ],
+  "disclaimer": "All non-mechanical claims are self-reported and not independently verified by this agent.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 34.67,
+      "prompt_tokens": 591,
+      "completion_tokens": 1776,
+      "input_summary": "name=Mistify AI; stage=pilot; subthemes=['climate-ai', 'agritech-climate']; problem=Farmers cannot see micro-climate risk until crops have already failed.",
+      "raw_output": "{\n  \"tagline\": \"Farmers foresee micro-climate risk before crop failure, lifting yields.\",\n  \"problem\": \"Farmers cannot see micro-climate risk until crops have already failed.\",\n  \"opportunity_size\": \"250M Indian farmers; ~$6B climate-advisory TAM.\",\n  \"differentiator\": \"Per-field micro-climate forecasts with pilot-proven 8% yield lift by agronomy+ML team.\",\n  \"solution\": \"Per-field micro-climate risk forecasting via IoT sensors and ML models.\",\n  \"stage\": \"pilot\",\n  \"ask\": \"Seeking pilot partners for climate-advisory rollout to farmer orgs.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 17.51,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/kavyasingh\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/kavyasingh"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"Website\", \"status\": \"unverified\", \"detail\": \"Website not live (URLError)\"},\n    {\"label\": \"LinkedIn\", \"status\": \"verified\", \"detail\": \"Well-formed LinkedIn URL\"},\n    {\"label\": \"Founder Identity\", \"status\": \"verified\", \"detail\": \"Founder name present\"},\n    {\"label\": \"Self-Reported Claims\", \"status\": \"unverified\", \"detail\": \"Business claims are self-reported and not independently verified\"}\n  ],\n  \"disclaimer\": \"All non-mechanical claims are self-reported and not independently verified by this agent.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "Website not live (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed LinkedIn URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Business claims are self-reported and not independently verified"
+        }
+      ],
+      "disclaimer": "All non-mechanical claims are self-reported and not independently verified by this agent."
+    }
+  ],
+  "published_card": {
+    "startup_name": "Mistify AI",
+    "tagline": "Farmers foresee micro-climate risk before crop failure, lifting yields.",
+    "stage": "pilot",
+    "problem": "Farmers cannot see micro-climate risk until crops have already failed.",
+    "opportunity_size": "250M Indian farmers; ~$6B climate-advisory TAM.",
+    "differentiator": "Per-field micro-climate forecasts with pilot-proven 8% yield lift by agronomy+ML team.",
+    "solution": "Per-field micro-climate risk forecasting via IoT sensors and ML models.",
+    "ask": "Seeking pilot partners for climate-advisory rollout to farmer orgs.",
+    "subtheme_tags": [
+      "climate-ai",
+      "agritech-climate"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "Website not live (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed LinkedIn URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Business claims are self-reported and not independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T08:45:01.803017Z"
+  },
+  "voters": [
+    "arjunsdeep@gmail.com"
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "id": "f566bd4c21",
+  "status": "published",
+  "created_at": "2026-07-12T08:54:04.616013Z",
+  "raw": {
+    "startup_name": "ThermaBridge",
+    "tagline": "",
+    "founder_names": "Leela Menon",
+    "founder_linkedin": "https://linkedin.com/in/leelamenon",
+    "website": "https://thermabridge.tech",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "materials-science"
+    ],
+    "problem": "Data centers reject heat that nearby buildings could use.",
+    "opportunity_size": "India data-center load ~1GW, growing 25%/yr; heat is free fuel.",
+    "why_now": "District-heating pilots now permitted in smart cities.",
+    "stage": "idea",
+    "proof_of_work": "Concept validated with 1 hyperscaler.",
+    "early_adopters": "Smart-city developers",
+    "gtm": "Heat-as-a-service contracts.",
+    "success_scenario": "If energy costs rise, heat has a buyer.",
+    "team_edge": "Thermal systems leads ex-Caterpillar.",
+    "looking_for": "co-founder"
+  },
+  "structured": {
+    "tagline": "Recycling data-center waste heat to warm buildings and cut emissions.",
+    "problem": "Data centers reject heat that nearby buildings could use.",
+    "opportunity_size": "India data-center load ~1GW, growing 25%/yr; heat is free fuel.",
+    "differentiator": "Ex-Caterpillar thermal experts with hyperscaler-validated heat-as-a-service for smart cities.",
+    "solution": "Heat-as-a-service concept linking data centers to building heating.",
+    "stage": "idea",
+    "ask": "Looking for a co-founder.",
+    "startup_name": "ThermaBridge",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "materials-science"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "website not live (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "well-formed linkedin.com/in/ URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Business claims are self-reported and not independently verified."
+    }
+  ],
+  "disclaimer": "Only mechanically checkable public signals were assessed; all other claims remain unverified.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 29.44,
+      "prompt_tokens": 571,
+      "completion_tokens": 2000,
+      "input_summary": "name=ThermaBridge; stage=idea; subthemes=['industrial-decarbonization', 'materials-science']; problem=Data centers reject heat that nearby buildings could use.",
+      "raw_output": "{\n  \"tagline\": \"Recycling data-center waste heat to warm buildings and cut emissions.\",\n  \"problem\": \"Data centers reject heat that nearby buildings could use.\",\n  \"opportunity_size\": \"India data-center load ~1GW, growing 25%/yr; heat is free fuel.\",\n  \"differentiator\": \"Ex-Caterpillar thermal experts with hyperscaler-validated heat-as-a-service for smart cities.\",\n  \"solution\": \"Heat-as-a-service concept linking data centers to building heating.\",\n  \"stage\": \"idea\",\n  \"ask\": \"Looking for a co-founder.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 12.02,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/leelamenon\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/leelamenon"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"website\", \"status\": \"unverified\", \"detail\": \"website not live (URLError)\"},\n    {\"label\": \"linkedin\", \"status\": \"verified\", \"detail\": \"well-formed linkedin.com/in/ URL\"},\n    {\"label\": \"founder identity\", \"status\": \"verified\", \"detail\": \"founder name present\"},\n    {\"label\": \"self-reported claims\", \"status\": \"unverified\", \"detail\": \"Business claims are self-reported and not independently verified.\"}\n  ],\n  \"disclaimer\": \"Only mechanically checkable public signals were assessed; all other claims remain unverified.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "website not live (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "well-formed linkedin.com/in/ URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Business claims are self-reported and not independently verified."
+        }
+      ],
+      "disclaimer": "All non-mechanical signals are self-reported and not independently verified by this agent."
+    }
+  ],
+  "published_card": {
+    "startup_name": "ThermaBridge",
+    "tagline": "Recycling data-center waste heat to warm buildings and cut emissions.",
+    "stage": "idea",
+    "problem": "Data centers reject heat that nearby buildings could use.",
+    "opportunity_size": "India data-center load ~1GW, growing 25%/yr; heat is free fuel.",
+    "differentiator": "Ex-Caterpillar thermal experts with hyperscaler-validated heat-as-a-service for smart cities.",
+    "solution": "Heat-as-a-service concept linking data centers to building heating.",
+    "ask": "Looking for a co-founder.",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "materials-science"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "website not live (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "well-formed linkedin.com/in/ URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Business claims are self-reported and not independently verified."
+      }
+    ],
+    "published_at": "2026-07-12T09:08:38.446605Z"
+  },
+  "voters": [
+    "arjunsdeep@gmail.com"
+  ]
+}

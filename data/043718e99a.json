@@ -1,0 +1,161 @@
+{
+  "id": "043718e99a",
+  "status": "published",
+  "created_at": "2026-07-12T08:50:43.799832Z",
+  "raw": {
+    "startup_name": "GridWeave",
+    "tagline": "",
+    "founder_names": "Vikram Reddy",
+    "founder_linkedin": "https://linkedin.com/in/vikramreddy",
+    "website": "https://gridweave.energy",
+    "subtheme_tags": [
+      "grid-tech",
+      "energy-storage"
+    ],
+    "problem": "Rooftop solar owners cannot trade surplus without a coordination layer.",
+    "opportunity_size": "India targets 300GW rooftop; peer trading market ~$3B.",
+    "why_now": "Net-metering reforms enable localized trading.",
+    "stage": "idea",
+    "proof_of_work": "Simulation validated against DISCOM data.",
+    "early_adopters": "Resident welfare assns",
+    "gtm": "Marketplace with smart-meter APIs.",
+    "success_scenario": "If regulations permit P2P, demand is instant.",
+    "team_edge": "Ex-grid-operator + fintech builder.",
+    "looking_for": "co-founder"
+  },
+  "structured": {
+    "tagline": "Rooftop solar owners trade surplus energy via a coordination layer.",
+    "problem": "Rooftop solar owners cannot trade surplus without a coordination layer.",
+    "opportunity_size": "India targets 300GW rooftop; peer trading market ~$3B.",
+    "differentiator": "Ex-grid-operator and fintech builder with DISCOM-validated simulation.",
+    "solution": "Built simulation of peer-trading marketplace with smart-meter APIs.",
+    "stage": "idea",
+    "ask": "Looking for a co-founder.",
+    "startup_name": "GridWeave",
+    "subtheme_tags": [
+      "grid-tech",
+      "energy-storage"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "Website not live (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed linkedin.com/in/ URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Business claims are self-reported and NOT independently verified"
+    }
+  ],
+  "disclaimer": "Only mechanically checkable public signals were assessed and business claims remain self-reported and unverified.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 30.62,
+      "prompt_tokens": 569,
+      "completion_tokens": 1783,
+      "input_summary": "name=GridWeave; stage=idea; subthemes=['grid-tech', 'energy-storage']; problem=Rooftop solar owners cannot trade surplus without a coordination layer.",
+      "raw_output": "{\n  \"tagline\": \"Rooftop solar owners trade surplus energy via a coordination layer.\",\n  \"problem\": \"Rooftop solar owners cannot trade surplus without a coordination layer.\",\n  \"opportunity_size\": \"India targets 300GW rooftop; peer trading market ~$3B.\",\n  \"differentiator\": \"Ex-grid-operator and fintech builder with DISCOM-validated simulation.\",\n  \"solution\": \"Built simulation of peer-trading marketplace with smart-meter APIs.\",\n  \"stage\": \"idea\",\n  \"ask\": \"Looking for a co-founder.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 20.33,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/vikramreddy\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/vikramreddy"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\"badges\":[{\"label\":\"website\",\"status\":\"unverified\",\"detail\":\"Website not live (URLError)\"},{\"label\":\"linkedin\",\"status\":\"verified\",\"detail\":\"Well-formed linkedin.com/in/ URL\"},{\"label\":\"founder identity\",\"status\":\"verified\",\"detail\":\"Founder name present\"},{\"label\":\"self-reported claims\",\"status\":\"unverified\",\"detail\":\"Business claims are self-reported and NOT independently verified\"}],\"disclaimer\":\"Only mechanically checkable public signals were assessed and business claims remain self-reported and unverified.\"}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "Website not live (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed linkedin.com/in/ URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Business claims are self-reported and NOT independently verified"
+        }
+      ],
+      "disclaimer": "Only mechanically checkable public signals were assessed and business claims remain self-reported and unverified."
+    }
+  ],
+  "published_card": {
+    "startup_name": "GridWeave",
+    "tagline": "Rooftop solar owners trade surplus energy via a coordination layer.",
+    "stage": "idea",
+    "problem": "Rooftop solar owners cannot trade surplus without a coordination layer.",
+    "opportunity_size": "India targets 300GW rooftop; peer trading market ~$3B.",
+    "differentiator": "Ex-grid-operator and fintech builder with DISCOM-validated simulation.",
+    "solution": "Built simulation of peer-trading marketplace with smart-meter APIs.",
+    "ask": "Looking for a co-founder.",
+    "subtheme_tags": [
+      "grid-tech",
+      "energy-storage"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "Website not live (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed linkedin.com/in/ URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Business claims are self-reported and NOT independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T08:51:34.805906Z"
+  }
+}

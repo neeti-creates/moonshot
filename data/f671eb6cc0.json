@@ -1,0 +1,160 @@
+{
+  "id": "f671eb6cc0",
+  "status": "published",
+  "created_at": "2026-07-12T08:42:12.706709Z",
+  "raw": {
+    "startup_name": "Recyclaro",
+    "tagline": "",
+    "founder_names": "Neeti Patel",
+    "founder_linkedin": "https://linkedin.com/in/neetipatel",
+    "website": "https://recyclaro.com",
+    "subtheme_tags": [
+      "waste-to-value",
+      "circular-economy"
+    ],
+    "problem": "Small Indian cities have no economic path to recycle plastic waste.",
+    "opportunity_size": "12M tonnes/yr of plastic waste in India; ~$40B addressable recovery market.",
+    "why_now": "EPR rules now mandate producer takeback, creating guaranteed feedstock.",
+    "stage": "pilot",
+    "proof_of_work": "2 municipal pilots in Pune processing 3t/day.",
+    "early_adopters": "Municipal bodies / ULBs",
+    "gtm": "Equipment-as-a-service to urban local bodies.",
+    "success_scenario": "If EPR enforcement tightens, demand becomes mandatory.",
+    "team_edge": "Deep municipal relationships and local logistics know-how.",
+    "looking_for": "pilot partners"
+  },
+  "structured": {
+    "tagline": "Small Indian cities gain a profitable path to recycle plastic waste.",
+    "problem": "Small Indian cities have no economic path to recycle plastic waste.",
+    "opportunity_size": "12M tonnes/yr of plastic waste in India; ~$40B addressable recovery market.",
+    "differentiator": "EaaS model backed by deep municipal relationships and local logistics expertise.",
+    "solution": "Equipment-as-a-service plastic recycling pilots in small cities.",
+    "stage": "pilot",
+    "ask": "Seeking pilot partners among urban local bodies.",
+    "startup_name": "Recyclaro",
+    "subtheme_tags": [
+      "waste-to-value",
+      "circular-economy"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "verified",
+      "detail": "Website live with HTTP 200"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed linkedin.com/in/ URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Business claims are self-reported and NOT independently verified"
+    }
+  ],
+  "disclaimer": "Only mechanically checkable public signals were verified; all business claims remain self-reported.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 24.54,
+      "prompt_tokens": 588,
+      "completion_tokens": 1618,
+      "input_summary": "name=Recyclaro; stage=pilot; subthemes=['waste-to-value', 'circular-economy']; problem=Small Indian cities have no economic path to recycle plastic waste.",
+      "raw_output": "{\n  \"tagline\": \"Small Indian cities gain a profitable path to recycle plastic waste.\",\n  \"problem\": \"Small Indian cities have no economic path to recycle plastic waste.\",\n  \"opportunity_size\": \"12M tonnes/yr of plastic waste in India; ~$40B addressable recovery market.\",\n  \"differentiator\": \"EaaS model backed by deep municipal relationships and local logistics expertise.\",\n  \"solution\": \"Equipment-as-a-service plastic recycling pilots in small cities.\",\n  \"stage\": \"pilot\",\n  \"ask\": \"Seeking pilot partners among urban local bodies.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 17.57,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/neetipatel\"}, \"website_live\": {\"checked\": true, \"status\": 200, \"live\": true}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/neetipatel"
+        },
+        "website_live": {
+          "checked": true,
+          "status": 200,
+          "live": true
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"website\", \"status\": \"verified\", \"detail\": \"Website live with HTTP 200\"},\n    {\"label\": \"linkedin\", \"status\": \"verified\", \"detail\": \"Well-formed linkedin.com/in/ URL\"},\n    {\"label\": \"founder identity\", \"status\": \"verified\", \"detail\": \"Founder name present\"},\n    {\"label\": \"self-reported claims\", \"status\": \"unverified\", \"detail\": \"Business claims are self-reported and NOT independently verified\"}\n  ],\n  \"disclaimer\": \"Only mechanically checkable public signals were verified; all business claims remain self-reported.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "verified",
+          "detail": "Website live with HTTP 200"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed linkedin.com/in/ URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Business claims are self-reported and NOT independently verified"
+        }
+      ],
+      "disclaimer": "Only mechanically checkable public signals were verified; all business claims remain self-reported."
+    }
+  ],
+  "published_card": {
+    "startup_name": "Recyclaro",
+    "tagline": "Small Indian cities gain a profitable path to recycle plastic waste.",
+    "stage": "pilot",
+    "problem": "Small Indian cities have no economic path to recycle plastic waste.",
+    "opportunity_size": "12M tonnes/yr of plastic waste in India; ~$40B addressable recovery market.",
+    "differentiator": "EaaS model backed by deep municipal relationships and local logistics expertise.",
+    "solution": "Equipment-as-a-service plastic recycling pilots in small cities.",
+    "ask": "Seeking pilot partners among urban local bodies.",
+    "subtheme_tags": [
+      "waste-to-value",
+      "circular-economy"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "verified",
+        "detail": "Website live with HTTP 200"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed linkedin.com/in/ URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Business claims are self-reported and NOT independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T08:43:27.101039Z"
+  }
+}

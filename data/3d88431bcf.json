@@ -1,0 +1,161 @@
+{
+  "id": "3d88431bcf",
+  "status": "published",
+  "created_at": "2026-07-12T08:45:01.805049Z",
+  "raw": {
+    "startup_name": "Datoms",
+    "tagline": "",
+    "founder_names": "Rohan Mehta",
+    "founder_linkedin": "https://linkedin.com/in/rohanmehta",
+    "website": "https://datoms.io",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "grid-tech"
+    ],
+    "problem": "Factory operators cannot see where energy is wasted in real time.",
+    "opportunity_size": "Indian industrial energy spend ~$120B/yr; 10-15% is recoverable.",
+    "why_now": "Rising grid tariffs force manufacturers to manage demand actively.",
+    "stage": "early revenue",
+    "proof_of_work": "12 factories live, $180k ARR.",
+    "early_adopters": "Mid-size manufacturers",
+    "gtm": "SaaS + edge sensors, monthly subscription.",
+    "success_scenario": "If energy prices keep rising, ROI is immediate.",
+    "team_edge": "Ex-Schneider energy engineers.",
+    "looking_for": "funding"
+  },
+  "structured": {
+    "tagline": "Factories see and recover wasted energy in real time.",
+    "problem": "Factory operators cannot see where energy is wasted in real time.",
+    "opportunity_size": "Indian industrial energy spend ~$120B/yr; 10-15% is recoverable.",
+    "differentiator": "Ex-Schneider energy engineers deploying SaaS + edge sensors across 12 factories.",
+    "solution": "SaaS plus edge sensors for real-time factory energy monitoring.",
+    "stage": "early revenue",
+    "ask": "Seeking funding.",
+    "startup_name": "Datoms",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "grid-tech"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "verified",
+      "detail": "Website live with HTTP 200"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed linkedin.com/in/ URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name is present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Business claims are self-reported and NOT independently verified."
+    }
+  ],
+  "disclaimer": "Only mechanically checkable public signals were verified; all business claims remain self-reported and unverified.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 27.82,
+      "prompt_tokens": 573,
+      "completion_tokens": 1555,
+      "input_summary": "name=Datoms; stage=early revenue; subthemes=['industrial-decarbonization', 'grid-tech']; problem=Factory operators cannot see where energy is wasted in real time.",
+      "raw_output": "{\n  \"tagline\": \"Factories see and recover wasted energy in real time.\",\n  \"problem\": \"Factory operators cannot see where energy is wasted in real time.\",\n  \"opportunity_size\": \"Indian industrial energy spend ~$120B/yr; 10-15% is recoverable.\",\n  \"differentiator\": \"Ex-Schneider energy engineers deploying SaaS + edge sensors across 12 factories.\",\n  \"solution\": \"SaaS plus edge sensors for real-time factory energy monitoring.\",\n  \"stage\": \"early revenue\",\n  \"ask\": \"Seeking funding.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 7.31,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/rohanmehta\"}, \"website_live\": {\"checked\": true, \"status\": 200, \"live\": true}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/rohanmehta"
+        },
+        "website_live": {
+          "checked": true,
+          "status": 200,
+          "live": true
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"website\", \"status\": \"verified\", \"detail\": \"Website live with HTTP 200\"},\n    {\"label\": \"linkedin\", \"status\": \"verified\", \"detail\": \"Well-formed linkedin.com/in/ URL\"},\n    {\"label\": \"founder identity\", \"status\": \"verified\", \"detail\": \"Founder name is present\"},\n    {\"label\": \"self-reported claims\", \"status\": \"unverified\", \"detail\": \"Business claims are self-reported and NOT independently verified.\"}\n  ],\n  \"disclaimer\": \"Only mechanically checkable public signals were verified; all business claims remain self-reported and unverified.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "verified",
+          "detail": "Website live with HTTP 200"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed linkedin.com/in/ URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name is present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Business claims are self-reported and NOT independently verified."
+        }
+      ],
+      "disclaimer": "Only mechanically checkable public signals were verified; all business claims remain self-reported and unverified."
+    }
+  ],
+  "published_card": {
+    "startup_name": "Datoms",
+    "tagline": "Factories see and recover wasted energy in real time.",
+    "stage": "early revenue",
+    "problem": "Factory operators cannot see where energy is wasted in real time.",
+    "opportunity_size": "Indian industrial energy spend ~$120B/yr; 10-15% is recoverable.",
+    "differentiator": "Ex-Schneider energy engineers deploying SaaS + edge sensors across 12 factories.",
+    "solution": "SaaS plus edge sensors for real-time factory energy monitoring.",
+    "ask": "Seeking funding.",
+    "subtheme_tags": [
+      "industrial-decarbonization",
+      "grid-tech"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "verified",
+        "detail": "Website live with HTTP 200"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed linkedin.com/in/ URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name is present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Business claims are self-reported and NOT independently verified."
+      }
+    ],
+    "published_at": "2026-07-12T08:45:37.428605Z"
+  },
+  "voters": []
+}

@@ -1,0 +1,165 @@
+{
+  "id": "96b1b13eeb",
+  "status": "published",
+  "created_at": "2026-07-12T08:58:32.426057Z",
+  "raw": {
+    "startup_name": "AgriChain",
+    "tagline": "",
+    "founder_names": "Ritu Agarwal",
+    "founder_linkedin": "https://linkedin.com/in/rituagarwal",
+    "website": "https://agrichain.farm",
+    "subtheme_tags": [
+      "agritech-climate",
+      "circular-economy"
+    ],
+    "problem": "Post-harvest loss is invisible because supply chains are opaque.",
+    "opportunity_size": "India loses ~$13B/yr post-harvest.",
+    "why_now": "Affordable IoT + UPI rails enable traceable logistics.",
+    "stage": "pilot",
+    "proof_of_work": "Tracked 8k tonnes across 3 states.",
+    "early_adopters": "Exporters / FPOs",
+    "gtm": "SaaS + device leasing.",
+    "success_scenario": "If traceability becomes export-required, adoption is mandatory.",
+    "team_edge": "Supply-chain leads ex-Ninjakart.",
+    "looking_for": "pilot partners"
+  },
+  "structured": {
+    "tagline": "Make post-harvest loss visible through traceable agri supply chains.",
+    "problem": "Post-harvest loss is invisible because supply chains are opaque.",
+    "opportunity_size": "India loses ~$13B/yr post-harvest.",
+    "differentiator": "Affordable IoT + UPI rails enable traceable logistics (team ex-Ninjakart).",
+    "solution": "Built SaaS + leased IoT devices for traceable post-harvest logistics.",
+    "stage": "pilot",
+    "ask": "Pilot partners for post-harvest traceability deployment.",
+    "startup_name": "AgriChain",
+    "subtheme_tags": [
+      "agritech-climate",
+      "circular-economy"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "Website not live (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "Well-formed linkedin.com/in/ URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "Founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "Claims are self-reported and not independently verified"
+    }
+  ],
+  "disclaimer": "All non-mechanical business claims remain self-reported and were not independently verified by this agent.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 25.31,
+      "prompt_tokens": 578,
+      "completion_tokens": 1657,
+      "input_summary": "name=AgriChain; stage=pilot; subthemes=['agritech-climate', 'circular-economy']; problem=Post-harvest loss is invisible because supply chains are opaque.",
+      "raw_output": "{\n  \"tagline\": \"Make post-harvest loss visible through traceable agri supply chains.\",\n  \"problem\": \"Post-harvest loss is invisible because supply chains are opaque.\",\n  \"opportunity_size\": \"India loses ~$13B/yr post-harvest.\",\n  \"differentiator\": \"Affordable IoT + UPI rails enable traceable logistics (team ex-Ninjakart).\",\n  \"solution\": \"Built SaaS + leased IoT devices for traceable post-harvest logistics.\",\n  \"stage\": \"pilot\",\n  \"ask\": \"Pilot partners for post-harvest traceability deployment.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 8.18,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/rituagarwal\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/rituagarwal"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"website\", \"status\": \"unverified\", \"detail\": \"Website not live (URLError)\"},\n    {\"label\": \"linkedin\", \"status\": \"verified\", \"detail\": \"Well-formed linkedin.com/in/ URL\"},\n    {\"label\": \"founder identity\", \"status\": \"verified\", \"detail\": \"Founder name present\"},\n    {\"label\": \"self-reported claims\", \"status\": \"unverified\", \"detail\": \"Claims are self-reported and not independently verified\"}\n  ],\n  \"disclaimer\": \"All non-mechanical business claims remain self-reported and were not independently verified by this agent.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "Website not live (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "Well-formed linkedin.com/in/ URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "Founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "Claims are self-reported and not independently verified"
+        }
+      ],
+      "disclaimer": "All non-mechanical business claims remain self-reported and were not independently verified by this agent."
+    }
+  ],
+  "published_card": {
+    "startup_name": "AgriChain",
+    "tagline": "Make post-harvest loss visible through traceable agri supply chains.",
+    "stage": "pilot",
+    "problem": "Post-harvest loss is invisible because supply chains are opaque.",
+    "opportunity_size": "India loses ~$13B/yr post-harvest.",
+    "differentiator": "Affordable IoT + UPI rails enable traceable logistics (team ex-Ninjakart).",
+    "solution": "Built SaaS + leased IoT devices for traceable post-harvest logistics.",
+    "ask": "Pilot partners for post-harvest traceability deployment.",
+    "subtheme_tags": [
+      "agritech-climate",
+      "circular-economy"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "Website not live (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "Well-formed linkedin.com/in/ URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "Founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "Claims are self-reported and not independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T09:00:22.423269Z"
+  },
+  "voters": [
+    "ar.neetipatel@gmail.com",
+    "arjunsdeep@gmail.com"
+  ]
+}

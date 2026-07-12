@@ -1,0 +1,163 @@
+"""JSON-file storage for MoonshotHunt submissions, drafts, and published cards."""
+import os, json, threading, uuid, datetime
+
+_lock = threading.Lock()
+DATA_DIR = None
+INDEX_PATH = None
+
+
+def init(d):
+    global DATA_DIR, INDEX_PATH
+    DATA_DIR = d
+    INDEX_PATH = os.path.join(d, "index.json")
+    os.makedirs(DATA_DIR, exist_ok=True)
+    if not os.path.exists(INDEX_PATH):
+        json.dump({}, open(INDEX_PATH, "w"))
+
+
+def _read_index():
+    return json.load(open(INDEX_PATH))
+
+
+def _write_index(d):
+    json.dump(d, open(INDEX_PATH, "w"), indent=2)
+
+
+def now_iso():
+    return datetime.datetime.utcnow().isoformat() + "Z"
+
+
+def create_submission(raw):
+    sid = uuid.uuid4().hex[:10]
+    rec = {"id": sid, "status": "processing",
+           "created_at": now_iso(), "raw": raw}
+    with _lock:
+        json.dump(rec, open(os.path.join(DATA_DIR, sid + ".json"), "w"), indent=2)
+        idx = _read_index()
+        idx[sid] = {"id": sid, "status": "processing",
+                    "name": raw.get("startup_name", ""), "created_at": rec["created_at"]}
+        _write_index(idx)
+    return rec
+
+
+def get(sid):
+    p = os.path.join(DATA_DIR, sid + ".json")
+    return json.load(open(p)) if os.path.exists(p) else None
+
+
+def update(sid, patch):
+    with _lock:
+        rec = get(sid) or {}
+        rec.update(patch)
+        json.dump(rec, open(os.path.join(DATA_DIR, sid + ".json"), "w"), indent=2)
+        idx = _read_index()
+        if sid in idx:
+            name = (rec.get("raw", {}).get("startup_name", "")
+                    or rec.get("structured", {}).get("startup_name", "")
+                    or rec.get("card", {}).get("startup_name", ""))
+            idx[sid].update({"status": rec.get("status"), "name": name})
+            _write_index(idx)
+
+
+def published():
+    idx = _read_index()
+    return [s for s in idx.values() if s.get("status") == "published"]
+
+
+def all_statuses():
+    return list(_read_index().values())
+
+
+# --- Upvotes + lightweight identification (no password, no verification email) ---
+USERS_PATH = None
+
+
+def _users_path():
+    global USERS_PATH
+    if USERS_PATH is None:
+        USERS_PATH = os.path.join(DATA_DIR, "users.json")
+    return USERS_PATH
+
+
+def identify(name, email):
+    """Record a lightweight identified user (name + email only). Returns user dict."""
+    email = (email or "").strip().lower()
+    name = (name or "").strip()
+    p = _users_path()
+    users = json.load(open(p)) if os.path.exists(p) else {}
+    if email in users:
+        # refresh name if provided
+        if name:
+            users[email]["name"] = name
+    else:
+        users[email] = {"email": email, "name": name, "created_at": now_iso()}
+    json.dump(users, open(p, "w"), indent=2)
+    return users[email]
+
+
+def get_user(email):
+    email = (email or "").strip().lower()
+    p = _users_path()
+    users = json.load(open(p)) if os.path.exists(p) else {}
+    return users.get(email)
+
+
+def vote(sid, email):
+    """Cast one upvote per identified user per startup. Returns (ok, count, reason)."""
+    email = (email or "").strip().lower()
+    rec = get(sid)
+    if not rec:
+        return False, 0, "not_found"
+    voters = rec.setdefault("voters", [])
+    if email in voters:
+        return False, len(voters), "already_voted"
+    voters.append(email)
+    update(sid, {"voters": voters})
+    return True, len(voters), "ok"
+
+
+def unvote(sid, email):
+    email = (email or "").strip().lower()
+    rec = get(sid)
+    if not rec:
+        return 0
+    voters = rec.get("voters", [])
+    if email in voters:
+        voters.remove(email)
+        update(sid, {"voters": voters})
+    return len(voters)
+
+
+def vote_count(sid):
+    rec = get(sid)
+    return len(rec.get("voters", [])) if rec else 0
+
+
+# --- Visit / unique-visitor counter (same cookie approach as voting) ---
+STATS_PATH = None
+
+
+def _stats_path():
+    global STATS_PATH
+    if STATS_PATH is None:
+        STATS_PATH = os.path.join(DATA_DIR, "stats.json")
+    return STATS_PATH
+
+
+def record_visit(visitor_id):
+    """Bump total visits; track unique visitors by their session id. Returns stats."""
+    p = _stats_path()
+    with _lock:
+        s = json.load(open(p)) if os.path.exists(p) else {"visits": 0, "uniques": []}
+        s["visits"] = s.get("visits", 0) + 1
+        if visitor_id and visitor_id not in s["uniques"]:
+            s["uniques"].append(visitor_id)
+        json.dump(s, open(p, "w"), indent=2)
+    return {"visits": s["visits"], "uniques": len(s["uniques"])}
+
+
+def get_stats():
+    p = _stats_path()
+    s = json.load(open(p)) if os.path.exists(p) else {"visits": 0, "uniques": []}
+    return {"visits": s.get("visits", 0), "uniques": len(s.get("uniques", []))}
+

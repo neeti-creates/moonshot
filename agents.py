@@ -1,0 +1,265 @@
+"""
+MoonshotHunt agents. Real LLM calls to the Nous Research inference endpoint
+(reusing the Hermes agent_key from ~/.hermes/auth.json) plus real network checks.
+
+VC Agent  -> structures raw Section-5 submission into Layer-1 card one-liners.
+Verifier  -> runs checkable network/liveness checks, then an LLM turns the
+             results into honest, lightweight verification badges.
+"""
+import os, json, time, urllib.request, urllib.error
+
+# --- Live LLM endpoint (same one Hermes uses) -------------------------------
+# Prefer env vars (for cloud deploy e.g. Render); fall back to local Hermes auth.json.
+def _load_creds():
+    base = os.environ.get("NOUS_BASE_URL")
+    key = os.environ.get("NOUS_API_KEY")
+    if key:
+        return (base or "https://inference-api.nousresearch.com/v1"), key
+    try:
+        auth = json.load(open(os.path.expanduser("~/.hermes/auth.json")))
+        nous = auth["providers"]["nous"]
+        return ((nous.get("inference_base_url") or "https://inference-api.nousresearch.com/v1"),
+                nous.get("agent_key") or nous.get("access_token"))
+    except Exception:
+        return "https://inference-api.nousresearch.com/v1", None
+
+
+BASE_URL, API_KEY = _load_creds()
+BASE_URL = BASE_URL.rstrip("/")
+DEF_MODEL = os.environ.get("MOONSHOT_MODEL", "tencent/hy3:free")
+
+
+def llm(messages, model=DEF_MODEL, json_mode=False, max_tokens=900, temperature=0.2):
+    import urllib.error as _ue
+    last_err = None
+    for attempt in range(5):
+        body = {"model": model, "messages": messages,
+                "max_tokens": max_tokens, "temperature": temperature}
+        req = urllib.request.Request(
+            BASE_URL + "/chat/completions",
+            data=json.dumps(body).encode(),
+            headers={"Content-Type": "application/json",
+                     "Authorization": f"Bearer {API_KEY}"})
+        t0 = time.time()
+        try:
+            r = urllib.request.urlopen(req, timeout=120)
+            data = json.loads(r.read().decode())
+        except _ue.HTTPError as e:
+            last_err = f"HTTP {e.code}: {e.read().decode()[:160]}"
+            time.sleep(3 + attempt * 3)
+            continue
+        except Exception as e:
+            last_err = f"{type(e).__name__}: {str(e)[:120]}"
+            time.sleep(3 + attempt * 3)
+            continue
+        content = (data.get("choices") or [{}])[0].get("message", {}).get("content")
+        if content is None:
+            last_err = f"empty completion (finish={(data.get('choices') or [{}])[0].get('finish_reason')})"
+            time.sleep(2 + attempt * 2)
+            continue
+        usage = data.get("usage", {})
+        return {"content": content,
+                "model": data.get("model", model),
+                "latency": round(time.time() - t0, 2),
+                "prompt_tokens": usage.get("prompt_tokens"),
+                "completion_tokens": usage.get("completion_tokens")}
+    return {"error": last_err or "all attempts failed",
+            "model": model, "latency": None}
+
+
+def _safe_json(text):
+    """Extract the first JSON object from an LLM reply, tolerating prose/fences."""
+    if not text:
+        return {}
+    if isinstance(text, dict):
+        return text
+    import re
+    # strip ```json ... ``` fences if present
+    fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
+    if fenced:
+        try:
+            return json.loads(fenced.group(1))
+        except Exception:
+            pass
+    s = text.find("{")
+    e = text.rfind("}")
+    if s != -1 and e != -1 and e > s:
+        try:
+            return json.loads(text[s:e + 1])
+        except Exception:
+            pass
+    return {"_raw": text}
+
+
+# ---------------------------------------------------------------------------
+# VC Agent — synthesis / structuring (NOT due diligence)
+# ---------------------------------------------------------------------------
+VC_SYSTEM = (
+    "You are the MoonshotHunt VC Agent. You read a founder's raw, messy "
+    "submission and render it into crisp, VC-legible one-liners for a discovery "
+    "card. This is STRUCTURING / SYNTHESIS, never investment due diligence.\n\n"
+    "Rules:\n"
+    "1. Read the SPECIFIC input. Do not use generic filler ('a promising startup'). "
+    "Each line must reflect this founder's actual words.\n"
+    "2. Condense, don't invent. If the submission does not support a field, write "
+    "a short honest 'Not specified by founder' rather than fabricating.\n"
+    "3. Outcome-framed language where possible (what changes in the world), not "
+    "feature-listing.\n"
+    "4. Respect the per-field length guidance.\n\n"
+    "Return STRICT JSON with exactly these keys:\n"
+    "  tagline        : one line, outcome-framed (keep founder's if good, else rewrite). <= 14 words\n"
+    "  problem        : one line, the problem in the founder's own domain. <= 22 words\n"
+    "  opportunity_size: one line, the scale/number claim + its basis. <= 22 words\n"
+    "  differentiator : one line, what makes this distinct. <= 22 words\n"
+    "  solution       : one line, what they built. <= 18 words\n"
+    "  stage          : exactly one of idea|prototype|pilot|early revenue|scaling\n"
+    "  ask            : one line, what they want (funding/partners/pilots/visibility). <= 18 words\n"
+)
+
+
+def _call_with_retry(build_messages, max_tokens, n=3):
+    """Run an LLM call, retrying on empty/truncated completion (free-model flakiness)."""
+    last = None
+    for attempt in range(n):
+        out = llm(build_messages(), max_tokens=max_tokens)
+        if "error" not in out and out.get("content"):
+            return out
+        last = out
+    return last or {"error": "all attempts returned empty"}
+
+
+def run_vc_agent(raw):
+    def msgs():
+        return [{"role": "system", "content": VC_SYSTEM},
+                {"role": "user", "content":
+                 ("Return ONLY a JSON object (no markdown, no commentary) for this submission:\n"
+                  + json.dumps(raw, indent=2, ensure_ascii=False))}]
+    out = _call_with_retry(msgs, max_tokens=2000)
+    if "error" in out or not out.get("content"):
+        return {"ok": False, "error": out.get("error", "empty"),
+                "trace": out, "structured": {}}
+    structured = _safe_json(out["content"])
+    structured["startup_name"] = raw.get("startup_name", "")
+    structured["subtheme_tags"] = raw.get("subtheme_tags", [])
+    return {"ok": True, "structured": structured, "llm": out}
+
+
+# ---------------------------------------------------------------------------
+# Verifier Agent — lightweight, checkable signals only
+# ---------------------------------------------------------------------------
+def _http_check(url, timeout=8):
+    if not url:
+        return {"checked": False, "reason": "not provided"}
+    try:
+        req = urllib.request.Request(url, method="HEAD",
+                                     headers={"User-Agent": "MoonshotHunt-Verifier/1.0"})
+        r = urllib.request.urlopen(req, timeout=timeout)
+        return {"checked": True, "status": r.status, "live": 200 <= r.status < 400}
+    except urllib.error.HTTPError as e:
+        return {"checked": True, "status": e.code, "live": 200 <= e.code < 400}
+    except Exception as e:
+        return {"checked": True, "status": None, "live": False, "error": type(e).__name__}
+
+
+def _linkedin_valid(url):
+    if not url:
+        return False, "no URL"
+    u = url.lower()
+    if "linkedin.com/in/" not in u:
+        return False, "not a linkedin.com/in/ profile URL"
+    slug = u.split("linkedin.com/in/")[1].strip("/").split("?")[0]
+    if not slug or " " in slug:
+        return False, "profile slug missing or malformed"
+    return True, "well-formed linkedin.com/in/ URL"
+
+
+def run_verifier(raw, structured):
+    linkedin_ok, linkedin_note = _linkedin_valid(raw.get("founder_linkedin", ""))
+    web = _http_check(raw.get("website", ""))
+
+    checks = {
+        "linkedin_format": {"ok": linkedin_ok, "note": linkedin_note,
+                             "url": raw.get("founder_linkedin", "")},
+        "website_live": web,
+        "founder_name": {"present": bool((raw.get("founder_names") or "").strip())},
+    }
+
+    sys_p = (
+        "You are the MoonshotHunt Verifier Agent. You ONLY assess what is "
+        "mechanically checkable from public signals. You do NOT verify business "
+        "claims (market size, traction, financials) — those stay self-reported.\n\n"
+        "From the check results produce honest BADGES. Each badge is "
+        "{\"label\": short text, \"status\": \"verified\"|\"unverified\", \"detail\": one line}.\n"
+        "RULES:\n"
+        "- All labels MUST be LOWERCASE, no spaces where possible (use e.g. "
+        "'website', 'linkedin', 'founder identity', 'self-reported claims').\n"
+        "- website: 'verified' only if live (HTTP 2xx/3xx), else 'unverified'.\n"
+        "- linkedin: 'verified' if URL well-formed, else 'unverified'.\n"
+        "- founder identity: 'verified' if a founder name is present, else 'unverified'.\n"
+        "Always add one 'unverified' badge labeled 'self-reported claims' stating claims "
+        "are self-reported and NOT independently verified. Never overstate.\n\n"
+        "Return ONLY JSON: {\"badges\": [ ... ], \"disclaimer\": \"one sentence\"}"
+    )
+    def msgs():
+        return [{"role": "system", "content": sys_p},
+                {"role": "user", "content":
+                 ("Return ONLY a JSON object (no markdown, no commentary):\n"
+                  + json.dumps(checks, indent=2, ensure_ascii=False))}]
+    out = _call_with_retry(msgs, max_tokens=1800)
+    if "error" in out:
+        badges = [{"label": "Verifier unavailable", "status": "unverified",
+                   "detail": out.get("error", "error")}]
+        disclaimer = "Automated lightweight check only — not due diligence."
+    else:
+        parsed = _safe_json(out["content"])
+        badges = parsed.get("badges", [])
+        disclaimer = parsed.get("disclaimer",
+                                "Lightweight automated check only — not due diligence.")
+    return {"checks": checks, "badges": badges,
+            "disclaimer": disclaimer, "llm": out}
+
+
+# ---------------------------------------------------------------------------
+# Pipeline orchestration
+# ---------------------------------------------------------------------------
+def run_pipeline(sub):
+    raw = sub["raw"]
+    trace = []
+
+    vc = run_vc_agent(raw)
+    trace.append({
+        "agent": "VC Agent (Synthesis)",
+        "role": "Structures raw submission into Layer-1 card fields",
+        "model": vc.get("llm", {}).get("model"),
+        "latency": vc.get("llm", {}).get("latency"),
+        "prompt_tokens": vc.get("llm", {}).get("prompt_tokens"),
+        "completion_tokens": vc.get("llm", {}).get("completion_tokens"),
+        "input_summary": _summarize(raw),
+        "raw_output": vc.get("llm", {}).get("content"),
+        "ok": vc.get("ok", False),
+        "error": vc.get("error"),
+    })
+    structured = vc.get("structured", {}) if vc.get("ok") else {}
+
+    ver = run_verifier(raw, structured)
+    trace.append({
+        "agent": "Verifier Agent (Lightweight)",
+        "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+        "model": ver.get("llm", {}).get("model"),
+        "latency": ver.get("llm", {}).get("latency"),
+        "input_summary": "Network checks: " + json.dumps(ver["checks"], ensure_ascii=False),
+        "checks": ver["checks"],
+        "raw_output": ver.get("llm", {}).get("content"),
+        "badges": ver["badges"],
+        "disclaimer": ver["disclaimer"],
+    })
+
+    return {"status": "review", "structured": structured,
+            "badges": ver["badges"], "disclaimer": ver["disclaimer"],
+            "trace": trace}
+
+
+def _summarize(raw):
+    return (f"name={raw.get('startup_name','')}; stage={raw.get('stage','')}; "
+            f"subthemes={raw.get('subtheme_tags',[])}; "
+            f"problem={ (raw.get('problem','') or '')[:80] }")

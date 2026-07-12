@@ -1,0 +1,161 @@
+{
+  "id": "f2c3789563",
+  "status": "published",
+  "created_at": "2026-07-12T08:49:55.813061Z",
+  "raw": {
+    "startup_name": "CarbonCraft",
+    "tagline": "",
+    "founder_names": "Meera Iyer",
+    "founder_linkedin": "https://linkedin.com/in/meeraiyer",
+    "website": "https://carboncraft.tech",
+    "subtheme_tags": [
+      "carbon-capture",
+      "materials-science"
+    ],
+    "problem": "CO2 from biogas plants is vented instead of being fixed into product.",
+    "opportunity_size": "15k biogas plants; each flares ~1kt CO2/yr.",
+    "why_now": "Voluntary carbon prices recovered enough to fund capture.",
+    "stage": "prototype",
+    "proof_of_work": "Bench unit mineralizing 50kg CO2/day into aggregate.",
+    "early_adopters": "Biogas operators",
+    "gtm": "Capture modules leased per plant.",
+    "success_scenario": "If carbon prices hold, unit economics close.",
+    "team_edge": "Materials scientists ex-IISc.",
+    "looking_for": "seed funding"
+  },
+  "structured": {
+    "tagline": "Mineralizing biogas CO2 into aggregate to permanently lock carbon.",
+    "problem": "CO2 from biogas plants is vented instead of being fixed into product.",
+    "opportunity_size": "15k biogas plants; each flares ~1kt CO2/yr.",
+    "differentiator": "Ex-IISc materials scientists with bench unit mineralizing CO2 into aggregate.",
+    "solution": "Bench unit mineralizing 50kg CO2/day into aggregate.",
+    "stage": "prototype",
+    "ask": "Seeking seed funding.",
+    "startup_name": "CarbonCraft",
+    "subtheme_tags": [
+      "carbon-capture",
+      "materials-science"
+    ]
+  },
+  "badges": [
+    {
+      "label": "website",
+      "status": "unverified",
+      "detail": "website not live (URLError)"
+    },
+    {
+      "label": "linkedin",
+      "status": "verified",
+      "detail": "well-formed linkedin.com/in/ URL"
+    },
+    {
+      "label": "founder identity",
+      "status": "verified",
+      "detail": "founder name present"
+    },
+    {
+      "label": "self-reported claims",
+      "status": "unverified",
+      "detail": "claims are self-reported and NOT independently verified"
+    }
+  ],
+  "disclaimer": "Only mechanically checkable public signals were assessed; all other claims remain self-reported and unverified.",
+  "trace": [
+    {
+      "agent": "VC Agent (Synthesis)",
+      "role": "Structures raw submission into Layer-1 card fields",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 29.56,
+      "prompt_tokens": 573,
+      "completion_tokens": 1878,
+      "input_summary": "name=CarbonCraft; stage=prototype; subthemes=['carbon-capture', 'materials-science']; problem=CO2 from biogas plants is vented instead of being fixed into product.",
+      "raw_output": "{\n  \"tagline\": \"Mineralizing biogas CO2 into aggregate to permanently lock carbon.\",\n  \"problem\": \"CO2 from biogas plants is vented instead of being fixed into product.\",\n  \"opportunity_size\": \"15k biogas plants; each flares ~1kt CO2/yr.\",\n  \"differentiator\": \"Ex-IISc materials scientists with bench unit mineralizing CO2 into aggregate.\",\n  \"solution\": \"Bench unit mineralizing 50kg CO2/day into aggregate.\",\n  \"stage\": \"prototype\",\n  \"ask\": \"Seeking seed funding.\"\n}",
+      "ok": true,
+      "error": null
+    },
+    {
+      "agent": "Verifier Agent (Lightweight)",
+      "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
+      "model": "tencent/hy3-20260706:free",
+      "latency": 18.31,
+      "input_summary": "Network checks: {\"linkedin_format\": {\"ok\": true, \"note\": \"well-formed linkedin.com/in/ URL\", \"url\": \"https://linkedin.com/in/meeraiyer\"}, \"website_live\": {\"checked\": true, \"status\": null, \"live\": false, \"error\": \"URLError\"}, \"founder_name\": {\"present\": true}}",
+      "checks": {
+        "linkedin_format": {
+          "ok": true,
+          "note": "well-formed linkedin.com/in/ URL",
+          "url": "https://linkedin.com/in/meeraiyer"
+        },
+        "website_live": {
+          "checked": true,
+          "status": null,
+          "live": false,
+          "error": "URLError"
+        },
+        "founder_name": {
+          "present": true
+        }
+      },
+      "raw_output": "{\n  \"badges\": [\n    {\"label\": \"website\", \"status\": \"unverified\", \"detail\": \"website not live (URLError)\"},\n    {\"label\": \"linkedin\", \"status\": \"verified\", \"detail\": \"well-formed linkedin.com/in/ URL\"},\n    {\"label\": \"founder identity\", \"status\": \"verified\", \"detail\": \"founder name present\"},\n    {\"label\": \"self-reported claims\", \"status\": \"unverified\", \"detail\": \"claims are self-reported and NOT independently verified\"}\n  ],\n  \"disclaimer\": \"Only mechanically checkable public signals were assessed; all other claims remain self-reported and unverified.\"\n}",
+      "badges": [
+        {
+          "label": "website",
+          "status": "unverified",
+          "detail": "website not live (URLError)"
+        },
+        {
+          "label": "linkedin",
+          "status": "verified",
+          "detail": "well-formed linkedin.com/in/ URL"
+        },
+        {
+          "label": "founder identity",
+          "status": "verified",
+          "detail": "founder name present"
+        },
+        {
+          "label": "self-reported claims",
+          "status": "unverified",
+          "detail": "claims are self-reported and NOT independently verified"
+        }
+      ],
+      "disclaimer": "Only mechanically checkable public signals were assessed; all other claims remain self-reported and unverified."
+    }
+  ],
+  "published_card": {
+    "startup_name": "CarbonCraft",
+    "tagline": "Mineralizing biogas CO2 into aggregate to permanently lock carbon.",
+    "stage": "prototype",
+    "problem": "CO2 from biogas plants is vented instead of being fixed into product.",
+    "opportunity_size": "15k biogas plants; each flares ~1kt CO2/yr.",
+    "differentiator": "Ex-IISc materials scientists with bench unit mineralizing CO2 into aggregate.",
+    "solution": "Bench unit mineralizing 50kg CO2/day into aggregate.",
+    "ask": "Seeking seed funding.",
+    "subtheme_tags": [
+      "carbon-capture",
+      "materials-science"
+    ],
+    "badges": [
+      {
+        "label": "website",
+        "status": "unverified",
+        "detail": "website not live (URLError)"
+      },
+      {
+        "label": "linkedin",
+        "status": "verified",
+        "detail": "well-formed linkedin.com/in/ URL"
+      },
+      {
+        "label": "founder identity",
+        "status": "verified",
+        "detail": "founder name present"
+      },
+      {
+        "label": "self-reported claims",
+        "status": "unverified",
+        "detail": "claims are self-reported and NOT independently verified"
+      }
+    ],
+    "published_at": "2026-07-12T08:50:43.797863Z"
+  }
+}
