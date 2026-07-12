@@ -79,20 +79,37 @@ def _users_path():
     return USERS_PATH
 
 
-def identify(name, email):
-    """Record a lightweight identified user (name + email only). Returns user dict."""
+def identify(name, email, role=None):
+    """Record a lightweight identified user (name + email + role). Returns user dict."""
     email = (email or "").strip().lower()
     name = (name or "").strip()
+    role = (role or "").strip()
     p = _users_path()
     users = json.load(open(p)) if os.path.exists(p) else {}
     if email in users:
-        # refresh name if provided
         if name:
             users[email]["name"] = name
+        if role:
+            users[email]["role"] = role
     else:
-        users[email] = {"email": email, "name": name, "created_at": now_iso()}
+        users[email] = {"email": email, "name": name, "role": role,
+                        "created_at": now_iso()}
     json.dump(users, open(p, "w"), indent=2)
     return users[email]
+
+
+def role_counts():
+    """Distinct identified users by role. Returns {'founder': n, 'vc': n}."""
+    p = _users_path()
+    users = json.load(open(p)) if os.path.exists(p) else {}
+    out = {"founder": 0, "vc": 0}
+    for u in users.values():
+        r = (u.get("role") or "").strip()
+        if r == "founder":
+            out["founder"] += 1
+        elif r in ("vc", "VC / Investor", "investor"):
+            out["vc"] += 1
+    return out
 
 
 def get_user(email):

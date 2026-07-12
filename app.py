@@ -60,7 +60,11 @@ nav a:hover{color:var(--coral);text-decoration:none}
   cursor:pointer;font-family:inherit;text-decoration:none}
 .cta:hover{background:var(--black2);text-decoration:none}
 .cta .arw{font-weight:700}
-.btnrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:18px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.stats{display:flex;gap:34px;flex-wrap:wrap;margin-top:18px}
+.stats .stat{display:flex;flex-direction:column;line-height:1.1}
+.stats .stat b{font-size:30px;font-weight:800;color:var(--coral)}
+.stats .stat span{font-size:12.5px;color:var(--txt2);margin-top:3px}
 
 .card{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
@@ -121,7 +125,7 @@ textarea{min-height:72px;resize:vertical}
 .seg span{display:inline-block;padding:9px 14px;border:1px solid var(--line);border-radius:999px;
   font-size:13px;font-weight:600;color:var(--txt2);background:var(--bg)}
 .seg input:checked + span{background:var(--black);color:#fff;border-color:var(--black)}
-.seg input:focus-visible + span{border-color:var(--coral)}
+.seg span.on{background:var(--black);color:#fff;border-color:var(--black)}
 
 .trace-step{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}
 .trace-step h4{margin:0 0 6px;font-size:15px}
@@ -148,7 +152,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
 </nav>
 <div class="wrap">{% block body %}{% endblock %}</div>
 
-<!-- Lightweight login modal (name + email, no password) -->
+<!-- Lightweight login modal (name + email + role, no password) -->
 <div class="modal" id="loginModal">
   <div class="box">
     <span class="x" onclick="closeLogin()">×</span>
@@ -156,6 +160,11 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
     <p class="hint">We need a name + email to record your vote. No password, no verification email.</p>
     <label>Name</label><input id="lm_name" placeholder="Your name">
     <label>Email</label><input id="lm_email" placeholder="you@email.com" type="email">
+    <label>I am a…</label>
+    <div class="seg" id="lm_role">
+      <span class="on" data-role="founder" onclick="setRole('founder')">Founder</span>
+      <span data-role="vc" onclick="setRole('vc')">VC / Investor</span>
+    </div>
     <div class="err" id="lm_err"></div>
     <div class="btnrow"><button class="cta" onclick="submitLogin()">Continue <span class="arw">→</span></button></div>
   </div>
@@ -163,7 +172,9 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
 <script>
 function openLogin(){document.getElementById('loginModal').classList.add('open');return false;}
 function closeLogin(){document.getElementById('loginModal').classList.remove('open');}
-let pendingSid=null;
+let pendingSid=null, pendingRole='founder';
+function setRole(r){ pendingRole=r;
+  document.querySelectorAll('#lm_role span').forEach(s=>s.classList.toggle('on', s.dataset.role===r)); }
 async function vote(sid){
   const email="{{ user_email or '' }}";
   if(!email){ pendingSid=sid; openLogin(); return; }
@@ -181,7 +192,7 @@ async function submitLogin(){
   const err=document.getElementById('lm_err');
   if(!name||!email||!email.includes('@')){ err.textContent='Enter a name and a valid email.'; return; }
   const r=await fetch('/identify',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({name:name,email:email})});
+    body:JSON.stringify({name:name,email:email,role:pendingRole})});
   const d=await r.json();
   if(d.ok){ closeLogin();
     if(pendingSid){ const s=pendingSid; pendingSid=null; await castVote(s,email); }
@@ -220,6 +231,11 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
   <div class="btnrow"><a class="cta" href="/submit">Submit your startup <span class="arw">→</span></a>
   <span class="pill">{{ cards|length }} startups live</span>
   <span class="pill">{{ stats.visits }} visits · {{ stats.uniques }} unique visitors</span></div>
+  <div class="stats" aria-label="platform metrics">
+    <div class="stat"><b>{{ metrics.startups }}</b><span>startups tracked</span></div>
+    <div class="stat"><b>{{ metrics.builders }}</b><span>builders on platform</span></div>
+    <div class="stat"><b>{{ metrics.vcs }}</b><span>VCs on platform</span></div>
+  </div>
 </div>
 <div class="grid">
 {% for c in cards %}
@@ -631,6 +647,9 @@ def home():
             if user["email"] in c.get("voters", []):
                 voted.add(c["id"])
     return render_template_string(TPL_HOME, cards=cards, voted=voted, stats=stats,
+                                  metrics={"startups": len(cards),
+                                           "builders": store.role_counts()["founder"],
+                                           "vcs": store.role_counts()["vc"]},
                                   user_email=user["email"] if user else "",
                                   user_name=user["name"] if user else "")
 
@@ -747,11 +766,15 @@ def identify():
     data = request.get_json(force=True, silent=True) or {}
     name = (data.get("name") or "").strip()
     email = (data.get("email") or "").strip().lower()
+    role = (data.get("role") or "").strip()
     if not name or "@" not in email:
         return jsonify({"ok": False, "error": "name and valid email required"}), 400
-    store.identify(name, email)
+    if role not in ("founder", "vc"):
+        return jsonify({"ok": False, "error": "role must be 'founder' or 'vc'"}), 400
+    store.identify(name, email, role)
     session["email"] = email
     session["name"] = name
+    session["role"] = role
     return jsonify({"ok": True})
 
 
