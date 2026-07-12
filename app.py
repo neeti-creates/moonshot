@@ -442,7 +442,7 @@ TPL_WHITESPACE = _page("Whitespace — MoonshotHunt", """
     </ul>
   </div>
 
-  <div id="stage" style="position:relative;height:640px;border:1px solid var(--line);border-radius:12px;
+  <div id="stage" style="position:relative;height:clamp(560px,72vh,760px);border:1px solid var(--line);border-radius:12px;
        overflow:hidden;background:var(--bg)">
     <div id="zoneTint" style="position:absolute;inset:0;pointer-events:none;
       background:linear-gradient(105deg, rgba(216,90,48,.05) 0%, rgba(216,90,48,.02) 42%, rgba(29,158,117,.02) 58%, rgba(29,158,117,.05) 100%)"></div>
@@ -469,27 +469,62 @@ const STAGE_FILTER=()=>document.getElementById('stageFilter').value;
 let DATA=null, expanded=new Set(), scale=1;
 const W=()=>document.getElementById('stage').clientWidth, H=()=>document.getElementById('stage').clientHeight;
 
-function bubbleR(count){ return count<=1 ? 24 : Math.min(24+count*7, 54); }
+function bubbleR(count){ return count<=1 ? 22 : Math.min(22+count*6, 50); }
 
 async function load(){
   const r=await fetch('/api/whitespace?stage='+encodeURIComponent(STAGE_FILTER()));
   DATA=await r.json(); render();
 }
 
+// Collision-aware, Prysm-style radial layout.
+// Each zone's bubbles sit on concentric half-arcs facing outward from center.
+// Ring radius is chosen so the arc length can hold each bubble's diameter + gap,
+// and bubbles are evenly spaced along the arc -> no overlaps, no clipping.
 function layout(){
-  // Climate bubbles fan out on the left semicircle, Deep Tech on the right.
   const cx=W()/2, cy=H()/2, positions={};
-  const xrad=W()*0.29, yrad=H()*0.36;   // separate radii; leaves margin for labels
+  const halfW = W()*0.46, halfH = H()*0.42;     // max ring radius bounds
+  const pad = 70;                                // outer margin for labels
+  const gap = 14;                                // min spacing between bubbles
   DATA.zones.forEach(z=>{
-    const n=z.bubbles.length, left=(z.side==='climate');
-    z.bubbles.forEach((b,i)=>{
-      const t=(i+0.5)/n;                  // 0..1 top->bottom
-      const ang=(-0.4+t*0.8)*Math.PI;     // arc ~ -72deg .. +72deg
-      positions[b.key]={
-        x: cx + (left?-1:1)*Math.cos(ang)*xrad,
-        y: cy + Math.sin(ang)*yrad
-      };
-    });
+    const left=(z.side==='climate');
+    const n=z.bubbles.length;
+    const bs=[...z.bubbles].sort((a,b)=>b.count-a.count);
+    const maxR=bubbleR(bs[0].count);
+    // distribute across rings; bigger bubbles first claim outer rings
+    const rings=Math.min(3, Math.max(1, Math.ceil(n/5)));
+    // ring radii from inner to outer
+    const r0=pad+maxR, r1=Math.min(halfW, halfH*2) - pad;
+    const radii=[]; for(let k=0;k<rings;k++) radii.push(r0+(r1-r0)*(rings===1?0.6:k/(rings-1)));
+    // how many each ring can hold (arc = PI*r)
+    const cap=radii.map(rad=>Math.max(1, Math.floor(Math.PI*rad/(2*maxR+gap))));
+    const per=[]; let assigned=0;
+    // fill outer rings first (more capacity)
+    for(let k=rings-1;k>=0;k--){
+      let cnt=Math.min(cap[k], n-assigned);
+      per[k]=cnt; assigned+=cnt;
+    }
+    while(assigned<n){ // spill remaining onto outer ring
+      per[rings-1]++; assigned++;
+    }
+    let bi=0;
+    for(let k=0;k<rings;k++){
+      const rad=radii[k], cnt=per[k];
+      // arc faces outward: left side spans 90..270 deg, right side spans -90..90 deg
+      const a0 = left ? Math.PI*0.5 : -Math.PI*0.5;
+      const a1 = left ? Math.PI*1.5 : Math.PI*0.5;
+      for(let j=0;j<cnt;j++){
+        const b=bs[bi++];
+        const t = cnt===1 ? 0.5 : j/(cnt-1);
+        const ang = a0 + (a1-a0)*t;
+        let x = cx + Math.cos(ang)*rad;
+        let y = cy + Math.sin(ang)*rad;
+        const rr=bubbleR(b.count);
+        x=Math.max(40, Math.min(W()-40, x));
+        const ly=y+rr+6;
+        y=Math.max(cy-H()/2+pad+rr, Math.min(cy+H()/2-pad-rr-14, y));
+        positions[b.key]={x:x, y:y, r:rr};
+      }
+    }
   });
   return {cx,cy,positions};
 }
@@ -505,7 +540,7 @@ function render(){
 
   DATA.zones.forEach(z=>{
     z.bubbles.forEach(b=>{
-      const p=positions[b.key], r=bubbleR(b.count), active=expanded.has(b.key);
+      const p=positions[b.key], r=p.r||bubbleR(b.count), active=expanded.has(b.key);
       // edge center->bubble
       line(svg,cx,cy,p.x,p.y, b.sparse?'var(--line)':'#E3E3E3', b.sparse);
       // bubble
@@ -520,11 +555,15 @@ function render(){
           (active?'var(--coral)':'var(--txt)')+'">'+b.count+'</div></div>',
         r*2, 'background:'+bg+';border:'+border+';cursor:pointer;'+op);
       el.onclick=()=>{ if(expanded.has(b.key)) expanded.delete(b.key); else expanded.add(b.key); render(); };
-      // floating cluster label near bubble
+      // floating cluster label near bubble (clamped inside canvas)
       const lab=document.createElement('div');
       lab.textContent=b.label+(b.sparse?' · whitespace':'');
-      lab.style.cssText='position:absolute;left:'+p.x+'px;top:'+(p.y+r+6)+'px;transform:translateX(-50%);'+
-        'font-size:10.5px;color:'+(b.sparse?'var(--mut)':'var(--txt2)')+';white-space:nowrap;pointer-events:none';
+      const lw=Math.min(b.label.length*6.2+ (b.sparse?54:0), W()-40);
+      let lx=Math.max(40, Math.min(W()-40, p.x));
+      let ly=p.y+r+6;
+      lab.style.cssText='position:absolute;left:'+lx+'px;top:'+ly+'px;transform:translateX(-50%);'+
+        'max-width:'+lw+'px;font-size:10px;color:'+(b.sparse?'var(--mut)':'var(--txt2)')+';'+
+        'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none';
       vp.appendChild(lab);
 
       // Level 2: orbit startup cards when expanded
