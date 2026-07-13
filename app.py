@@ -246,7 +246,7 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .nucbtn:hover{border-color:var(--blue);color:var(--blue)}
 .showmap{margin:0 0 18px}
 .nucinner{position:relative;display:flex;flex-wrap:wrap;gap:26px 30px;align-items:flex-start;justify-content:center;
-  padding:34px 20px 40px;min-height:300px}
+  padding:34px 44px 44px;min-height:300px}
 .zonetag{position:absolute;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(107,107,107,.28);font-weight:700;pointer-events:none;z-index:0}
 .zonetag.zt-0{top:18px;left:24px}
 .zonetag.zt-1{top:18px;right:24px;text-align:right}
