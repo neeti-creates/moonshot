@@ -149,7 +149,7 @@ nav{display:flex;gap:14px;align-items:center;padding:12px 24px;
   border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
 nav .brand{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--txt);
   letter-spacing:-.3px;padding:2px 2px;border-radius:10px}
-.brandlogo{height:30px;width:auto}
+.brandlogo{height:46px;width:auto}
 nav .navlinks{display:flex;gap:6px;align-items:center}
 nav .navlinks a{color:var(--txt2);font-weight:600;padding:8px 14px;border-radius:999px;
   border:1px solid transparent;transition:background .15s,border-color .15s,color .15s}
@@ -440,9 +440,11 @@ textarea{min-height:72px;resize:vertical}
 .field input,.field textarea{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:12px;font:inherit;background:#fff}
 .field textarea{resize:vertical}
 .herohint{font-size:13px;color:var(--mut)}
-.flownav{display:flex;justify-content:space-between;margin-top:16px}
+.flownav{display:flex;justify-content:flex-end;gap:12px;margin-top:16px}
 .ghostbtn{background:none;border:1px solid var(--line);border-radius:999px;padding:12px 24px;font-weight:700;cursor:pointer;color:var(--ink)}
 .chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px}
+.chipswide{margin-top:8px;gap:9px 10px}
+.chipswide .funpill{font-size:13.5px;padding:7px 14px}
 .chiplbl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);font-weight:600;margin-right:2px}
 .funpill{font-size:13px;text-decoration:none;color:var(--txt);background:var(--bg);border:1px solid var(--line);
   border-radius:999px;padding:6px 13px;transition:border-color .12s,color .12s,transform .12s}
@@ -681,21 +683,6 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
       <div class="stat"><b>{{ metrics.builders }}</b><span>builders on platform</span></div>
       <div class="stat"><b>{{ metrics.vcs }}</b><span>VCs on platform</span></div>
     </div>
-    <div class="chips">
-      <span class="chiplbl">Popular themes:</span>
-      <a class="funpill" href="/directory?group=energy-grid">⚡ Clean Energy</a>
-      <a class="funpill" href="/directory?group=carbon">🌍 Carbon Removal</a>
-      <a class="funpill" href="/directory?group=circular">♻️ Circular Economy</a>
-      <a class="funpill" href="/directory?group=mobility">🚗 Mobility</a>
-      <a class="funpill" href="/directory?group=robotics">🤖 Robotics</a>
-      <a class="funpill" href="/directory?group=ai">🧠 AI &amp; ML</a>
-      <a class="funpill" href="/directory?group=materials">🔬 Materials</a>
-    <a class="funpill" href="/directory?group=biotech">🧬 Biotech</a>
-    <a class="funpill" href="/directory?group=water">💧 Water</a>
-    <a class="funpill" href="/directory?group=web3">🔗 Web3</a>
-    <a class="funpill" href="/directory?group=food-ag">🌱 Food &amp; Ag</a>
-    <a class="funpill" href="/directory?group=built">🏗️ Built Env</a>
-  </div>
   </div>
   <div class="heroR">
     <div class="cluster">
@@ -709,8 +696,24 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
     </div>
   </div>
 </div>
+</div>
 
-<!-- Nucleated bubble map (single entry point; click a sub-sector to reveal its sub-segments) -->
+<div class="chips chipswide">
+<span class="chiplbl">Popular themes:</span>
+<a class="funpill" href="/directory?group=energy-grid">⚡ Clean Energy</a>
+<a class="funpill" href="/directory?group=carbon">🌍 Carbon Removal</a>
+<a class="funpill" href="/directory?group=circular">♻️ Circular Economy</a>
+<a class="funpill" href="/directory?group=mobility">🚗 Mobility</a>
+<a class="funpill" href="/directory?group=robotics">🤖 Robotics</a>
+<a class="funpill" href="/directory?group=ai">🧠 AI &amp; ML</a>
+<a class="funpill" href="/directory?group=materials">🔬 Materials</a>
+<a class="funpill" href="/directory?group=biotech">🧬 Biotech</a>
+<a class="funpill" href="/directory?group=water">💧 Water</a>
+<a class="funpill" href="/directory?group=web3">🔗 Web3</a>
+<a class="funpill" href="/directory?group=food-ag">🌱 Food &amp; Ag</a>
+<a class="funpill" href="/directory?group=built">🏗️ Built Env</a>
+</div>
+
 {% if active_segment_name %}<div class="activepill"><span class="pill" style="background:var(--coral-bg);color:var(--coral)">Segment: {{ active_segment_name }} <a href="/directory?group={{ active_group }}" style="margin-left:6px;color:inherit">✕</a></span></div>
 {% elif active_group_name %}<div class="activepill"><span class="pill" style="background:var(--coral-bg);color:var(--coral)">Sub-sector: {{ active_group_name }} <a href="/directory" style="margin-left:6px;color:inherit">✕</a></span></div>{% endif %}
 
@@ -903,9 +906,13 @@ TPL_SUBMIT = _page("Submit — MoonshotHunt", """\
         <div class="card">
           <span class="stp">Step 4 · Why &amp; launch</span>
           <h3>Why are you building this?</h3>
-          <p class="cheer">The part VCs can't read off a deck. What made you start — and what keeps you going?</p>
-          <div class="field"><label>Why you built this *</label>
-            <textarea name="why_built" rows="4" placeholder="The spark, the gap you saw, the future you want…" required></textarea></div>
+          <p class="cheer">Three quick prompts — they help us (and VCs) understand the builder behind the deck. One line each is plenty.</p>
+          <div class="field"><label>1 · What did you see that others missed? *</label>
+            <textarea name="why1" rows="2" placeholder="The gap, the broken thing, the obvious-in-hindsight insight…" required></textarea></div>
+          <div class="field"><label>2 · What made you the one to build it? *</label>
+            <textarea name="why2" rows="2" placeholder="Your edge — background, access, obsession…" required></textarea></div>
+          <div class="field"><label>3 · What does success look like in 5 years? *</label>
+            <textarea name="why3" rows="2" placeholder="The future you're pulling toward…" required></textarea></div>
           <div class="field"><label>Anything else for the reviewers? <span class="sub">optional</span></label>
             <input name="note" placeholder="Optional note"></div>
           <div class="btnrow"><button type="submit" class="cta">Run agent pipeline <span class="arw">→</span></button></div>
@@ -1555,7 +1562,10 @@ def submit_post():
         "founder_linkedin": (request.form.get("founder_linkedin") or "").strip(),
         "founder_email": (request.form.get("founder_email") or "").strip(),
         "website": (request.form.get("website") or "").strip(),
-        "why_built": (request.form.get("why_built") or "").strip(),
+        "why_built": " | ".join([(request.form.get(f) or "").strip() for f in ("why1", "why2", "why3") if (request.form.get(f) or "").strip()]),
+        "why1": (request.form.get("why1") or "").strip(),
+        "why2": (request.form.get("why2") or "").strip(),
+        "why3": (request.form.get("why3") or "").strip(),
         "note": (request.form.get("note") or "").strip(),
     }
     if not raw["startup_name"]:
