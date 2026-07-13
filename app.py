@@ -130,7 +130,11 @@ TPL_LAYOUT = """<!doctype html><html lang="en"><head><meta charset="utf-8">
   --blue:#2F7FE0; --blue2:#1E5FB8; --beige:#F6F1E7; --red:#E5484D; --tan:#C9A36B;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--txt);
+html{background:var(--bg)}
+body{margin:0;color:var(--txt);
+  background-color:var(--bg);
+  background-image:linear-gradient(#F0F0F0 1px,transparent 1px),linear-gradient(90deg,#F0F0F0 1px,transparent 1px);
+  background-size:28px 28px;
   font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 h1,h2,h3{font-weight:600;color:var(--txt)}
 h1{font-size:28px;line-height:1.25;margin:0 0 8px}
@@ -140,12 +144,18 @@ a{color:var(--coral);text-decoration:none}
 a:hover{text-decoration:underline}
 .wrap{max-width:1080px;margin:0 auto;padding:24px}
 .wrap-full{max-width:none;margin:0;padding:0}
-nav{display:flex;gap:20px;align-items:center;padding:14px 24px;border-bottom:1px solid var(--line);
-  background:var(--bg);position:sticky;top:0;z-index:20}
-nav .brand{font-weight:700;font-size:18px;color:var(--txt);letter-spacing:-.2px}
-.brandlogo{height:26px;width:auto;border-radius:6px}
-nav a{color:var(--txt2);font-weight:600}
-nav a:hover{color:var(--coral);text-decoration:none}
+nav{display:flex;gap:14px;align-items:center;padding:12px 24px;
+  background:rgba(248,247,244,.82);backdrop-filter:saturate(140%) blur(8px);
+  border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+nav .brand{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--txt);
+  letter-spacing:-.3px;padding:2px 2px;border-radius:10px}
+.brandlogo{height:30px;width:auto}
+nav .navlinks{display:flex;gap:6px;align-items:center}
+nav .navlinks a{color:var(--txt2);font-weight:600;padding:8px 14px;border-radius:999px;
+  border:1px solid transparent;transition:background .15s,border-color .15s,color .15s}
+nav .navlinks a:hover{color:var(--coral);text-decoration:none;background:var(--bg);border-color:var(--line)}
+nav .navlinks a.active{color:var(--coral);background:#fff;border-color:var(--line);
+  box-shadow:0 1px 3px rgba(26,26,26,.06)}
 .navspacer{flex:1}
 .pill{font-size:11px;padding:3px 10px;border-radius:999px;background:var(--bg2);
   border:1px solid var(--line);color:var(--mut)}
@@ -412,11 +422,17 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
 .modal .err{color:var(--coral);font-size:13px;margin-top:8px;min-height:16px}
 .x{float:right;cursor:pointer;color:var(--mut);font-size:20px;line-height:1}
 </style></head><body>
-<nav><a class="brand" href="/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px"><img class="brandlogo" src="/static/logo.png" alt="MoonshotHunt"> <span>MoonshotHunt</span></a>
-<a href="/directory">Directory</a><a href="/whitespace">Whitespace</a><a href="/discussion">Discussion</a><a href="/submit">Submit</a>
-<span class="navspacer"></span>
-{% if user_email %}<span class="pill">Hi, {{ (user_name.split(' ')[0] if user_name else user_email.split('@')[0]) }}</span>
-{% else %}<a class="pill" href="#" onclick="return openLogin()">sign in to vote</a>{% endif %}
+<nav>
+  <a class="brand" href="/" style="text-decoration:none;color:inherit"><img class="brandlogo" src="/static/logo.png" alt="MoonshotHunt"></a>
+  <div class="navlinks">
+    <a href="/directory" class="{% if request.path.startswith('/directory') or request.path.startswith('/profile') %}active{% endif %}">Directory</a>
+    <a href="/whitespace" class="{% if request.path.startswith('/whitespace') %}active{% endif %}">Whitespace</a>
+    <a href="/discussion" class="{% if request.path.startswith('/discussion') %}active{% endif %}">Discussion</a>
+    <a href="/submit" class="{% if request.path.startswith('/submit') %}active{% endif %}">Submit</a>
+  </div>
+  <span class="navspacer"></span>
+  {% if user_email %}<span class="pill">Hi, {{ (user_name.split(' ')[0] if user_name else user_email.split('@')[0]) }}</span>
+  {% else %}<a class="pill" href="#" onclick="return openLogin()">sign in to vote</a>{% endif %}
 </nav>
 <div class="wrap">{% block body %}{% endblock %}</div>
 
