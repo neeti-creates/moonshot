@@ -175,7 +175,26 @@ nav .navlinks a.active{color:var(--coral);background:#fff;border-color:var(--lin
 .card{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0;
   box-shadow:0 10px 28px rgba(26,26,26,.14);transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease}
 .card:hover{box-shadow:0 14px 34px rgba(91,58,142,.18);border-color:var(--coral);transform:translateY(-2px)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:26px 22px}
+
+/* featured founders section */
+.featwrap{margin-top:46px;padding-top:30px;border-top:1px solid var(--line)}
+.feathead{margin-bottom:18px}
+.feathead h2{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+.featgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.feat{background:var(--bg);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 10px 28px rgba(26,26,26,.12);
+  transition:box-shadow .15s ease,transform .15s ease,border-color .15s ease}
+.feat:hover{box-shadow:0 14px 34px rgba(91,58,142,.18);transform:translateY(-2px);border-color:var(--coral)}
+.feat .fshot{height:118px;background:linear-gradient(160deg,#3a342e,#211d18)}
+.feat.beige .fshot{background:linear-gradient(160deg,#d9cfbd,#b6a890)}
+.feat.blue .fshot{background:linear-gradient(160deg,#4F9BF2,#1E5FB8)}
+.feat.red .fshot{background:linear-gradient(160deg,#EE6A6E,#E5484D)}
+.feat .fbody{padding:15px 16px 16px}
+.feat .ftitle{font-weight:700;font-size:17px;text-transform:lowercase}
+.feat .ftag{color:var(--txt2);font-size:13px;margin:5px 0 12px;min-height:34px}
+.feat .fmeta{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.feat .fstage{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--mut)}
+.feat .fvotes{color:var(--coral);font-weight:700}
 
 /* ===== TICKET CARD (blue / beige / coral) ===== */
 .tk{background:var(--beige);border-radius:16px;overflow:hidden;box-shadow:0 10px 28px rgba(26,26,26,.16);
@@ -191,7 +210,7 @@ nav .navlinks a.active{color:var(--coral);background:#fff;border-color:var(--lin
 .tk .dots i:nth-child(1){left:20px;top:4px}
 .tk .dots i:nth-child(2){left:50%;top:22px;transform:translateX(-50%)}
 .tk .dots i:nth-child(3){right:20px;top:44px}
-.info{padding:15px 16px 14px;color:#fff;position:relative}
+.info{padding:19px 20px 17px;color:#fff;position:relative}
 .info.blue{background:linear-gradient(160deg,#4F9BF2,#1E5FB8)}
 .info.coral{background:linear-gradient(160deg,#FA8A66,#F87060)}
 .info.red{background:linear-gradient(160deg,#EE6A6E,#E5484D)}
@@ -312,6 +331,7 @@ nav .navlinks a.active{color:var(--coral);background:#fff;border-color:var(--lin
 .threadcard{border:1px solid var(--line);border-radius:16px;padding:22px 24px;background:var(--bg);margin-bottom:18px;
   box-shadow:0 1px 4px rgba(26,26,26,.05)}
 .threadcard.empty{text-align:center;padding:34px}
+.threadcard.active-tc{border-color:var(--coral);box-shadow:0 10px 28px rgba(26,26,26,.12)}
 .tcmeta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--txt2);margin-bottom:8px}
 .tcdot{width:10px;height:10px;border-radius:50%;background:var(--coral);flex:none}
 .tcauthor{font-weight:700;color:var(--txt)}
@@ -326,6 +346,17 @@ nav .navlinks a.active{color:var(--coral);background:#fff;border-color:var(--lin
 .rolebadge.founder{background:var(--coral-bg);color:var(--coral)}
 .rolebadge.vc{background:#E3F1EC;color:var(--teal2)}
 .reply p{margin:4px 0 0;color:var(--txt);line-height:1.5}
+.topiclist{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.topicrow{display:flex;align-items:center;gap:16px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--bg);transition:border-color .15s,box-shadow .15s}
+.topicrow:hover{border-color:var(--coral);box-shadow:0 6px 18px rgba(91,58,142,.1)}
+.trowmain{flex:1;min-width:0}
+.trowtitle{font-weight:700;font-size:16px;color:var(--txt);text-decoration:none}
+.trowtitle:hover{color:var(--coral)}
+.trowbody{color:var(--txt2);font-size:13px;margin:5px 0 8px;line-height:1.45;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.trowmeta{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--mut)}
+.trowside{flex:none}
+.ghostbtn.sm{padding:8px 16px;font-size:13px}
 .topicform{max-width:620px;border:1px dashed var(--coral);border-radius:14px;padding:18px 20px;margin:6px 0 18px;background:var(--bg2)}
 .replybox{max-width:620px;margin-top:8px}
 .muted.small{color:var(--mut);font-size:13px}
@@ -765,6 +796,33 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
   </div>
   {% if not cards %}<p class="muted">No startups match these filters. <a href="/directory">Reset</a></p>{% endif %}
 </div>
+
+{% if featured %}
+<section class="featwrap">
+  <div class="feathead">
+    <h2>Featured founders</h2>
+    <p class="muted small">The startups the community is backing right now — real builders, pre-funding.</p>
+  </div>
+  <div class="featgrid">
+  {% for c in featured %}
+    {% set pc = c.published_card if c.published_card else {} %}
+    {% set tcol = ['blue','beige','red'][loop.index0 % 3] %}
+    {% set logo = _logo_for(c) %}
+    <a class="feat {{ tcol }}" href="/profile/{{ c.id }}" style="text-decoration:none;color:inherit">
+      <div class="fshot"{% if logo %} style="background-image:url('{{ logo }}');background-size:cover;background-position:center"{% endif %}></div>
+      <div class="fbody">
+        <div class="ftitle">{{ (pc.startup_name or c.raw.startup_name or 'untitled') | lower }}</div>
+        <p class="ftag">{{ pc.tagline or c.structured.tagline or '' }}</p>
+        <div class="fmeta">
+          <span class="fstage">{{ pc.stage or c.structured.stage or c.raw.stage or '—' }}</span>
+          <span class="fvotes">▲ {{ c.voters|length }}</span>
+        </div>
+      </div>
+    </a>
+  {% endfor %}
+  </div>
+</section>
+{% endif %}
 """)
 
 
@@ -856,6 +914,10 @@ TPL_SUBMIT = _page("Submit — MoonshotHunt", """\
 
     </div></div>
   </form>
+  <div class="flownav">
+    <button type="button" class="ghostbtn" id="back" onclick="move(-1)">← Back</button>
+    <button type="button" class="cta" id="next" onclick="move(1)">Next →</button>
+  </div>
 </div>
 
 <script>
@@ -869,6 +931,8 @@ function render(){
   track.style.transform='translateX('+(-i*100)+'%)';
   [...dots.children].forEach((d,k)=>d.className='dot'+(k===i?' on':''));
   ft.textContent='Step '+(i+1)+' of '+TOTAL;
+  if(back) back.style.display = i===0 ? 'none' : '';
+  if(next) next.style.display = i===TOTAL-1 ? 'none' : '';
 }
 if(back) back.onclick=function(){move(-1);};
 if(next) next.onclick=function(){move(1);};
@@ -1442,6 +1506,8 @@ def directory():
 
     cards = [c for c in all_cards if matches(c)]
     cards.sort(key=lambda c: (len(c.get("voters", [])), c.get("created_at", "")), reverse=True)
+    # featured = top 3 by votes regardless of active filters
+    featured = sorted(all_cards, key=lambda c: (len(c.get("voters", [])), c.get("created_at", "")), reverse=True)[:3]
     user = _current_user()
     stats = store.record_visit(_visitor_id())
     voted = set()
@@ -1460,6 +1526,7 @@ def directory():
                                            "builders": store.builder_count(),
                                            "vcs": store.role_counts()["vc"]},
                                   stages=STAGES, subthemes=SUBTHEMES,
+                                  featured=featured,
                                   user_email=user["email"] if user else "",
                                   user_name=user["name"] if user else "")
 
@@ -1828,8 +1895,9 @@ def whitespace():
 @app.route("/discussion", methods=["GET"])
 def discussion():
     user = _current_user()
-    thread = store.get_thread()
-    return render_template_string(TPL_DISCUSSION, thread=thread, is_admin=_is_admin(),
+    topics = store.get_topics()
+    active = store.get_active_topic()
+    return render_template_string(TPL_DISCUSSION, topics=topics, active_topic=active, is_admin=_is_admin(),
                                   user_email=user["email"] if user else "",
                                   user_name=user["name"] if user else "",
                                   user_role=session.get("role", ""))
@@ -1845,7 +1913,19 @@ def discussion_topic():
     if not title or not body:
         return jsonify({"ok": False, "error": "title and body required"}), 400
     user = _current_user()
-    store.set_thread(title, body, session.get("email", ""), user["name"] if user else "")
+    store.add_topic(title, body, session.get("email", ""), user["name"] if user else "", active=True)
+    return jsonify({"ok": True})
+
+
+@app.route("/discussion/activate", methods=["POST"])
+def discussion_activate():
+    if not _is_admin():
+        return jsonify({"ok": False, "error": "admin only"}), 403
+    data = request.get_json(silent=True) or {}
+    tid = (data.get("id") or "").strip()
+    if not tid:
+        return jsonify({"ok": False, "error": "id required"}), 400
+    store.set_active_topic(tid)
     return jsonify({"ok": True})
 
 
@@ -1856,13 +1936,13 @@ def discussion_reply():
         return jsonify({"ok": False, "error": "login to reply"}), 401
     data = request.get_json(silent=True) or {}
     body = (data.get("body") or "").strip()
+    tid = (data.get("id") or "").strip()
     if not body:
         return jsonify({"ok": False, "error": "reply body required"}), 400
-    thread = store.get_thread()
-    if not thread:
-        return jsonify({"ok": False, "error": "no active thread"}), 404
+    if not tid:
+        return jsonify({"ok": False, "error": "topic id required"}), 400
     role = session.get("role", "")
-    store.add_reply(thread, user["name"], role, body)
+    store.add_reply_to_topic(tid, user["name"], role, body)
     return jsonify({"ok": True})
 
 
@@ -1870,8 +1950,8 @@ TPL_DISCUSSION = _page("Discussion — MoonshotHunt", """\
 <div class="hero">
   <div class="heroL">
     <div class="eyebrow">MoonshotHunt · Forum</div>
-    <h1>Discus<br>sion<span class="dot">.</span></h1>
-    <p class="lead">One active thread at a time. Founders and VCs weigh in — the real talk behind the decks.</p>
+    <h1>Discussion<span class="dot">.</span></h1>
+    <p class="lead">Real talk behind the decks — founders and VCs weigh in on what building pre-funding actually takes.</p>
   </div>
   <div class="heroR">
     <div class="cluster">
@@ -1887,25 +1967,30 @@ TPL_DISCUSSION = _page("Discussion — MoonshotHunt", """\
 </div>
 
 <div class="disc">
-  <!-- search bar above the thread card -->
+  <!-- search bar above the topic list -->
   <div class="dsearch">
-    <span class="sico">⌕</span><input id="dSearch" placeholder="Search this discussion…" oninput="filterReplies()">
+    <span class="sico">⌕</span><input id="dSearch" placeholder="Search discussions…" oninput="filterTopics()">
   </div>
 
-  {% if is_admin %}<div class="disctools"><button class="cta" onclick="newTopic()">+ Write new thread</button></div>{% endif %}
+  {% if is_admin %}<div class="disctools"><button class="cta" onclick="newTopic()">+ Start a topic</button></div>{% endif %}
 
-  {% if thread %}
-    <div class="threadcard">
+  {% if not topics %}
+    <div class="threadcard empty"><p class="muted">No topics yet.</p>
+      {% if is_admin %}<button class="cta" onclick="newTopic()">Post the first topic</button>{% endif %}</div>
+  {% else %}
+    <!-- active / featured topic -->
+    {% if active_topic %}
+    <div class="threadcard active-tc">
       <div class="tcmeta">
         <span class="tcdot"></span>
-        <span class="tcauthor">{{ thread.author_name or 'MoonshotHunt' }}</span>
-        <span class="tctime">{{ thread.created_at[:10] }}</span>
-        <span class="tcreplies">{{ thread.replies|length }} repl{{ '' if thread.replies|length==1 else 'ies' }}</span>
+        <span class="tcauthor">{{ active_topic.author_name or 'MoonshotHunt' }}</span>
+        <span class="tctime">{{ active_topic.created_at[:10] }}</span>
+        <span class="tcreplies">{{ active_topic.replies|length }} repl{{ '' if active_topic.replies|length==1 else 'ies' }}</span>
       </div>
-      <h2 class="tctitle">{{ thread.title }}</h2>
-      <p class="tcbody">{{ thread.body }}</p>
-      <div class="replies">
-        {% for r in thread.replies %}
+      <h2 class="tctitle">{{ active_topic.title }}</h2>
+      <p class="tcbody">{{ active_topic.body }}</p>
+      <div class="replies" id="replies-{{ active_topic.id }}">
+        {% for r in active_topic.replies %}
         <div class="reply">
           <div class="rhead"><b>{{ r.name or 'Anonymous' }}</b>
             <span class="rolebadge {{ r.role }}">{{ 'VC' if r.role=='vc' else 'Founder' if r.role=='founder' else (r.role or '') }}</span></div>
@@ -1916,10 +2001,26 @@ TPL_DISCUSSION = _page("Discussion — MoonshotHunt", """\
         {% endfor %}
       </div>
     </div>
-  {% else %}
-    <div class="threadcard empty">
-      <p class="muted">No active thread right now.</p>
-      {% if is_admin %}<button class="cta" onclick="newTopic()">Post the first topic</button>{% endif %}
+    {% endif %}
+
+    <!-- all topics list -->
+    <div class="topiclist">
+      {% for t in topics %}
+      <div class="topicrow" data-id="{{ t.id }}">
+        <div class="trowmain">
+          <a class="trowtitle" href="#" onclick="return makeActive('{{ t.id }}')">{{ t.title }}</a>
+          <p class="trowbody">{{ t.body }}</p>
+          <div class="trowmeta">
+            <span class="tctime">{{ t.created_at[:10] }}</span>
+            <span class="tcreplies">{{ t.replies|length }} repl{{ '' if t.replies|length==1 else 'ies' }}</span>
+            {% if t.active %}<span class="pill" style="background:var(--coral-bg);color:var(--coral)">active</span>{% endif %}
+          </div>
+        </div>
+        <div class="trowside">
+          <button class="ghostbtn sm" onclick="makeActive('{{ t.id }}')">Open</button>
+        </div>
+      </div>
+      {% endfor %}
     </div>
   {% endif %}
 
@@ -1930,25 +2031,33 @@ TPL_DISCUSSION = _page("Discussion — MoonshotHunt", """\
     <div class="btnrow"><button class="cta" onclick="postTopic()">Post topic <span class="arw">→</span></button></div>
   </div>
 
-  {% if user_email %}
+  {% if user_email and active_topic %}
   <div class="replybox">
     <label>Your reply <span class="sub">as {{ user_name }} · {{ 'VC' if user_role=='vc' else 'Founder' if user_role=='founder' else user_role }}</span></label>
     <textarea id="rp_body" placeholder="Share your take…"></textarea>
-    <div class="btnrow"><button class="cta" onclick="postReply()">Reply <span class="arw">→</span></button></div>
+    <div class="btnrow"><button class="cta" onclick="postReply('{{ active_topic.id }}')">Reply <span class="arw">→</span></button></div>
   </div>
-  {% else %}
+  {% elif not user_email %}
   <p class="muted small"><a href="#" onclick="return openLogin()">Sign in</a> (founder or VC) to reply.</p>
   {% endif %}
 </div>
 
 <script>
 function newTopic(){ document.getElementById('topicForm').style.display='block'; }
-function filterReplies(){
+function filterTopics(){
   const q=(document.getElementById('dSearch').value||'').toLowerCase();
-  document.querySelectorAll('.reply').forEach(function(el){
-    const t=el.textContent.toLowerCase();
-    el.style.display = (!q || t.includes(q)) ? '' : 'none';
+  document.querySelectorAll('.topicrow').forEach(function(el){
+    el.style.display = (!q || el.textContent.toLowerCase().includes(q)) ? '' : 'none';
   });
+  const act=document.querySelector('.active-tc');
+  if(act) act.style.display = (!q || act.textContent.toLowerCase().includes(q)) ? '' : 'none';
+}
+async function makeActive(id){
+  const r=await fetch('/discussion/activate',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({id:id})});
+  const d=await r.json();
+  if(d.ok){ location.reload(); } else { alert(d.error||'Failed.'); }
+  return false;
 }
 async function postTopic(){
   const title=document.getElementById('tp_title').value.trim();
@@ -1959,16 +2068,17 @@ async function postTopic(){
   const d=await r.json();
   if(d.ok){ location.reload(); } else { alert(d.error||'Failed to post.'); }
 }
-async function postReply(){
+async function postReply(id){
   const body=document.getElementById('rp_body').value.trim();
   if(!body){ alert('Write something first.'); return; }
   const r=await fetch('/discussion/reply',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({body:body})});
+    body:JSON.stringify({id:id,body:body})});
   const d=await r.json();
   if(d.ok){ location.reload(); } else { alert(d.error||'Failed to reply.'); }
 }
 </script>
 """)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5001))

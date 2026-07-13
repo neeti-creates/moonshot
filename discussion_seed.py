@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Free, zero-cost daily discussion poster for MoonshotHunt.
 
-Picks the next curated prompt (cycling) and posts it as the single active
-thread via store.set_thread(). No network/API calls, no external cost.
+Picks the next curated prompt (cycling) and posts it as a new active
+topic via store.add_topic(active=True). No network/API calls, no external cost.
 
 Run via cron (e.g. daily). Env: DATA_DIR (default "data").
 """
@@ -69,8 +69,9 @@ def main():
     data_dir = os.environ.get("DATA_DIR", "data")
     store.init(data_dir)
     title, body = next_prompt()
-    # Author the daily prompt as the platform (no fabricated person).
-    store.set_thread(title, body, "hello@moonshot.hunt", "MoonshotHunt")
+    # Author the daily prompt as the platform (no fabricated person);
+    # it becomes the new active topic (older topics stay in the list).
+    store.add_topic(title, body, "hello@moonshot.hunt", "MoonshotHunt", active=True)
     print("Posted daily topic:", title)
 
 

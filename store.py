@@ -187,51 +187,77 @@ def vote_count(sid):
     return len(rec.get("voters", [])) if rec else 0
 
 
-# --- Single active Discussion thread (manual, no archive yet) ---
-THREAD_PATH = None
+# --- Discussion topics (a list; one is "active"/featured at a time) ---
+TOPICS_PATH = None
 
 
-def _thread_path():
-    global THREAD_PATH
-    if THREAD_PATH is None:
-        THREAD_PATH = os.path.join(DATA_DIR, "thread.json")
-    return THREAD_PATH
+def _topics_path():
+    global TOPICS_PATH
+    if TOPICS_PATH is None:
+        TOPICS_PATH = os.path.join(DATA_DIR, "topics.json")
+    return TOPICS_PATH
 
 
-def get_thread():
-    """Return the single active thread dict, or None if none posted yet."""
-    p = _thread_path()
+def get_topics():
+    """Return all discussion topics (list of dicts), newest first. Empty list if none."""
+    p = _topics_path()
     if not os.path.exists(p):
-        return None
+        return []
     return json.load(open(p))
 
 
-def set_thread(title, body, author_email, author_name):
-    """Create/replace the single active thread. One at a time, no history."""
+def add_topic(title, body, author_email, author_name, active=False):
+    """Append a topic; if active, demote others. Returns the new topic dict."""
+    topics = get_topics()
+    for t in topics:
+        t["active"] = False
     t = {
+        "id": uuid.uuid4().hex[:8],
         "title": (title or "").strip(),
         "body": (body or "").strip(),
         "author_email": author_email,
-        "author_name": author_name,
+        "author_name": author_name or "MoonshotHunt",
         "created_at": datetime.datetime.utcnow().isoformat() + "Z",
+        "active": bool(active),
         "replies": [],
     }
+    topics.insert(0, t)
     with _lock:
-        json.dump(t, open(_thread_path(), "w"), indent=2)
+        json.dump(topics, open(_topics_path(), "w"), indent=2)
     return t
 
 
-def add_reply(thread, name, role, body):
-    """Append a reply to the in-memory thread dict and persist it."""
-    thread.setdefault("replies", []).append({
-        "name": (name or "").strip(),
-        "role": (role or "").strip(),
-        "body": (body or "").strip(),
-        "created_at": datetime.datetime.utcnow().isoformat() + "Z",
-    })
+def get_active_topic():
+    topics = get_topics()
+    for t in topics:
+        if t.get("active"):
+            return t
+    return topics[0] if topics else None
+
+
+def set_active_topic(tid):
+    topics = get_topics()
+    for t in topics:
+        t["active"] = (t["id"] == tid)
     with _lock:
-        json.dump(thread, open(_thread_path(), "w"), indent=2)
-    return thread
+        json.dump(topics, open(_topics_path(), "w"), indent=2)
+    return get_active_topic()
+
+
+def add_reply_to_topic(tid, name, role, body):
+    topics = get_topics()
+    for t in topics:
+        if t["id"] == tid:
+            t.setdefault("replies", []).append({
+                "name": (name or "").strip(),
+                "role": (role or "").strip(),
+                "body": (body or "").strip(),
+                "created_at": datetime.datetime.utcnow().isoformat() + "Z",
+            })
+            break
+    with _lock:
+        json.dump(topics, open(_topics_path(), "w"), indent=2)
+    return topics
 
 
 
