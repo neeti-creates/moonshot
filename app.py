@@ -361,6 +361,14 @@ textarea{min-height:72px;resize:vertical}
 .funpill{font-size:13px;text-decoration:none;color:var(--txt);background:var(--bg);border:1px solid var(--line);
   border-radius:999px;padding:6px 13px;transition:border-color .12s,color .12s,transform .12s}
 .funpill:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-1px)}
+.heroact{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-top:16px}
+.heroact .hfield{display:flex;flex-direction:column;gap:5px}
+.heroact .hfield.grow{flex:1 1 260px;min-width:0}
+.heroact .hfield label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);font-weight:600}
+.heroact .hfield input,.heroact .hfield select{font:inherit;font-size:14px;padding:11px 14px;border:1px solid var(--line);
+  border-radius:12px;background:#fff;color:var(--txt);min-width:0}
+.heroact .hfield input{flex:1}
+.heroact .cta{margin-top:0}
 
 .fieldrow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:640px){.fieldrow{grid-template-columns:1fr}}
@@ -458,6 +466,15 @@ function syncExpandBtn(){
   if(!btn||!segs.length) return;
   btn.textContent = segs.every(e=>e.classList.contains('open')) ? 'Collapse all' : 'Expand all';
 }
+function heroSearch(){
+  const q=document.getElementById('heroQ');
+  const t=document.getElementById('heroTheme');
+  const p=new URLSearchParams();
+  if(q && q.value.trim()) p.set('q', q.value.trim());
+  if(t && t.value) p.set('group', t.value);
+  const s=p.toString();
+  window.location.href='/directory'+(s?'?'+s:'');
+}
 
 async function submitLogin(){
   const name=document.getElementById('lm_name').value.trim();
@@ -543,21 +560,47 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
 <div class="hero">
   <h1>Building the future of <span style="color:var(--coral)">climate</span> &amp; <span style="color:var(--blue)">deep tech</span> — pre-funding?</h1>
   <p class="lead">You're early. So are the people who should back you. MoonshotHunt is where pre-seed climate &amp; deep-tech founders get structured, VC-legible, and discovered — before the deck polish.</p>
-  <span class="pill">{{ metrics.startups }} startups live</span>
-  <span class="pill">{{ stats.visits }} visits · {{ stats.uniques }} unique visitors</span></div>
+  <div class="heroact">
+    <div class="hfield grow"><label>Search</label>
+      <input id="heroQ" placeholder="Search startups, problems, tags…" onkeydown="if(event.key==='Enter'){event.preventDefault();heroSearch();}"></div>
+    <div class="hfield"><label>Theme</label>
+      <select id="heroTheme" onchange="heroSearch()">
+        <option value="">All themes</option>
+        <option value="energy-grid">Clean Energy &amp; Grid</option>
+        <option value="mobility">Mobility &amp; Transport</option>
+        <option value="built">Built Environment &amp; Industry</option>
+        <option value="food-ag">Food, Land Use &amp; Agriculture</option>
+        <option value="carbon">Carbon Capture &amp; Removal</option>
+        <option value="circular">Circular Economy &amp; Waste</option>
+        <option value="water">Water &amp; Climate Resilience</option>
+        <option value="compute">Advanced Computing</option>
+        <option value="ai">AI &amp; ML</option>
+        <option value="robotics">Robotics, Machines &amp; Space</option>
+        <option value="materials">Materials &amp; Physical Sciences</option>
+        <option value="biotech">Biotechnology &amp; Life Sciences</option>
+        <option value="web3">Web3 &amp; DLT</option>
+      </select></div>
+    <a class="cta" href="/submit">Submit your startup <span class="arw">→</span></a>
+  </div>
   <div class="stats" aria-label="platform metrics">
     <div class="stat"><b>{{ metrics.startups }}</b><span>startups tracked</span></div>
     <div class="stat"><b>{{ metrics.builders }}</b><span>builders on platform</span></div>
     <div class="stat"><b>{{ metrics.vcs }}</b><span>VCs on platform</span></div>
   </div>
   <div class="chips">
-    <span class="chiplbl">Explore:</span>
+    <span class="chiplbl">Popular themes:</span>
     <a class="funpill" href="/directory?group=energy-grid">⚡ Clean Energy</a>
     <a class="funpill" href="/directory?group=carbon">🌍 Carbon Removal</a>
     <a class="funpill" href="/directory?group=circular">♻️ Circular Economy</a>
+    <a class="funpill" href="/directory?group=mobility">🚗 Mobility</a>
     <a class="funpill" href="/directory?group=robotics">🤖 Robotics</a>
     <a class="funpill" href="/directory?group=ai">🧠 AI &amp; ML</a>
+    <a class="funpill" href="/directory?group=materials">🔬 Materials</a>
     <a class="funpill" href="/directory?group=biotech">🧬 Biotech</a>
+    <a class="funpill" href="/directory?group=water">💧 Water</a>
+    <a class="funpill" href="/directory?group=web3">🔗 Web3</a>
+    <a class="funpill" href="/directory?group=food-ag">🌱 Food &amp; Ag</a>
+    <a class="funpill" href="/directory?group=built">🏗️ Built Env</a>
   </div>
 </div>
 
