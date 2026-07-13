@@ -15,50 +15,103 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 store.init(DATA_DIR)
 
 STAGES = ["idea", "prototype", "pilot", "early revenue", "scaling"]
+
+# Layer-2 sub-sector SEGMENTS (granular). Founders pick these on review; agent tags at this level.
 SUBTHEMES = [
-    "waste-to-value", "industrial-decarbonization", "climate-ai", "energy-storage",
-    "green-hydrogen", "carbon-capture", "sustainable-mobility", "agritech-climate",
-    "water-tech", "circular-economy", "grid-tech", "robotics-in-healthcare",
-    "nanorobotics", "space-tech", "materials-science", "deep-tech-other",
+    # Clean Energy & Grid
+    "renewable-generation", "energy-storage", "grid-infrastructure",
+    # Mobility & Transport
+    "evs", "alt-fuels", "micromobility-logistics",
+    # Built Environment & Industry
+    "decarbonized-materials", "building-tech",
+    # Food, Land Use & Agriculture
+    "precision-ag", "alt-proteins", "soil-carbon",
+    # Carbon Capture & Removal
+    "carbon-removal", "carbon-accounting",
+    # Circular Economy & Waste
+    "waste-to-value", "recycling-tech",
+    # Water & Climate Resilience
+    "water-mgmt", "climate-fintech-risk",
+    # Advanced Computing & Connectivity
+    "quantum-computing", "next-gen-hardware",
+    # AI & ML
+    "advanced-ai",
+    # Robotics, Machines & Space
+    "autonomous-systems", "aerospace-spacetech",
+    # Materials & Physical Sciences
+    "advanced-materials", "photonics",
+    # Biotechnology & Life Sciences
+    "synthetic-biology", "healthcare-tech",
+    # Web3 & DLT
+    "blockchain-infra",
 ]
 
-# Two-level theme taxonomy for the nucleated Directory (zones -> broader groups -> subthemes).
-# Bubbles in the nucleated view are GROUPS (not individual startups); each shows its count.
+# Two-level taxonomy for the nucleated Directory.
+# Layer 1 = sub-sector (the bubbles / theme tiles). Layer 2 = segments (expand under each).
 THEME_ZONES = [
     {"key": "climate", "name": "Climate Tech", "groups": [
-        {"key": "circular", "name": "Circular Economy", "sub": ["circular-economy"]},
-        {"key": "waste", "name": "Waste Management", "sub": ["waste-to-value"]},
-        {"key": "decarbon", "name": "Decarbonization", "sub": ["industrial-decarbonization", "carbon-capture", "climate-ai"]},
-        {"key": "energy", "name": "Energy", "sub": ["energy-storage", "grid-tech", "green-hydrogen", "water-tech"]},
-        {"key": "mobility", "name": "Mobility", "sub": ["sustainable-mobility"]},
-        {"key": "agri", "name": "Agriculture", "sub": ["agritech-climate"]},
-        {"key": "built", "name": "Built Environment", "sub": []},
+        {"key": "energy-grid", "name": "Clean Energy & Grid", "seg": ["renewable-generation", "energy-storage", "grid-infrastructure"]},
+        {"key": "mobility", "name": "Mobility & Transport", "seg": ["evs", "alt-fuels", "micromobility-logistics"]},
+        {"key": "built", "name": "Built Environment & Industry", "seg": ["decarbonized-materials", "building-tech"]},
+        {"key": "food-ag", "name": "Food, Land Use & Agriculture", "seg": ["precision-ag", "alt-proteins", "soil-carbon"]},
+        {"key": "carbon", "name": "Carbon Capture & Removal", "seg": ["carbon-removal", "carbon-accounting"]},
+        {"key": "circular", "name": "Circular Economy & Waste", "seg": ["waste-to-value", "recycling-tech"]},
+        {"key": "water", "name": "Water & Climate Resilience", "seg": ["water-mgmt", "climate-fintech-risk"]},
     ]},
     {"key": "deep", "name": "Deep Tech", "groups": [
-        {"key": "robotics", "name": "Robotics", "sub": ["nanorobotics", "robotics-in-healthcare"]},
-        {"key": "space", "name": "Space Tech", "sub": ["space-tech"]},
-        {"key": "biotech", "name": "Biotech", "sub": ["biotech"]},
-        {"key": "materials", "name": "New Materials", "sub": ["materials-science"]},
-        {"key": "ai", "name": "AI Infrastructure", "sub": []},
-        {"key": "semi", "name": "Semiconductors", "sub": []},
-        {"key": "quantum", "name": "Quantum", "sub": ["quantum"]},
+        {"key": "compute", "name": "Advanced Computing & Connectivity", "seg": ["quantum-computing", "next-gen-hardware"]},
+        {"key": "ai", "name": "Artificial Intelligence & ML", "seg": ["advanced-ai"]},
+        {"key": "robotics", "name": "Robotics, Machines & Space", "seg": ["autonomous-systems", "aerospace-spacetech"]},
+        {"key": "materials", "name": "Materials & Physical Sciences", "seg": ["advanced-materials", "photonics"]},
+        {"key": "biotech", "name": "Biotechnology & Life Sciences", "seg": ["synthetic-biology", "healthcare-tech"]},
+        {"key": "web3", "name": "Web3 & Distributed Ledger", "seg": ["blockchain-infra"]},
     ]},
 ]
-_SUB_TO_GROUP = {s: (z["key"], g["key"]) for z in THEME_ZONES for g in z["groups"] for s in g["sub"]}
+_SEG_LABELS = {s: s.replace("-", " ").title() for z in THEME_ZONES for g in z["groups"] for s in g["seg"]}
+_SUB_TO_GROUP = {s: g["key"] for z in THEME_ZONES for g in z["groups"] for s in g["seg"]}
+_GROUP_NAME = {g["key"]: g["name"] for z in THEME_ZONES for g in z["groups"]}
+# Forward-map legacy subtheme tags (pre-restructure) onto the new segment keys.
+_LEGACY_MAP = {
+    "waste-to-value": "waste-to-value", "industrial-decarbonization": "decarbonized-materials",
+    "climate-ai": "advanced-ai", "energy-storage": "energy-storage", "green-hydrogen": "alt-fuels",
+    "carbon-capture": "carbon-removal", "sustainable-mobility": "evs", "agritech-climate": "precision-ag",
+    "water-tech": "water-mgmt", "circular-economy": "recycling-tech", "grid-tech": "grid-infrastructure",
+    "robotics-in-healthcare": "autonomous-systems", "nanorobotics": "autonomous-systems",
+    "space-tech": "aerospace-spacetech", "materials-science": "advanced-materials", "deep-tech-other": "advanced-materials",
+}
+
+
+def _norm_tags(c):
+    pc = c.get("published_card") or {}
+    tags = pc.get("subtheme_tags") or c.get("structured", {}).get("subtheme_tags") or c.get("raw", {}).get("subtheme_tags", []) or []
+    out = []
+    for t in tags:
+        out.append(_LEGACY_MAP.get(t, t))
+    return out
 
 
 def group_counts(cards):
-    """Count published startups per group key across all cards (stable counts)."""
+    """Count published startups per Layer-1 group key (stable counts)."""
     counts = {}
     for c in cards:
-        pc = c.get("published_card") or {}
-        tags = pc.get("subtheme_tags") or c.get("structured", {}).get("subtheme_tags") or c.get("raw", {}).get("subtheme_tags", []) or []
         seen = set()
-        for t in tags:
-            gk = _SUB_TO_GROUP.get(t, (None, None))[1]
+        for t in _norm_tags(c):
+            gk = _SUB_TO_GROUP.get(t)
             if gk and gk not in seen:
                 counts[gk] = counts.get(gk, 0) + 1
                 seen.add(gk)
+    return counts
+
+
+def segment_counts(cards):
+    """Count published startups per Layer-2 segment key (stable counts)."""
+    counts = {}
+    for c in cards:
+        seen = set()
+        for t in _norm_tags(c):
+            if t not in seen:
+                counts[t] = counts.get(t, 0) + 1
+                seen.add(t)
     return counts
 
 # ---------------------------------------------------------------------------
@@ -187,6 +240,14 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .tile .tname{font-weight:600;font-size:15px}
 .tile .tcount{font-family:var(--mono);font-size:12px;color:var(--mut)}
 
+.tilewrap{display:flex;flex-direction:column;gap:6px;min-width:150px}
+.segchips{display:flex;flex-wrap:wrap;gap:5px}
+.segchips.center{justify-content:center;margin-top:10px}
+.segchip{font-size:11px;text-decoration:none;color:var(--txt2);background:var(--bg2);
+  border:1px solid var(--line);border-radius:999px;padding:3px 9px;transition:border-color .12s,color .12s}
+.segchip:hover{border-color:var(--blue);color:var(--blue)}
+.segchip .sc{font-family:var(--mono);color:var(--mut);margin-left:3px}
+
 .nuc{position:relative;border-radius:16px;overflow:hidden;margin:8px 0 22px;border:1px solid var(--line)}
 .nucbg{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 0%,#eef3fb 0%,#f6f1f7 45%,#f3edf8 100%)}
 .nucinner{position:relative;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center;
@@ -197,6 +258,7 @@ nav a:hover{color:var(--coral);text-decoration:none}
   text-decoration:none;color:#fff;font-family:"Space Grotesk",sans-serif;border:2px solid rgba(255,255,255,.6);
   box-shadow:0 6px 22px rgba(26,26,26,.12),inset 0 0 18px rgba(255,255,255,.18);
   transition:transform .15s ease,box-shadow .15s ease}
+.bubwrap{display:flex;flex-direction:column;align-items:center}
 .bub:hover{transform:scale(1.06);box-shadow:0 10px 30px rgba(26,26,26,.18)}
 .bub .bname{font-weight:600;font-size:13px;text-align:center;padding:0 8px;line-height:1.1}
 .bub .bcount{font-family:var(--mono);font-size:18px;font-weight:700;margin-top:3px}
@@ -400,46 +462,58 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
 <!-- Persistent search + filters (floating bar) -->
 <form class="filterbar" method="get" action="/directory">
   <input type="hidden" name="group" value="{{ filters.group }}">
+  <input type="hidden" name="segment" value="{{ filters.segment }}">
   <div class="search"><span class="sico">⌕</span><input name="q" value="{{ filters.q }}" placeholder="Search startups, problems, tags…"></div>
   <select name="stage"><option value="">All stages</option>{% for s in stages %}<option value="{{ s }}" {% if s==filters.stage %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
   <select name="verify"><option value="">Any verification</option><option value="verified" {% if filters.verify=='verified' %}selected{% endif %}>Verified</option><option value="unverified" {% if filters.verify=='unverified' %}selected{% endif %}>Unverified</option></select>
   <button class="cta" type="submit">Apply</button>
-  {% if filters.group or filters.q or filters.stage or filters.verify %}<a class="pill" href="/directory">Clear ✕</a>{% endif %}
+  {% if filters.group or filters.segment or filters.q or filters.stage or filters.verify %}<a class="pill" href="/directory">Clear ✕</a>{% endif %}
 </form>
 
-<!-- Theme picker entry (calm "pick a theme" step) -->
+<!-- Theme picker entry (calm "pick a theme" step): Layer 1 sub-sectors + Layer 2 segments -->
 <div class="themepick">
   <div class="tphead">
     <h2 style="margin:0">Pick a theme</h2>
-    {% if active_group_name %}<span class="pill" style="background:var(--coral-bg);color:var(--coral)">Filtered: {{ active_group_name }} <a href="/directory" style="margin-left:6px;color:inherit">✕</a></span>{% endif %}
-    <button class="pill" id="toggleNuc" onclick="toggleNuc()">{% if active_group %}Show map{% else %}Nucleated view{% endif %}</button>
+    {% if active_segment_name %}<span class="pill" style="background:var(--coral-bg);color:var(--coral)">Segment: {{ active_segment_name }} <a href="/directory?group={{ active_group }}" style="margin-left:6px;color:inherit">✕</a></span>
+    {% elif active_group_name %}<span class="pill" style="background:var(--coral-bg);color:var(--coral)">Sub-sector: {{ active_group_name }} <a href="/directory" style="margin-left:6px;color:inherit">✕</a></span>{% endif %}
+    <button class="pill" id="toggleNuc" onclick="toggleNuc()">{% if active_group or active_segment %}Show map{% else %}Nucleated view{% endif %}</button>
   </div>
   {% for z in zones %}
   <div class="zone">
     <div class="zonelbl">{{ z.name }}</div>
     <div class="tiles">
       {% for g in z.groups %}
-      <a class="tile" href="/directory?group={{ g.key }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">
-        <span class="tname">{{ g.name }}</span>
-        <span class="tcount">{{ counts.get(g.key, 0) }}</span>
-      </a>
+      <div class="tilewrap">
+        <a class="tile" href="/directory?group={{ g.key }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">
+          <span class="tname">{{ g.name }}</span>
+          <span class="tcount">{{ counts.get(g.key, 0) }}</span>
+        </a>
+        <div class="segchips">
+          {% for s in g.seg %}<a class="segchip" href="/directory?segment={{ s }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">{{ seg_labels.get(s, s) }} <span class="sc">{{ seg_counts.get(s, 0) }}</span></a>{% endfor %}
+        </div>
+      </div>
       {% endfor %}
     </div>
   </div>
   {% endfor %}
 </div>
 
-<!-- Nucleated bubble overlay (collapsible; theme filter tool, not per-startup) -->
-<div class="nuc" id="nuc" style="display:{% if active_group %}none{% else %}block{% endif %}">
+<!-- Nucleated bubble overlay (collapsible; Layer 1 = sub-sector bubbles, Layer 2 = segment chips) -->
+<div class="nuc" id="nuc" style="display:{% if active_group or active_segment %}none{% else %}block{% endif %}">
   <div class="nucbg"></div>
   <div class="nucinner">
     {% for z in zones %}
     <div class="nuczone"><span class="nuczonelbl">{{ z.name }}</span></div>
     {% for g in z.groups %}
-    <a class="bub bub-{{ loop.index0 % 3 }}" style="--i:{{ loop.index0 }}"
-       href="/directory?group={{ g.key }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">
-      <span class="bname">{{ g.name }}</span><span class="bcount">{{ counts.get(g.key, 0) }}</span>
-    </a>
+    <div class="bubwrap">
+      <a class="bub bub-{{ loop.index0 % 3 }}" style="--i:{{ loop.index0 }}"
+         href="/directory?group={{ g.key }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">
+        <span class="bname">{{ g.name }}</span><span class="bcount">{{ counts.get(g.key, 0) }}</span>
+      </a>
+      <div class="segchips center">
+        {% for s in g.seg %}<a class="segchip" href="/directory?segment={{ s }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">{{ seg_labels.get(s, s) }} <span class="sc">{{ seg_counts.get(s, 0) }}</span></a>{% endfor %}
+      </div>
+    </div>
     {% endfor %}
     {% endfor %}
     <button class="nucclose" onclick="toggleNuc()">Collapse ✕</button>
@@ -448,7 +522,9 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
 
 <div class="gridwrap">
   <div class="gridhead">
-    <span>{% if active_group_name %}{{ active_group_name }} — {{ cards|length }} startup{{ '' if cards|length==1 else 's' }}{% else %}{{ cards|length }} startups{% endif %}</span>
+    <span>{% if active_segment_name %}{{ active_segment_name }} — {{ cards|length }} startup{{ '' if cards|length==1 else 's' }}
+    {% elif active_group_name %}{{ active_group_name }} — {{ cards|length }} startup{{ '' if cards|length==1 else 's' }}
+    {% else %}{{ cards|length }} startups{% endif %}</span>
   </div>
   <div class="grid">
 {% for c in cards %}
@@ -1031,28 +1107,39 @@ def home():
 def directory():
     all_cards = [store.get(s["id"]) for s in store.published()]
     all_cards = [c for c in all_cards if c]
-    # stable group counts (over all published, independent of active filters)
+    # stable counts (over all published, independent of active filters)
     counts = group_counts(all_cards)
+    seg_counts = segment_counts(all_cards)
 
     q = (request.args.get("q") or "").strip().lower()
     stage_f = (request.args.get("stage") or "").strip()
     verify_f = (request.args.get("verify") or "").strip()
     group_f = (request.args.get("group") or "").strip()
+    seg_f = (request.args.get("segment") or "").strip()
 
-    # map active group -> its subthemes, for filtering the gallery
+    # map active group -> its segments; active segment -> exact key
     active_sub = set()
     active_group_name = None
-    if group_f:
+    active_segment_name = None
+    if seg_f:
+        active_sub = {seg_f}
+        active_segment_name = _SEG_LABELS.get(seg_f, seg_f)
+        for z in THEME_ZONES:
+            for g in z["groups"]:
+                if seg_f in g["seg"]:
+                    active_group_name = g["name"]
+                    break
+    elif group_f:
         for z in THEME_ZONES:
             for g in z["groups"]:
                 if g["key"] == group_f:
-                    active_sub = set(g["sub"])
+                    active_sub = set(g["seg"])
                     active_group_name = g["name"]
                     break
 
     def matches(c):
+        tags = _norm_tags(c)
         pc = c.get("published_card") or {}
-        tags = pc.get("subtheme_tags") or c.get("structured", {}).get("subtheme_tags") or c.get("raw", {}).get("subtheme_tags", []) or []
         if active_sub and not (set(tags) & active_sub):
             return False
         if stage_f and (pc.get("stage") or c.get("structured", {}).get("stage") or c.get("raw", {}).get("stage", "")) != stage_f:
@@ -1081,9 +1168,12 @@ def directory():
             if user["email"] in c.get("voters", []):
                 voted.add(c["id"])
     return render_template_string(TPL_HOME, cards=cards, voted=voted, stats=stats,
-                                  zones=THEME_ZONES, counts=counts,
+                                  zones=THEME_ZONES, counts=counts, seg_counts=seg_counts,
+                                  seg_labels=_SEG_LABELS,
                                   active_group=group_f, active_group_name=active_group_name,
-                                  filters={"q": q, "stage": stage_f, "verify": verify_f, "group": group_f},
+                                  active_segment=seg_f, active_segment_name=active_segment_name,
+                                  filters={"q": q, "stage": stage_f, "verify": verify_f,
+                                           "group": group_f, "segment": seg_f},
                                   metrics={"startups": len(all_cards),
                                            "builders": store.builder_count(),
                                            "vcs": store.role_counts()["vc"]},
