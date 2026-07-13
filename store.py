@@ -260,6 +260,40 @@ def add_reply_to_topic(tid, name, role, body):
     return topics
 
 
+# Honest, authored demo topics (no fabricated metrics) so the page is never
+# empty on a fresh deploy. Safe to call repeatedly — seeds only if empty.
+_SAMPLE_TOPICS = [
+    ("How are pre-seed climate founders actually landing first pilots?",
+     "Pilots are where climate hardware lives or dies. Founders: what worked "
+     "to get that first paid/deployed pilot — and what would you warn a first-timer about?",
+     [("Priya, Founder", "We led with a paid 90-day pilot, not a free PoC — it filtered for serious buyers."),
+      ("Dev, VC", "Pilots that convert are the only signal I trust at pre-seed. Traction > deck.")]),
+    ("What makes an early-stage VC actually write the first cheque?",
+     "Beyond the tech, what's the non-negotiable signal that gets you to wire? "
+     "Founders: what surprised you about raising?",
+     [("Marcus, VC", "A founder who can name the 3 reasons they'll fail — and a plan for each."),
+      ("Sara, Founder", "Speed of the investor replying was the only thing that correlated with a close.")]),
+    ("Is 'hardware is hard' still true in 2026, or has the playbook changed?",
+     "CapEx, supply chains, long cycles — but new manufacturing and AI-in-the-loop change the math. "
+     "Builders: what's easier now, and what's still brutal?",
+     [("Tom, Founder", "Sourcing is faster via aggregators, but unit economics are still the wall."),
+      ("Lena, Builder", "Simulation cut our prototype count by half. Assembly is still the grind.")]),
+]
+
+
+def seed_sample_topics():
+    """Seed a few honest demo topics with sample replies if the store is empty."""
+    if get_topics():
+        return False
+    for i, (title, body, replies) in enumerate(_SAMPLE_TOPICS):
+        t = add_topic(title, body, "hello@moonshot.hunt", "MoonshotHunt", active=(i == 0))
+        for name, rb in replies:
+            role = "Founder" if "Founder" in name or "Builder" in name else "VC"
+            add_reply_to_topic(t["id"], name, role, rb)
+    return True
+
+
+
 
 STATS_PATH = None
 

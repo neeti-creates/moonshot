@@ -142,7 +142,7 @@ h2{font-size:22px;margin:0 0 10px}
 h3{font-size:16px;margin:0 0 10px}
 a{color:var(--coral);text-decoration:none}
 a:hover{text-decoration:underline}
-.wrap{max-width:1080px;margin:0 auto;padding:24px}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 36px}
 .wrap-full{max-width:none;margin:0;padding:0}
 nav{display:flex;gap:14px;align-items:center;padding:12px 24px;
   background:rgba(248,247,244,.82);backdrop-filter:saturate(140%) blur(8px);
@@ -408,7 +408,7 @@ textarea{min-height:72px;resize:vertical}
 .disclaimer{background:var(--amber-bg);border:1px solid #EAD9BE;color:var(--amber-tx);
   border-radius:10px;padding:10px 12px;font-size:13px;margin:10px 0}
 .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;
-  padding:56px 0 34px;margin-bottom:8px;background:none;border:none}
+  padding:56px 4px 34px;margin-bottom:8px;background:none;border:none}
 .hero .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:700;margin-bottom:16px}
 .hero h1{font-size:56px;line-height:1.0;font-weight:800;letter-spacing:-2px;margin:0}
 .hero h1 .dot{color:var(--coral)}
@@ -443,7 +443,7 @@ textarea{min-height:72px;resize:vertical}
 .flownav{display:flex;justify-content:flex-end;gap:12px;margin-top:16px}
 .ghostbtn{background:none;border:1px solid var(--line);border-radius:999px;padding:12px 24px;font-weight:700;cursor:pointer;color:var(--ink)}
 .chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px}
-.chipswide{margin-top:8px;gap:9px 10px}
+.chipswide{margin-top:8px;gap:9px 10px;max-height:78px;overflow:hidden}
 .chipswide .funpill{font-size:13.5px;padding:7px 14px}
 .chiplbl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);font-weight:600;margin-right:2px}
 .funpill{font-size:13px;text-decoration:none;color:var(--txt);background:var(--bg);border:1px solid var(--line);
@@ -1905,6 +1905,9 @@ def whitespace():
 @app.route("/discussion", methods=["GET"])
 def discussion():
     user = _current_user()
+    # never ship an empty discussion: self-seed a few honest demo topics on first load
+    if not store.get_topics():
+        store.seed_sample_topics()
     topics = store.get_topics()
     active = store.get_active_topic()
     return render_template_string(TPL_DISCUSSION, topics=topics, active_topic=active, is_admin=_is_admin(),
