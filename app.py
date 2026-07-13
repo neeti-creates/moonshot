@@ -173,8 +173,8 @@ nav .navlinks a.active{color:var(--coral);background:#fff;border-color:var(--lin
 .stats .stat span{font-size:12.5px;color:var(--txt2);margin-top:3px}
 
 .card{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0;
-  box-shadow:0 1px 3px rgba(26,26,26,.06);transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease}
-.card:hover{box-shadow:0 6px 16px rgba(91,58,142,.12);border-color:var(--coral);transform:translateY(-2px)}
+  box-shadow:0 10px 28px rgba(26,26,26,.14);transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease}
+.card:hover{box-shadow:0 14px 34px rgba(91,58,142,.18);border-color:var(--coral);transform:translateY(-2px)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
 
 /* ===== TICKET CARD (blue / beige / coral) ===== */
@@ -376,9 +376,41 @@ textarea{min-height:72px;resize:vertical}
 .muted{color:var(--mut)}.small{font-size:13px}.meta{font-size:13px;color:var(--txt2)}
 .disclaimer{background:var(--amber-bg);border:1px solid #EAD9BE;color:var(--amber-tx);
   border-radius:10px;padding:10px 12px;font-size:13px;margin:10px 0}
-.hero{background:linear-gradient(135deg,#F3EDFB 0%,#EEF3FB 55%,#FBF1EE 100%);border:1px solid var(--line);border-radius:16px;padding:30px 30px 24px;margin-bottom:8px}
-.hero h1{font-size:30px;line-height:1.15;margin:0 0 10px;letter-spacing:-.01em}
-.lead{color:var(--txt2);max-width:680px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;
+  padding:56px 0 34px;margin-bottom:8px;background:none;border:none}
+.hero .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:700;margin-bottom:16px}
+.hero h1{font-size:56px;line-height:1.0;font-weight:800;letter-spacing:-2px;margin:0}
+.hero h1 .dot{color:var(--coral)}
+.lead{color:var(--txt2);max-width:520px;font-size:17px;margin:18px 0 0}
+.herocta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:26px}
+/* editorial circle cluster (Ref 1) */
+.cluster{position:relative;height:300px}
+.c{position:absolute;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.c.lg{background:#fff;border:1px solid var(--line);box-shadow:0 6px 18px rgba(26,26,26,.06)}
+.c.ghost{background:var(--grid)}
+.c .n{font-weight:800;font-size:22px}
+.c .t{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.badge{position:absolute;background:#111;color:#fff;border-radius:999px;padding:5px 11px;font-size:11px;font-weight:700}
+.ring{position:absolute;border-radius:50%;border:1.5px dashed var(--line)}
+/* submit swipe-flow */
+.flow{margin:24px 0 10px}
+.flowhead{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.dots{display:flex;gap:8px}.dot{width:9px;height:9px;border-radius:50%;background:var(--line)}.dot.on{background:var(--coral);width:26px;border-radius:999px}
+.ft{font-size:13px;color:var(--mut);font-weight:600}
+.stage{overflow:hidden;border-radius:22px}
+.track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.step{flex:0 0 100%;padding:4px}
+.stp{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--coral);border-radius:999px;padding:4px 12px;margin-bottom:10px}
+.step h3{font-size:28px;margin:0 0 6px}
+.cheer{color:var(--mut);margin:0 0 22px;font-size:15px}
+.field{margin-bottom:16px}
+.field label{display:block;font-weight:700;font-size:14px;margin-bottom:6px}
+.field .sub{font-weight:400;color:var(--mut);font-size:12px}
+.field input,.field textarea{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:12px;font:inherit;background:#fff}
+.field textarea{resize:vertical}
+.herohint{font-size:13px;color:var(--mut)}
+.flownav{display:flex;justify-content:space-between;margin-top:16px}
+.ghostbtn{background:none;border:1px solid var(--line);border-radius:999px;padding:12px 24px;font-weight:700;cursor:pointer;color:var(--ink)}
 .chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px}
 .chiplbl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);font-weight:600;margin-right:2px}
 .funpill{font-size:13px;text-decoration:none;color:var(--txt);background:var(--bg);border:1px solid var(--line);
@@ -585,51 +617,65 @@ def _logo_for(rec):
         return None
 
 
-TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
+TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
 <div class="hero">
-  <h1>Building the future of <span style="color:var(--coral)">climate</span> &amp; <span style="color:var(--blue)">deep tech</span> — pre-funding?</h1>
-  <p class="lead">You're early. So are the people who should back you. MoonshotHunt is where pre-seed climate &amp; deep-tech founders get structured, VC-legible, and discovered — before the deck polish.</p>
-  <div class="heroact">
-    <div class="hfield grow"><label>Search</label>
-      <input id="heroQ" placeholder="Search startups, problems, tags…" onkeydown="if(event.key==='Enter'){event.preventDefault();heroSearch();}"></div>
-    <div class="hfield"><label>Theme</label>
-      <select id="heroTheme" onchange="heroSearch()">
-        <option value="">All themes</option>
-        <option value="energy-grid">Clean Energy &amp; Grid</option>
-        <option value="mobility">Mobility &amp; Transport</option>
-        <option value="built">Built Environment &amp; Industry</option>
-        <option value="food-ag">Food, Land Use &amp; Agriculture</option>
-        <option value="carbon">Carbon Capture &amp; Removal</option>
-        <option value="circular">Circular Economy &amp; Waste</option>
-        <option value="water">Water &amp; Climate Resilience</option>
-        <option value="compute">Advanced Computing</option>
-        <option value="ai">AI &amp; ML</option>
-        <option value="robotics">Robotics, Machines &amp; Space</option>
-        <option value="materials">Materials &amp; Physical Sciences</option>
-        <option value="biotech">Biotechnology &amp; Life Sciences</option>
-        <option value="web3">Web3 &amp; DLT</option>
-      </select></div>
-    <a class="cta" href="/submit">Submit your startup <span class="arw">→</span></a>
-  </div>
-  <div class="stats" aria-label="platform metrics">
-    <div class="stat"><b>{{ metrics.startups }}</b><span>startups tracked</span></div>
-    <div class="stat"><b>{{ metrics.builders }}</b><span>builders on platform</span></div>
-    <div class="stat"><b>{{ metrics.vcs }}</b><span>VCs on platform</span></div>
-  </div>
-  <div class="chips">
-    <span class="chiplbl">Popular themes:</span>
-    <a class="funpill" href="/directory?group=energy-grid">⚡ Clean Energy</a>
-    <a class="funpill" href="/directory?group=carbon">🌍 Carbon Removal</a>
-    <a class="funpill" href="/directory?group=circular">♻️ Circular Economy</a>
-    <a class="funpill" href="/directory?group=mobility">🚗 Mobility</a>
-    <a class="funpill" href="/directory?group=robotics">🤖 Robotics</a>
-    <a class="funpill" href="/directory?group=ai">🧠 AI &amp; ML</a>
-    <a class="funpill" href="/directory?group=materials">🔬 Materials</a>
+  <div class="heroL">
+    <div class="eyebrow">MoonshotHunt · Discovery</div>
+    <h1>Building the future of <span style="color:var(--coral)">climate</span> &amp; <span style="color:var(--blue)">deep tech</span> — pre-funding<span class="dot">?</span></h1>
+    <p class="lead">You're early. So are the people who should back you. MoonshotHunt is where pre-seed climate &amp; deep-tech founders get structured, VC-legible, and discovered — before the deck polish.</p>
+    <div class="heroact">
+      <div class="hfield grow"><label>Search</label>
+        <input id="heroQ" placeholder="Search startups, problems, tags…" onkeydown="if(event.key==='Enter'){event.preventDefault();heroSearch();}"></div>
+      <div class="hfield"><label>Theme</label>
+        <select id="heroTheme" onchange="heroSearch()">
+          <option value="">All themes</option>
+          <option value="energy-grid">Clean Energy &amp; Grid</option>
+          <option value="mobility">Mobility &amp; Transport</option>
+          <option value="built">Built Environment &amp; Industry</option>
+          <option value="food-ag">Food, Land Use &amp; Agriculture</option>
+          <option value="carbon">Carbon Capture &amp; Removal</option>
+          <option value="circular">Circular Economy &amp; Waste</option>
+          <option value="water">Water &amp; Climate Resilience</option>
+          <option value="compute">Advanced Computing</option>
+          <option value="ai">AI &amp; ML</option>
+          <option value="robotics">Robotics, Machines &amp; Space</option>
+          <option value="materials">Materials &amp; Physical Sciences</option>
+          <option value="biotech">Biotechnology &amp; Life Sciences</option>
+          <option value="web3">Web3 &amp; DLT</option>
+        </select></div>
+      <a class="cta" href="/submit">Submit your startup <span class="arw">→</span></a>
+    </div>
+    <div class="stats" aria-label="platform metrics">
+      <div class="stat"><b>{{ metrics.startups }}</b><span>startups tracked</span></div>
+      <div class="stat"><b>{{ metrics.builders }}</b><span>builders on platform</span></div>
+      <div class="stat"><b>{{ metrics.vcs }}</b><span>VCs on platform</span></div>
+    </div>
+    <div class="chips">
+      <span class="chiplbl">Popular themes:</span>
+      <a class="funpill" href="/directory?group=energy-grid">⚡ Clean Energy</a>
+      <a class="funpill" href="/directory?group=carbon">🌍 Carbon Removal</a>
+      <a class="funpill" href="/directory?group=circular">♻️ Circular Economy</a>
+      <a class="funpill" href="/directory?group=mobility">🚗 Mobility</a>
+      <a class="funpill" href="/directory?group=robotics">🤖 Robotics</a>
+      <a class="funpill" href="/directory?group=ai">🧠 AI &amp; ML</a>
+      <a class="funpill" href="/directory?group=materials">🔬 Materials</a>
     <a class="funpill" href="/directory?group=biotech">🧬 Biotech</a>
     <a class="funpill" href="/directory?group=water">💧 Water</a>
     <a class="funpill" href="/directory?group=web3">🔗 Web3</a>
     <a class="funpill" href="/directory?group=food-ag">🌱 Food &amp; Ag</a>
     <a class="funpill" href="/directory?group=built">🏗️ Built Env</a>
+  </div>
+  </div>
+  <div class="heroR">
+    <div class="cluster">
+      <div class="ring" style="width:300px;height:300px;left:20px;top:10px"></div>
+      <div class="c lg" style="width:120px;height:120px;left:50px;top:20px"><span class="n">{{ metrics.startups }}</span><span class="t">startups</span></div>
+      <div class="c ghost" style="width:84px;height:84px;left:190px;top:0"><span class="n">18</span><span class="t">sectors</span></div>
+      <div class="c lg" style="width:96px;height:96px;left:0;top:170px"><span class="n">{{ metrics.vcs }}</span><span class="t">VCs</span></div>
+      <div class="c ghost" style="width:70px;height:70px;left:220px;top:130px"><span class="n">1</span><span class="t">mission</span></div>
+      <div class="badge" style="left:120px;top:110px">idea → pilot</div>
+      <div class="badge" style="left:20px;top:280px">pre-seed first</div>
+    </div>
   </div>
 </div>
 
@@ -722,61 +768,133 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
 """)
 
 
-TPL_SUBMIT = _page("Submit — MoonshotHunt", """
-<h2>Submit your startup</h2>
-<p class="muted small">Upload whatever you have — deck, one-pager, tech spec, product doc. Our agent reads it like a VC would and drafts your listing. You'll review everything before it goes live.</p>
-<form method="post" action="/submit" enctype="multipart/form-data" id="subForm">
-  <div class="card">
-    <div class="seclabel">Identity <span class="sub">you type these directly — they're authoritative</span></div>
-    <label>Startup name *</label><input name="startup_name" required>
-    <label>Founder name(s) *</label><input name="founder_names" required>
-    <label>Founder LinkedIn * <span class="sub">needed for the mechanical verifier check</span></label><input name="founder_linkedin" placeholder="https://linkedin.com/in/..." required>
-    <label>Founder email * <span class="sub">for your session; we won't spam</span></label><input name="founder_email" type="email" placeholder="you@startup.com" required>
-    <label>Website / product link</label><input name="website" placeholder="https://">
-  </div>
-
-  <div class="card">
-    <div class="seclabel">Uploads <span class="sub">PDF / PPTX / DOCX · max 5 files · 20MB each · the agent reads these</span></div>
-    <div id="drop" style="border:2px dashed var(--coral);border-radius:12px;padding:28px;text-align:center;color:var(--txt2);
-         background:var(--bg2);cursor:pointer;transition:background .15s">
-      <div style="font-size:30px">⬆</div>
-      <div style="font-weight:600;color:var(--txt)">Drag &amp; drop files here</div>
-      <div class="small">or click to browse</div>
-      <input id="fileInput" type="file" name="files" multiple accept=".pdf,.pptx,.docx" style="display:none">
+TPL_SUBMIT = _page("Submit — MoonshotHunt", """\
+<div class="hero">
+  <div class="heroL">
+    <div class="eyebrow">MoonshotHunt · for founders</div>
+    <h1>ideas<br>worth<br>backing<span class="dot">.</span></h1>
+    <p class="lead">You're pre-funding. Early. Unproven on paper. That's exactly why you belong here — we read the builder, not just the deck.</p>
+    <div class="herocta">
+      <button class="cta" type="button" onclick="go(0)">Start your listing <span class="arw">→</span></button>
+      <span class="herohint">~2 min · you review before anything goes live</span>
     </div>
-    <div id="chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
   </div>
-
-  <div class="card">
-    <div class="seclabel">Links <span class="sub">press / article / extra URLs</span></div>
-    <div id="linkRows" style="display:flex;flex-direction:column;gap:8px">
-      <input class="linkinp" name="url1" placeholder="https://article-or-press-link">
+  <div class="heroR">
+    <div class="cluster">
+      <div class="ring" style="width:300px;height:300px;left:20px;top:10px"></div>
+      <div class="c lg" style="width:120px;height:120px;left:50px;top:20px"><span class="n">MH</span><span class="t">the hunt</span></div>
+      <div class="c ghost" style="width:84px;height:84px;left:190px;top:0"><span class="n">18</span><span class="t">sectors</span></div>
+      <div class="c lg" style="width:96px;height:96px;left:0;top:170px"><span class="n">120+</span><span class="t">founders</span></div>
+      <div class="c ghost" style="width:70px;height:70px;left:220px;top:130px"><span class="n">1</span><span class="t">mission</span></div>
+      <div class="badge" style="left:120px;top:110px">idea → pilot</div>
+      <div class="badge" style="left:20px;top:280px">pre-seed first</div>
     </div>
-    <button type="button" class="pill" id="addLink" style="cursor:pointer;margin-top:8px">+ add another link</button>
   </div>
+</div>
 
-  <div class="btnrow"><button type="submit" class="cta">Run agent pipeline <span class="arw">→</span></button></div>
-</form>
+<div class="flow">
+  <div class="flowhead">
+    <div class="dots" id="dots"></div>
+    <div class="ft" id="ft">Step 1 of 4</div>
+  </div>
+  <form method="post" action="/submit" enctype="multipart/form-data" id="subForm">
+    <div class="stage"><div class="track" id="track">
+
+      <div class="step">
+        <div class="card">
+          <span class="stp">Step 1 · Your startup</span>
+          <h3>Tell us what you're building.</h3>
+          <p class="cheer">No polish needed. A working name and a sentence is enough to start.</p>
+          <div class="field"><label>Startup name *</label><input name="startup_name" required></div>
+          <div class="field"><label>Founder name(s) *</label><input name="founder_names" required></div>
+          <div class="field"><label>Website / product link</label><input name="website" placeholder="https://"></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="card">
+          <span class="stp">Step 2 · You</span>
+          <h3>Where can we reach you?</h3>
+          <p class="cheer">This stays yours — your session, your listing, your call on what goes live.</p>
+          <div class="field"><label>Founder LinkedIn * <span class="sub">needed for the mechanical verifier check</span></label><input name="founder_linkedin" placeholder="https://linkedin.com/in/..." required></div>
+          <div class="field"><label>Founder email * <span class="sub">for your session; we won't spam</span></label><input name="founder_email" type="email" placeholder="you@startup.com" required></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="card">
+          <span class="stp">Step 3 · Show your work</span>
+          <h3>Drop what you have.</h3>
+          <p class="cheer">Deck, one-pager, spec, doc — the agent reads it like a VC would. Max 5 files.</p>
+          <div id="drop" style="border:2px dashed var(--coral);border-radius:12px;padding:24px;text-align:center;color:var(--txt2);background:var(--bg2);cursor:pointer;transition:background .15s">
+            <div style="font-size:28px">⬆</div>
+            <div style="font-weight:600;color:var(--txt)">Drag &amp; drop files here</div>
+            <div class="small">or click to browse · PDF / PPTX / DOCX</div>
+            <input id="fileInput" type="file" name="files" multiple accept=".pdf,.pptx,.docx" style="display:none">
+          </div>
+          <div id="chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+          <div class="field" style="margin-top:18px"><label>Your logo — transparent PNG <span class="sub">so we can place it cleanly on your card</span></label>
+            <input type="file" name="logo_file" accept="image/png"></div>
+          <div class="field"><label>Press / article / extra links</label>
+            <div id="linkRows" style="display:flex;flex-direction:column;gap:8px"><input class="linkinp" name="url1" placeholder="https://article-or-press-link"></div>
+            <button type="button" class="pill" id="addLink" style="cursor:pointer;margin-top:8px">+ add another link</button></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="card">
+          <span class="stp">Step 4 · Why &amp; launch</span>
+          <h3>Why are you building this?</h3>
+          <p class="cheer">The part VCs can't read off a deck. What made you start — and what keeps you going?</p>
+          <div class="field"><label>Why you built this *</label>
+            <textarea name="why_built" rows="4" placeholder="The spark, the gap you saw, the future you want…" required></textarea></div>
+          <div class="field"><label>Anything else for the reviewers? <span class="sub">optional</span></label>
+            <input name="note" placeholder="Optional note"></div>
+          <div class="btnrow"><button type="submit" class="cta">Run agent pipeline <span class="arw">→</span></button></div>
+        </div>
+      </div>
+
+    </div></div>
+  </form>
+</div>
+
+<script>
+const TOTAL=4; let i=0;
+const track=document.getElementById('track'),dots=document.getElementById('dots'),ft=document.getElementById('ft'),
+      back=document.getElementById('back'),next=document.getElementById('next');
+for(let k=0;k<TOTAL;k++){const d=document.createElement('div');d.className='dot';dots.appendChild(d);}
+function go(n){i=n;render();document.querySelector('.flow').scrollIntoView({behavior:'smooth'});}
+function move(d){i=Math.max(0,Math.min(TOTAL-1,i+d));render();}
+function render(){
+  track.style.transform='translateX('+(-i*100)+'%)';
+  [...dots.children].forEach((d,k)=>d.className='dot'+(k===i?' on':''));
+  ft.textContent='Step '+(i+1)+' of '+TOTAL;
+}
+if(back) back.onclick=function(){move(-1);};
+if(next) next.onclick=function(){move(1);};
+render();
+</script>
+
 <script>
 const MAXF=5, MAXL=5, drop=document.getElementById('drop'), fi=document.getElementById('fileInput');
 const chips=document.getElementById('chips'); let files=[];
 function renderChips(){
   chips.innerHTML='';
-  files.forEach((f,i)=>{
+  files.forEach(function(f,i){
     const sz=(f.size/1024/1024).toFixed(1)+'MB';
     const c=document.createElement('div');
     c.style.cssText='display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:13px';
     c.innerHTML='<span style="font-weight:600;color:var(--coral)">📎</span>'+f.name+' <span class="muted small">'+sz+'</span> <span style="cursor:pointer;color:var(--mut)" onclick="rmFile('+i+')">✕</span>';
     chips.appendChild(c);
   });
-  const dt=new DataTransfer(); files.forEach(f=>dt.items.add(f)); fi.files=dt.files;
+  const dt=new DataTransfer(); files.forEach(function(f){dt.items.add(f);}); fi.files=dt.files;
 }
 function rmFile(i){ files.splice(i,1); renderChips(); }
-drop.onclick=()=>fi.click();
-fi.onchange=e=>{ addFiles(e.target.files); };
-['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.style.background='#F1EBFA';}));
-['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.style.background='var(--bg2)';}));
-drop.addEventListener('drop',e=>{ addFiles(e.dataTransfer.files); });
+drop.onclick=function(){fi.click();};
+fi.onchange=function(e){ addFiles(e.target.files); };
+['dragover','dragenter'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.style.background='#F1EBFA';});});
+['dragleave','drop'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.style.background='var(--bg2)';});});
+drop.addEventListener('drop',function(e){ addFiles(e.dataTransfer.files); });
 function addFiles(list){
   for(const f of list){ if(files.length>=MAXF) break;
     const ext=f.name.rsplit('.',1)[-1].toLowerCase();
@@ -784,7 +902,7 @@ function addFiles(list){
   files=files.slice(0,MAXF); renderChips();
 }
 let links=1;
-document.getElementById('addLink').onclick=()=>{ if(links>=MAXL) return;
+document.getElementById('addLink').onclick=function(){ if(links>=MAXL) return;
   links++; const inp=document.createElement('input'); inp.className='linkinp';
   inp.name='url'+links; inp.placeholder='https://article-or-press-link';
   document.getElementById('linkRows').appendChild(inp); };
@@ -792,7 +910,7 @@ document.getElementById('addLink').onclick=()=>{ if(links>=MAXL) return;
 """)
 
 
-TPL_PROCESSING = _page("Processing — MoonshotHunt", """
+TPL_PROCESSING = _page("Processing — MoonshotHunt", """\
 <div class="card"><h2>Running the agent pipeline…</h2>
 <p class="muted">This runs two real LLM agents on your uploads. Please wait, it takes ~30–60s.</p>
 <pre id="log">Initializing…</pre></div>
@@ -1370,6 +1488,8 @@ def submit_post():
         "founder_linkedin": (request.form.get("founder_linkedin") or "").strip(),
         "founder_email": (request.form.get("founder_email") or "").strip(),
         "website": (request.form.get("website") or "").strip(),
+        "why_built": (request.form.get("why_built") or "").strip(),
+        "note": (request.form.get("note") or "").strip(),
     }
     if not raw["startup_name"]:
         return "Startup name is required.", 400
@@ -1397,6 +1517,20 @@ def submit_post():
         shutil.rmtree(upload_dir, ignore_errors=True)
         return f"Upload error: {e}", 400
 
+    # --- logo (transparent PNG) — saved alongside, stored for the card ---
+    logo_path = None
+    try:
+        lf = request.files.get("logo_file")
+        if lf and lf.filename:
+            lext = lf.filename.rsplit(".", 1)[-1].lower()
+            if lext == "png" and lf.content_length is None or (lf.content_length or 0) <= 5 * 1024 * 1024:
+                lname = "logo_" + os.urandom(4).hex() + ".png"
+                lpath = os.path.join(upload_dir, lname)
+                lf.save(lpath)
+                logo_path = lpath
+    except Exception:
+        logo_path = None
+
     # --- URL links (website already captured above; plus extra press/article links) ---
     urls = []
     if raw["website"]:
@@ -1414,7 +1548,8 @@ def submit_post():
     raw["source_urls"] = urls
 
     rec = store.create_submission(raw)
-    store.update(rec["id"], {"log": "queued", "upload_dir": upload_dir})
+    store.update(rec["id"], {"log": "queued", "upload_dir": upload_dir,
+                             "logo_path": logo_path, "why_built": raw.get("why_built", "")})
     threading.Thread(target=_run_pipeline_bg, args=(rec["id"], upload_dir), daemon=True).start()
     return redirect(url_for("processing", sid=rec["id"]))
 
@@ -1732,9 +1867,23 @@ def discussion_reply():
 
 
 TPL_DISCUSSION = _page("Discussion — MoonshotHunt", """\
-<div class="hero slim">
-  <h1>Discussion</h1>
-  <p class="lead">One active thread at a time. Founders and VCs weigh in. Manual for now — no automation.</p>
+<div class="hero">
+  <div class="heroL">
+    <div class="eyebrow">MoonshotHunt · Forum</div>
+    <h1>Discus<br>sion<span class="dot">.</span></h1>
+    <p class="lead">One active thread at a time. Founders and VCs weigh in — the real talk behind the decks.</p>
+  </div>
+  <div class="heroR">
+    <div class="cluster">
+      <div class="ring" style="width:300px;height:300px;left:20px;top:10px"></div>
+      <div class="c lg" style="width:120px;height:120px;left:50px;top:20px"><span class="n">💬</span><span class="t">the thread</span></div>
+      <div class="c ghost" style="width:84px;height:84px;left:190px;top:0"><span class="n">VC</span><span class="t">&amp; founder</span></div>
+      <div class="c lg" style="width:96px;height:96px;left:0;top:170px"><span class="n">1</span><span class="t">topic / day</span></div>
+      <div class="c ghost" style="width:70px;height:70px;left:220px;top:130px"><span class="n">↻</span><span class="t">daily</span></div>
+      <div class="badge" style="left:110px;top:120px">say it plain</div>
+      <div class="badge" style="left:20px;top:280px">no noise</div>
+    </div>
+  </div>
 </div>
 
 <div class="disc">
