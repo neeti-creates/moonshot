@@ -126,7 +126,7 @@ TPL_LAYOUT = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 :root{
   --bg:#FFFFFF; --bg2:#F8F7F4; --txt:#1A1A1A; --txt2:#6B6B6B; --mut:#9B9B9B;
   --line:#EAEAEA; --coral:#5B3A8E; --coral-bg:#F1EBFA; --teal:#1D9E75; --teal2:#0F6E56;
-  --amber-bg:#FAEEDA; --amber-tx:#854F0B; --black:#111111;
+  --amber-bg:#FAEEDA; --amber-tx:#854F0B; --black:#111111; --black2:#2B2B2B;
   --blue:#2F7FE0; --blue2:#1E5FB8; --beige:#F6F1E7; --red:#E5484D; --tan:#C9A36B;
 }
 *{box-sizing:border-box}
@@ -218,18 +218,22 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .info .bcnum{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;margin-top:2px;opacity:.7}
 
 /* ===== NUCLEATED DIRECTORY ===== */
-.filterbar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;position:sticky;top:64px;z-index:15;
+.filterbar{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;position:sticky;top:64px;z-index:15;
   background:#F4F5F7;border:1px solid var(--line);
-  border-radius:14px;padding:8px 12px;margin:18px 0;box-shadow:0 1px 4px rgba(26,26,26,.05)}
-.filterbar .search{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px;background:#fff;
+  border-radius:14px;padding:8px 12px;margin:18px 0;box-shadow:0 1px 4px rgba(26,26,26,.05);max-width:100%;overflow:hidden}
+.filterbar .search{flex:1 1 140px;min-width:0;display:flex;align-items:center;gap:8px;background:#fff;
   border:1px solid var(--line);border-radius:10px;padding:8px 14px}
 .filterbar .search .sico{color:var(--mut);font-size:16px;flex:none}
 .filterbar .search input{border:none;background:none;outline:none;flex:1;min-width:0;font:inherit;font-size:14px}
-.filterbar .fsel{flex:none;border:1px solid var(--line);border-radius:999px;padding:8px 30px 8px 14px;font:inherit;
+.filterbar .fsel{flex:0 1 auto;min-width:0;border:1px solid var(--line);border-radius:999px;padding:8px 28px 8px 13px;font:inherit;
   background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B6B6B'/%3E%3C/svg%3E") no-repeat right 12px center;
-  -webkit-appearance:none;appearance:none;color:var(--txt);cursor:pointer}
+  -webkit-appearance:none;appearance:none;color:var(--txt);cursor:pointer;max-width:170px;overflow:hidden;text-overflow:ellipsis}
 .filterbar .cta{flex:none;padding:8px 16px}
 .filterbar .pill{flex:none;white-space:nowrap}
+@media(max-width:640px){.filterbar{flex-wrap:wrap}
+  .filterbar .search{flex:1 1 100%}
+  .filterbar .fsel{flex:1 1 auto;max-width:none}
+  .filterbar .cta{flex:1 1 auto}}
 
 .activepill{margin:6px 0 12px}
 .nuc{position:relative;border-radius:16px;overflow:hidden;margin:8px 0 22px;border:1px solid var(--line)}
@@ -238,11 +242,17 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .nucbtn{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer;color:var(--txt)}
 .nucbtn:hover{border-color:var(--blue);color:var(--blue)}
 .showmap{margin:0 0 18px}
-.nucinner{position:relative;padding:24px 10px 30px;min-height:560px}
+.nucinner{position:relative;display:flex;flex-wrap:wrap;gap:26px 30px;align-items:flex-start;justify-content:center;
+  padding:34px 20px 40px;min-height:300px}
 .zonetag{position:absolute;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(107,107,107,.28);font-weight:700;pointer-events:none;z-index:0}
 .zonetag.zt-0{top:18px;left:24px}
 .zonetag.zt-1{top:18px;right:24px;text-align:right}
-.bubwrap{position:absolute;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2}
+/* organic, non-overlapping stagger (flow reserves space; expansion never collides) */
+.bubwrap{display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2}
+.bubwrap:nth-child(3n+1){transform:translateY(14px)}
+.bubwrap:nth-child(3n+2){transform:translateY(-8px)}
+.bubwrap:nth-child(4n+3){transform:translateY(22px)}
+.bubwrap:nth-child(5n){transform:translateY(-4px)}
 .bub{width:118px;height:118px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-decoration:none;color:#fff;font-family:"Space Grotesk",sans-serif;border:2px solid rgba(255,255,255,.6);cursor:pointer;
   box-shadow:0 6px 22px rgba(26,26,26,.12),inset 0 0 18px rgba(255,255,255,.18);
@@ -418,32 +428,27 @@ function hideMap(){ const n=document.getElementById('nuc'); if(n) n.style.displa
   const s=document.getElementById('showMap'); if(s) s.style.display='inline-block'; }
 function showMap(){ const n=document.getElementById('nuc'); if(n) n.style.display='block';
   const s=document.getElementById('showMap'); if(s) s.style.display='none'; }
-function expandAll(){ document.querySelectorAll('.segs').forEach(e=>e.classList.add('open')); }
-function collapseAll(){ document.querySelectorAll('.segs.open').forEach(e=>e.classList.remove('open')); }
+function toggleExpandAll(){
+  const segs=[...document.querySelectorAll('.segs')];
+  const anyOpen=segs.some(e=>e.classList.contains('open'));
+  segs.forEach(e=>anyOpen?e.classList.remove('open'):e.classList.add('open'));
+  const btn=document.getElementById('expandBtn');
+  if(btn) btn.textContent = anyOpen ? 'Expand all' : 'Collapse all';
+}
 function toggleSeg(key){
   const el=document.getElementById('segs-'+key);
   if(!el) return;
   const open=el.classList.toggle('open');
   if(open) collapseAllExcept(el);
+  syncExpandBtn();
 }
 function collapseAllExcept(keep){ document.querySelectorAll('.segs.open').forEach(o=>{ if(o!==keep) o.classList.remove('open'); }); }
-// Organic scatter: stable pseudo-random placement of bubbles (no rigid rows)
-function layoutNuc(){
-  const inner=document.getElementById('nucinner'); if(!inner) return;
-  const wraps=[...inner.querySelectorAll('.bubwrap')];
-  const W=inner.clientWidth||900, H=Math.max(560, inner.clientHeight||560);
-  // deterministic pseudo-random from index
-  const rnd=(i)=>{ const x=Math.sin(i*127.1+311.7)*43758.5453; return x-Math.floor(x); };
-  wraps.forEach((w,i)=>{
-    const x=40 + rnd(i)* (W-200);
-    const y=70 + rnd(i+99)* (H-220);
-    w.style.position='absolute';
-    w.style.left=x+'px'; w.style.top=y+'px';
-  });
-  inner.style.minHeight=H+'px';
+function syncExpandBtn(){
+  const segs=[...document.querySelectorAll('.segs')];
+  const btn=document.getElementById('expandBtn');
+  if(!btn||!segs.length) return;
+  btn.textContent = segs.every(e=>e.classList.contains('open')) ? 'Collapse all' : 'Expand all';
 }
-window.addEventListener('load', layoutNuc);
-window.addEventListener('resize', layoutNuc);
 
 async function submitLogin(){
   const name=document.getElementById('lm_name').value.trim();
@@ -534,7 +539,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
 <div class="nuc" id="nuc" style="display:{% if active_group or active_segment %}none{% else %}block{% endif %}">
   <div class="nucbg"></div>
   <div class="nuctools">
-    <button class="nucbtn" type="button" onclick="expandAll()">Expand all</button>
+    <button class="nucbtn" type="button" id="expandBtn" onclick="toggleExpandAll()">Expand all</button>
     <button class="nucbtn" type="button" id="hideMap" onclick="hideMap()">Hide map</button>
   </div>
   <div class="nucinner" id="nucinner">
@@ -542,7 +547,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
     <span class="zonetag zt-{{ loop.index0 % 2 }}">{{ z.name }}</span>
     {% endfor %}
     {% for z in zones %}{% for g in z.groups %}
-    <div class="bubwrap" data-i="{{ loop.index0 }}">
+    <div class="bubwrap">
       <button class="bub bub-{{ loop.index0 % 3 }}" type="button"
               onclick="toggleSeg('{{ g.key }}')">
         <span class="bname">{{ g.name }}</span><span class="bcount">{{ counts.get(g.key, 0) }}</span>
