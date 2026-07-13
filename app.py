@@ -218,58 +218,72 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .info .bcnum{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;margin-top:2px;opacity:.7}
 
 /* ===== NUCLEATED DIRECTORY ===== */
-.filterbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:64px;z-index:15;
+.filterbar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;position:sticky;top:64px;z-index:15;
   background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--line);
   border-radius:999px;padding:8px 12px;margin:18px 0;box-shadow:0 4px 16px rgba(26,26,26,.06)}
-.filterbar .search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--bg2);
+.filterbar .search{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px;background:var(--bg2);
   border:1px solid var(--line);border-radius:999px;padding:7px 14px}
-.filterbar .search .sico{color:var(--mut);font-size:16px}
-.filterbar .search input{border:none;background:none;outline:none;flex:1;font:inherit;font-size:14px}
-.filterbar select{border:1px solid var(--line);border-radius:999px;padding:8px 14px;font:inherit;background:var(--bg);color:var(--txt)}
-.filterbar .cta{padding:8px 16px}
+.filterbar .search .sico{color:var(--mut);font-size:16px;flex:none}
+.filterbar .search input{border:none;background:none;outline:none;flex:1;min-width:0;font:inherit;font-size:14px}
+.filterbar select{flex:none;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font:inherit;background:var(--bg);color:var(--txt)}
+.filterbar .cta{flex:none;padding:8px 16px}
+.filterbar .pill{flex:none;white-space:nowrap}
 
-.themepick{margin:6px 0 22px}
-.tphead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.tphead h2{font-size:20px}
-.zone{margin-bottom:16px}
-.zonelbl{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:8px}
-.tiles{display:flex;flex-wrap:wrap;gap:12px}
-.tile{display:flex;flex-direction:column;gap:2px;min-width:150px;background:var(--bg);border:1px solid var(--line);
-  border-radius:14px;padding:14px 16px;text-decoration:none;color:var(--txt);transition:border-color .15s,box-shadow .15s,transform .15s}
-.tile:hover{border-color:var(--blue);box-shadow:0 6px 18px rgba(47,127,224,.14);transform:translateY(-2px)}
-.tile .tname{font-weight:600;font-size:15px}
-.tile .tcount{font-family:var(--mono);font-size:12px;color:var(--mut)}
-
-.tilewrap{display:flex;flex-direction:column;gap:6px;min-width:150px}
-.segchips{display:flex;flex-wrap:wrap;gap:5px}
-.segchips.center{justify-content:center;margin-top:10px}
-.segchip{font-size:11px;text-decoration:none;color:var(--txt2);background:var(--bg2);
-  border:1px solid var(--line);border-radius:999px;padding:3px 9px;transition:border-color .12s,color .12s}
-.segchip:hover{border-color:var(--blue);color:var(--blue)}
-.segchip .sc{font-family:var(--mono);color:var(--mut);margin-left:3px}
-
+.activepill{margin:6px 0 12px}
 .nuc{position:relative;border-radius:16px;overflow:hidden;margin:8px 0 22px;border:1px solid var(--line)}
 .nucbg{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 0%,#eef3fb 0%,#f6f1f7 45%,#f3edf8 100%)}
-.nucinner{position:relative;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center;
+.nucinner{position:relative;display:flex;flex-wrap:wrap;gap:22px 26px;align-items:flex-start;justify-content:center;
   padding:34px 20px;min-height:300px}
 .nuczone{flex-basis:100%;text-align:center;margin-top:6px}
 .nuczonelbl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);font-weight:600}
+.bubwrap{display:flex;flex-direction:column;align-items:center;gap:10px}
 .bub{width:118px;height:118px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-decoration:none;color:#fff;font-family:"Space Grotesk",sans-serif;border:2px solid rgba(255,255,255,.6);
+  text-decoration:none;color:#fff;font-family:"Space Grotesk",sans-serif;border:2px solid rgba(255,255,255,.6);cursor:pointer;
   box-shadow:0 6px 22px rgba(26,26,26,.12),inset 0 0 18px rgba(255,255,255,.18);
   transition:transform .15s ease,box-shadow .15s ease}
-.bubwrap{display:flex;flex-direction:column;align-items:center}
 .bub:hover{transform:scale(1.06);box-shadow:0 10px 30px rgba(26,26,26,.18)}
 .bub .bname{font-weight:600;font-size:13px;text-align:center;padding:0 8px;line-height:1.1}
 .bub .bcount{font-family:var(--mono);font-size:18px;font-weight:700;margin-top:3px}
-.bub-0{background:linear-gradient(150deg,#4F9BF2,#1E5FB8)}      /* blue */
-.bub-1{background:linear-gradient(150deg,#E9DCC2,#C9A36B);color:#1A1A1A}  /* beige */
-.bub-2{background:linear-gradient(150deg,#EE6A6E,#E5484D)}      /* red */
+.bub-0{background:linear-gradient(150deg,#4F9BF2,#1E5FB8)}
+.bub-1{background:linear-gradient(150deg,#E9DCC2,#C9A36B);color:#1A1A1A}
+.bub-2{background:linear-gradient(150deg,#EE6A6E,#E5484D)}
+/* sub-segments: smaller, lighter circles, revealed on click */
+.segs{display:none;flex-wrap:wrap;gap:8px;justify-content:center;max-width:240px}
+.segs.open{display:flex}
+.segcircle{width:64px;height:64px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-decoration:none;color:#1A1A1A;font-family:"Space Grotesk",sans-serif;border:1.5px solid rgba(255,255,255,.7);
+  box-shadow:0 3px 12px rgba(26,26,26,.08);transition:transform .12s ease,box-shadow .12s ease}
+.segcircle:hover{transform:scale(1.08)}
+.segcircle .sname{font-weight:600;font-size:8.5px;text-align:center;padding:0 5px;line-height:1.05}
+.segcircle .scount{font-family:var(--mono);font-size:11px;font-weight:700;margin-top:2px}
+.segcircle.seg-0{background:linear-gradient(150deg,#BFDCF7,#9CC2EE)}
+.segcircle.seg-1{background:linear-gradient(150deg,#F0E7D6,#E2D2B4)}
+.segcircle.seg-2{background:linear-gradient(150deg,#F6C9CB,#F1B0B3)}
+.segall{font-size:11px;color:var(--mut);text-decoration:none;align-self:center;white-space:nowrap}
+.segall:hover{color:var(--blue)}
 .nucclose{position:absolute;top:12px;right:14px;border:1px solid var(--line);background:var(--bg);
   border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer;color:var(--txt)}
 
 .gridwrap{margin-top:8px}
 .gridhead{font-size:13px;color:var(--txt2);margin:6px 2px 12px;font-weight:600}
+.disc{max-width:760px}
+.hero.slim{padding:26px 0 10px}
+.hero.slim h1{font-size:26px}
+.thread{border:1px solid var(--line);border-radius:16px;padding:22px 24px;background:var(--bg);margin-bottom:18px}
+.threadhead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.threadhead h2{font-size:21px}
+.threadbody{color:var(--txt2);line-height:1.55;margin:12px 0 4px;white-space:pre-wrap}
+.replies{margin-top:18px;border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:14px}
+.reply{border-left:3px solid var(--line);padding:2px 0 2px 14px}
+.rhead{display:flex;align-items:center;gap:8px;font-size:14px}
+.rolebadge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-radius:999px;padding:2px 8px}
+.rolebadge.founder{background:var(--coral-bg);color:var(--coral)}
+.rolebadge.vc{background:#E3F1EC;color:var(--teal2)}
+.reply p{margin:4px 0 0;color:var(--txt);line-height:1.5}
+.topicform{max-width:620px;border:1px dashed var(--coral);border-radius:14px;padding:18px 20px;margin:6px 0 18px;background:var(--bg2)}
+.replybox{max-width:620px;margin-top:8px}
+.muted.small{color:var(--mut);font-size:13px}
+.tinyerr{color:var(--coral);font-size:13px;margin-top:8px;min-height:16px}
 
 .section{background:var(--bg2)}
 
@@ -348,7 +362,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
 .x{float:right;cursor:pointer;color:var(--mut);font-size:20px;line-height:1}
 </style></head><body>
 <nav><a class="brand" href="/" style="text-decoration:none;color:inherit">⬡ MoonshotHunt</a>
-<a href="/directory">Directory</a><a href="/whitespace">Whitespace</a><a href="/submit">Submit</a>
+<a href="/directory">Directory</a><a href="/whitespace">Whitespace</a><a href="/discussion">Discussion</a><a href="/submit">Submit</a>
 <span class="navspacer"></span>
 {% if user_email %}<span class="pill">{{ user_name or user_email }}</span>
 {% else %}<a class="pill" href="#" onclick="return openLogin()">sign in to vote</a>{% endif %}
@@ -394,6 +408,12 @@ function toggleNuc(){
   if(n) n.style.display = (n.style.display==='none' || !n.style.display) ? 'none' : 'block';
   const t=document.getElementById('toggleNuc');
   if(t) t.textContent = (n && n.style.display==='none') ? 'Nucleated view' : 'Show map';
+}
+function toggleSeg(key){
+  const el=document.getElementById('segs-'+key);
+  if(!el) return;
+  const open=el.classList.toggle('open');
+  document.querySelectorAll('.segs.open').forEach(o=>{ if(o!==el) o.classList.remove('open'); });
 }
 async function submitLogin(){
   const name=document.getElementById('lm_name').value.trim();
@@ -459,7 +479,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
   </div>
 </div>
 
-<!-- Persistent search + filters (floating bar) -->
+<!-- Persistent search + filters (single neat row) -->
 <form class="filterbar" method="get" action="/directory">
   <input type="hidden" name="group" value="{{ filters.group }}">
   <input type="hidden" name="segment" value="{{ filters.segment }}">
@@ -470,35 +490,10 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
   {% if filters.group or filters.segment or filters.q or filters.stage or filters.verify %}<a class="pill" href="/directory">Clear ✕</a>{% endif %}
 </form>
 
-<!-- Theme picker entry (calm "pick a theme" step): Layer 1 sub-sectors + Layer 2 segments -->
-<div class="themepick">
-  <div class="tphead">
-    <h2 style="margin:0">Pick a theme</h2>
-    {% if active_segment_name %}<span class="pill" style="background:var(--coral-bg);color:var(--coral)">Segment: {{ active_segment_name }} <a href="/directory?group={{ active_group }}" style="margin-left:6px;color:inherit">✕</a></span>
-    {% elif active_group_name %}<span class="pill" style="background:var(--coral-bg);color:var(--coral)">Sub-sector: {{ active_group_name }} <a href="/directory" style="margin-left:6px;color:inherit">✕</a></span>{% endif %}
-    <button class="pill" id="toggleNuc" onclick="toggleNuc()">{% if active_group or active_segment %}Show map{% else %}Nucleated view{% endif %}</button>
-  </div>
-  {% for z in zones %}
-  <div class="zone">
-    <div class="zonelbl">{{ z.name }}</div>
-    <div class="tiles">
-      {% for g in z.groups %}
-      <div class="tilewrap">
-        <a class="tile" href="/directory?group={{ g.key }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">
-          <span class="tname">{{ g.name }}</span>
-          <span class="tcount">{{ counts.get(g.key, 0) }}</span>
-        </a>
-        <div class="segchips">
-          {% for s in g.seg %}<a class="segchip" href="/directory?segment={{ s }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">{{ seg_labels.get(s, s) }} <span class="sc">{{ seg_counts.get(s, 0) }}</span></a>{% endfor %}
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endfor %}
-</div>
+<!-- Nucleated bubble map (single entry point; click a sub-sector to reveal its sub-segments) -->
+{% if active_segment_name %}<div class="activepill"><span class="pill" style="background:var(--coral-bg);color:var(--coral)">Segment: {{ active_segment_name }} <a href="/directory?group={{ active_group }}" style="margin-left:6px;color:inherit">✕</a></span></div>
+{% elif active_group_name %}<div class="activepill"><span class="pill" style="background:var(--coral-bg);color:var(--coral)">Sub-sector: {{ active_group_name }} <a href="/directory" style="margin-left:6px;color:inherit">✕</a></span></div>{% endif %}
 
-<!-- Nucleated bubble overlay (collapsible; Layer 1 = sub-sector bubbles, Layer 2 = segment chips) -->
 <div class="nuc" id="nuc" style="display:{% if active_group or active_segment %}none{% else %}block{% endif %}">
   <div class="nucbg"></div>
   <div class="nucinner">
@@ -506,17 +501,23 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
     <div class="nuczone"><span class="nuczonelbl">{{ z.name }}</span></div>
     {% for g in z.groups %}
     <div class="bubwrap">
-      <a class="bub bub-{{ loop.index0 % 3 }}" style="--i:{{ loop.index0 }}"
-         href="/directory?group={{ g.key }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">
+      <button class="bub bub-{{ loop.index0 % 3 }}" type="button" style="--i:{{ loop.index0 }}"
+              onclick="toggleSeg('{{ g.key }}')">
         <span class="bname">{{ g.name }}</span><span class="bcount">{{ counts.get(g.key, 0) }}</span>
-      </a>
-      <div class="segchips center">
-        {% for s in g.seg %}<a class="segchip" href="/directory?segment={{ s }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">{{ seg_labels.get(s, s) }} <span class="sc">{{ seg_counts.get(s, 0) }}</span></a>{% endfor %}
+      </button>
+      <div class="segs" id="segs-{{ g.key }}">
+        {% for s in g.seg %}
+        <a class="segcircle seg-{{ loop.index0 % 3 }}" title="{{ seg_labels.get(s, s) }}"
+           href="/directory?segment={{ s }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">
+          <span class="sname">{{ seg_labels.get(s, s) }}</span><span class="scount">{{ seg_counts.get(s, 0) }}</span>
+        </a>
+        {% endfor %}
+        <a class="segall" href="/directory?group={{ g.key }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">view all →</a>
       </div>
     </div>
     {% endfor %}
     {% endfor %}
-    <button class="nucclose" onclick="toggleNuc()">Collapse ✕</button>
+    <button class="nucclose" onclick="toggleNuc()">{% if active_group or active_segment %}Show map{% else %}Hide map{% endif %}</button>
   </div>
 </div>
 
@@ -1085,7 +1086,15 @@ def _current_user():
     if not email:
         return None
     u = store.get_user(email) or {}
-    return {"email": email, "name": u.get("name", "")}
+    return {"email": email,
+            "name": u.get("name") or session.get("name", ""),
+            "role": u.get("role") or session.get("role", "")}
+
+
+def _is_admin():
+    """Manual Discussion admin = a single configured email (reuses login session)."""
+    admin = os.environ.get("ADMIN_EMAIL", "").strip().lower()
+    return bool(admin) and session.get("email", "").strip().lower() == admin
 
 
 def _visitor_id():
@@ -1525,6 +1534,120 @@ def whitespace():
                                   user_email=user["email"] if user else "",
                                   user_name=user["name"] if user else "")
 
+
+@app.route("/discussion", methods=["GET"])
+def discussion():
+    user = _current_user()
+    thread = store.get_thread()
+    return render_template_string(TPL_DISCUSSION, thread=thread, is_admin=_is_admin(),
+                                  user_email=user["email"] if user else "",
+                                  user_name=user["name"] if user else "",
+                                  user_role=session.get("role", ""))
+
+
+@app.route("/discussion/topic", methods=["POST"])
+def discussion_topic():
+    if not _is_admin():
+        return jsonify({"ok": False, "error": "admin only"}), 403
+    data = request.get_json(silent=True) or {}
+    title = (data.get("title") or "").strip()
+    body = (data.get("body") or "").strip()
+    if not title or not body:
+        return jsonify({"ok": False, "error": "title and body required"}), 400
+    user = _current_user()
+    store.set_thread(title, body, session.get("email", ""), user["name"] if user else "")
+    return jsonify({"ok": True})
+
+
+@app.route("/discussion/reply", methods=["POST"])
+def discussion_reply():
+    user = _current_user()
+    if not user:
+        return jsonify({"ok": False, "error": "login to reply"}), 401
+    data = request.get_json(silent=True) or {}
+    body = (data.get("body") or "").strip()
+    if not body:
+        return jsonify({"ok": False, "error": "reply body required"}), 400
+    thread = store.get_thread()
+    if not thread:
+        return jsonify({"ok": False, "error": "no active thread"}), 404
+    role = session.get("role", "")
+    store.add_reply(thread, user["name"], role, body)
+    return jsonify({"ok": True})
+
+
+TPL_DISCUSSION = _page("Discussion — MoonshotHunt", """\
+<div class="hero slim">
+  <h1>Discussion</h1>
+  <p class="lead">One active thread at a time. Founders and VCs weigh in. Manual for now — no automation.</p>
+</div>
+
+<div class="disc">
+  {% if thread %}
+    <div class="thread">
+      <div class="threadhead">
+        <h2 style="margin:0">{{ thread.title }}</h2>
+        {% if is_admin %}<button class="pill" onclick="newTopic()">New topic</button>{% endif %}
+      </div>
+      <p class="threadbody">{{ thread.body }}</p>
+      <div class="replies">
+        {% for r in thread.replies %}
+        <div class="reply">
+          <div class="rhead"><b>{{ r.name or 'Anonymous' }}</b>
+            <span class="rolebadge {{ r.role }}">{{ 'VC' if r.role=='vc' else 'Founder' if r.role=='founder' else r.role }}</span></div>
+          <p>{{ r.body }}</p>
+        </div>
+        {% else %}
+        <p class="muted small">No replies yet — be the first to weigh in.</p>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div class="thread empty">
+      <p class="muted">No active thread right now.</p>
+      {% if is_admin %}<button class="cta" onclick="newTopic()">Post the first topic</button>{% endif %}
+    </div>
+  {% endif %}
+
+  <div class="topicform" id="topicForm" style="display:none">
+    <h3>New topic</h3>
+    <label>Title</label><input id="tp_title" placeholder="e.g. What's the hardest part of piloting climate hardware in India?">
+    <label>Prompt / body</label><textarea id="tp_body" placeholder="Frame the question for founders and VCs…"></textarea>
+    <div class="btnrow"><button class="cta" onclick="postTopic()">Post topic <span class="arw">→</span></button></div>
+  </div>
+
+  {% if user_email %}
+  <div class="replybox">
+    <label>Your reply <span class="sub">as {{ user_name }} · {{ 'VC' if user_role=='vc' else 'Founder' if user_role=='founder' else user_role }}</span></label>
+    <textarea id="rp_body" placeholder="Share your take…"></textarea>
+    <div class="btnrow"><button class="cta" onclick="postReply()">Reply <span class="arw">→</span></button></div>
+  </div>
+  {% else %}
+  <p class="muted small"><a href="#" onclick="return openLogin()">Sign in</a> (founder or VC) to reply.</p>
+  {% endif %}
+</div>
+
+<script>
+function newTopic(){ document.getElementById('topicForm').style.display='block'; }
+async function postTopic(){
+  const title=document.getElementById('tp_title').value.trim();
+  const body=document.getElementById('tp_body').value.trim();
+  if(!title||!body){ alert('Title and body are required.'); return; }
+  const r=await fetch('/discussion/topic',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({title:title,body:body})});
+  const d=await r.json();
+  if(d.ok){ location.reload(); } else { alert(d.error||'Failed to post.'); }
+}
+async function postReply(){
+  const body=document.getElementById('rp_body').value.trim();
+  if(!body){ alert('Write something first.'); return; }
+  const r=await fetch('/discussion/reply',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({body:body})});
+  const d=await r.json();
+  if(d.ok){ location.reload(); } else { alert(d.error||'Failed to reply.'); }
+}
+</script>
+""")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5001))
