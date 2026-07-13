@@ -256,7 +256,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
         font-weight:700;font-size:20px;color:var(--coral);flex:none">{{ _monogram(pc.startup_name or c.raw.startup_name) }}</div>
       <div style="flex:1;min-width:0">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-          <strong style="font-size:17px">{{ pc.startup_name or c.raw.startup_name }}</strong>
+          <strong style="font-size:17px"><a href="/profile/{{ c.id }}" style="color:inherit;text-decoration:none">{{ pc.startup_name or c.raw.startup_name }}</a></strong>
           <span class="stage">{{ pc.stage or c.structured.stage or c.raw.stage }}</span>
         </div>
         <p style="margin:4px 0 8px;color:var(--coral)">{{ pc.tagline or c.structured.tagline }}</p>
@@ -276,7 +276,8 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
     <div style="margin-top:12px">
       {% for t in (pc.subtheme_tags or c.structured.subtheme_tags or c.raw.subtheme_tags or []) %}<span class="tag">{{ t }}</span>{% endfor %}
     </div>
-    <div class="btnrow"><a class="pill" href="/trace/{{ c.id }}" style="color:var(--txt2)">View agent trace →</a></div>
+    <div class="btnrow"><a class="cta" href="/profile/{{ c.id }}">View VC profile <span class="arw">→</span></a>
+      <a class="pill" href="/trace/{{ c.id }}" style="color:var(--txt2)">agent trace</a></div>
   </div>
 {% endfor %}
 </div>
@@ -445,6 +446,59 @@ a transient model timeout — your uploads were received fine. You can retry, or
   <a class="cta" href="/submit">Try again <span class="arw">→</span></a>
   <a class="pill" href="/trace/{{ sid }}" style="color:var(--txt2)">View agent trace</a>
 </div>
+""")
+
+
+TPL_PROFILE = _page("VC profile — MoonshotHunt", """
+<div style="max-width:760px;margin:0 auto">
+  <a class="pill" href="/directory" style="color:var(--txt2)">← Directory</a>
+  <div style="display:flex;align-items:center;gap:14px;margin:14px 0 6px">
+    <div style="width:54px;height:54px;border-radius:10px;background:var(--bg2);border:1px solid var(--line);
+      display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;color:var(--coral);flex:none">
+      {{ _monogram(pc.startup_name) }}</div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <h1 style="margin:0;font-size:26px">{{ pc.startup_name }}</h1>
+        <span class="stage">{{ pc.stage }}</span>
+      </div>
+      <p style="margin:6px 0 0;color:var(--coral);font-size:16px;font-weight:600">{{ pc.tagline }}</p>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px">
+    {% for t in subthemes %}<span class="tag">{{ t }}</span>{% endfor %}
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 18px">
+    {% for b in badges %}<span class="vbadge {{ b.status }}"><span class="ck">✓</span>{{ b.label }} · {{ b.status }}</span>{% endfor %}
+  </div>
+
+  <div class="memo">
+    <div class="mrow"><div class="mlabel">Problem</div><div class="mval">{{ pc.problem or 'Not specified by founder' }}</div></div>
+    <div class="mrow"><div class="mlabel">Opportunity size</div><div class="mval">{{ pc.opportunity_size or 'Not specified by founder' }}</div></div>
+    <div class="mrow"><div class="mlabel">Differentiator</div><div class="mval">{{ pc.differentiator or 'Not specified by founder' }}</div></div>
+    <div class="mrow"><div class="mlabel">Solution</div><div class="mval">{{ pc.solution or 'Not specified by founder' }}</div></div>
+    <div class="mrow"><div class="mlabel">What they're looking for</div><div class="mval">{{ pc.ask or 'Not specified by founder' }}</div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="seclabel">Founder</div>
+    <div class="small"><b>Name:</b> {{ rec.raw.founder_names or 'Not specified' }}</div>
+    {% if rec.raw.founder_linkedin %}<div class="small"><b>LinkedIn:</b> <a href="{{ rec.raw.founder_linkedin }}" style="color:var(--coral)">{{ rec.raw.founder_linkedin }}</a></div>{% endif %}
+    {% if rec.raw.website %}<div class="small"><b>Website:</b> <a href="{{ rec.raw.website }}" style="color:var(--coral)">{{ rec.raw.website }}</a></div>{% endif %}
+  </div>
+
+  <div class="btnrow" style="margin-top:18px">
+    <a class="pill" href="/trace/{{ sid }}" style="color:var(--txt2)">View agent trace →</a>
+    <span class="muted small" style="margin-left:auto">Self-reported · not due diligence · drafted by the MoonshotHunt VC Agent</span>
+  </div>
+</div>
+<style>
+.memo{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+.mrow{display:flex;gap:16px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.mrow:last-child{border-bottom:none}
+.mlabel{width:160px;flex:none;font-weight:600;color:var(--txt2);font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+.mval{flex:1;color:var(--txt);line-height:1.5}
+</style>
 """)
 
 
@@ -954,6 +1008,26 @@ def publish(sid):
     rec["status"] = "published"
     store.update(sid, rec)
     return redirect(url_for("home"))
+
+
+@app.route("/profile/<sid>")
+def profile(sid):
+    rec = store.get(sid)
+    if not rec:
+        return "not found", 404
+    if rec.get("status") != "published":
+        # not published yet — still let founders/preview see the draft memo
+        if not rec.get("structured") and not rec.get("published_card"):
+            return "Nothing to show yet. <a href='/processing/" + sid + "'>Check status</a>", 202
+    user = _current_user()
+    pc = rec.get("published_card") or rec.get("structured") or {}
+    pc.setdefault("startup_name", rec.get("raw", {}).get("startup_name", ""))
+    return render_template_string(TPL_PROFILE, sid=sid, rec=rec, pc=pc,
+                                  badges=_lower_badges(rec.get("published_card", {}).get("badges")
+                                                      if rec.get("published_card") else rec.get("badges", [])),
+                                  subthemes=(pc.get("subtheme_tags") or rec.get("raw", {}).get("subtheme_tags", []) or []),
+                                  user_email=user["email"] if user else "",
+                                  user_name=user["name"] if user else "")
 
 
 @app.route("/trace/<sid>")
