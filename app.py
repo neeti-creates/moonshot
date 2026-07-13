@@ -433,6 +433,20 @@ were inferred by the agent — edit anything before publishing. You — the huma
 </form>
 """)
 
+TPL_REVIEW_ERR = _page("Draft failed — MoonshotHunt", """
+<h2>Draft couldn't be generated</h2>
+<p class="muted">Our agent didn't return a usable draft for your submission this time. This is usually
+a transient model timeout — your uploads were received fine. You can retry, or submit again shortly.</p>
+<div class="card">
+  <div class="seclabel">What happened</div>
+  <div class="disclaimer">{{ err }}</div>
+</div>
+<div class="btnrow">
+  <a class="cta" href="/submit">Try again <span class="arw">→</span></a>
+  <a class="pill" href="/trace/{{ sid }}" style="color:var(--txt2)">View agent trace</a>
+</div>
+""")
+
 
 TPL_TRACE = _page("Agent trace — MoonshotHunt", """
 <h2>Agent trace — <span style="color:var(--coral)">{{ rec.raw.startup_name or rec.structured.startup_name }}</span></h2>
@@ -857,7 +871,8 @@ def _run_pipeline_bg(sid, upload_dir=None):
     rec["badges"] = res["badges"]
     rec["disclaimer"] = res["disclaimer"]
     rec["trace"] = res["trace"]
-    rec["status"] = "review" if res["structured"] and "_raw" not in res["structured"] else "error"
+    rec["status"] = res["status"]          # trust the pipeline's own ok/fail decision
+    rec["vc_error"] = res.get("vc_error")
     rec["log"] = "done"
     store.update(sid, rec)
     # uploaded temp files are no longer needed once extracted
@@ -885,6 +900,13 @@ def review(sid):
     if not rec:
         return "not found", 404
     sc = rec.get("structured", {})
+    # VC agent failed to produce a usable card — show a clear retry state, not a blank form
+    if rec.get("status") == "error":
+        user = _current_user()
+        return render_template_string(TPL_REVIEW_ERR, sid=sid,
+                                      err=rec.get("vc_error") or "The agent didn't return a draft.",
+                                      user_email=user["email"] if user else "",
+                                      user_name=user["name"] if user else "")
     if not sc:
         return "Pipeline hasn't completed yet. <a href='/processing/" + sid + "'>Check status</a>", 202
     for k in ["startup_name", "tagline", "problem", "opportunity_size",

@@ -6,7 +6,7 @@ VC Agent  -> structures raw Section-5 submission into Layer-1 card one-liners.
 Verifier  -> runs checkable network/liveness checks, then an LLM turns the
              results into honest, lightweight verification badges.
 """
-import os, json, time, urllib.request, urllib.error
+import os, json, time, threading, urllib.request, urllib.error
 
 # --- Live LLM endpoint (same one Hermes uses) -------------------------------
 # Prefer env vars (for cloud deploy e.g. Render); fall back to local Hermes auth.json.
@@ -29,10 +29,35 @@ BASE_URL = BASE_URL.rstrip("/")
 DEF_MODEL = os.environ.get("MOONSHOT_MODEL", "tencent/hy3:free")
 
 
+def _timed_request(req, cap):
+    """Run urlopen in a worker thread and join with a hard wall-clock cap.
+
+    On macOS the system urllib/ssl (LibreSSL) ignores the socket `timeout` for
+    TLS connections, so a stalled free-tier call would hang forever. A worker
+    thread + join(cap) guarantees we never block past `cap` seconds; on timeout
+    we return None and let the caller retry.
+    """
+    box = {}
+    def worker():
+        try:
+            box["r"] = urllib.request.urlopen(req, timeout=cap)
+        except Exception as e:
+            box["err"] = e
+    th = threading.Thread(target=worker, daemon=True)
+    th.start()
+    th.join(cap + 2)
+    if th.is_alive():
+        return None  # hard timeout — caller retries
+    if "err" in box:
+        raise box["err"]
+    return box.get("r")
+
+
 def llm(messages, model=DEF_MODEL, json_mode=False, max_tokens=900, temperature=0.2):
     import urllib.error as _ue
     last_err = None
-    for attempt in range(5):
+    CAP = 90  # hard wall-clock cap per attempt (free tier is slow but must not hang)
+    for attempt in range(4):
         body = {"model": model, "messages": messages,
                 "max_tokens": max_tokens, "temperature": temperature}
         req = urllib.request.Request(
@@ -42,7 +67,11 @@ def llm(messages, model=DEF_MODEL, json_mode=False, max_tokens=900, temperature=
                      "Authorization": f"Bearer {API_KEY}"})
         t0 = time.time()
         try:
-            r = urllib.request.urlopen(req, timeout=120)
+            r = _timed_request(req, CAP)
+            if r is None:
+                last_err = f"timeout after {CAP}s (attempt {attempt+1})"
+                time.sleep(4 + attempt * 4)
+                continue
             data = json.loads(r.read().decode())
         except _ue.HTTPError as e:
             last_err = f"HTTP {e.code}: {e.read().decode()[:160]}"
@@ -287,9 +316,13 @@ def run_pipeline(sub):
         "disclaimer": ver["disclaimer"],
     })
 
-    return {"status": "review", "structured": structured,
+    # If the VC agent failed or returned nothing usable, mark the submission as
+    # errored so the founder sees a clear retry state instead of a blank review form.
+    vc_ok = bool(vc.get("ok")) and bool(structured.get("startup_name"))
+    status = "review" if vc_ok else "error"
+    return {"status": status, "structured": structured,
             "badges": ver["badges"], "disclaimer": ver["disclaimer"],
-            "trace": trace}
+            "trace": trace, "vc_error": None if vc_ok else vc.get("error")}
 
 
 def _summarize(raw):
