@@ -143,6 +143,7 @@ a:hover{text-decoration:underline}
 nav{display:flex;gap:20px;align-items:center;padding:14px 24px;border-bottom:1px solid var(--line);
   background:var(--bg);position:sticky;top:0;z-index:20}
 nav .brand{font-weight:700;font-size:18px;color:var(--txt);letter-spacing:-.2px}
+.brandlogo{height:26px;width:auto;border-radius:6px}
 nav a{color:var(--txt2);font-weight:600}
 nav a:hover{color:var(--coral);text-decoration:none}
 .navspacer{flex:1}
@@ -292,10 +293,22 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .disc{max-width:760px}
 .hero.slim{padding:26px 0 10px}
 .hero.slim h1{font-size:26px}
-.thread{border:1px solid var(--line);border-radius:16px;padding:22px 24px;background:var(--bg);margin-bottom:18px}
-.threadhead{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.threadhead h2{font-size:21px}
-.threadbody{color:var(--txt2);line-height:1.55;margin:12px 0 4px;white-space:pre-wrap}
+/* forum-style discussion */
+.dsearch{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);
+  border-radius:999px;padding:9px 16px;margin:6px 0 14px}
+.dsearch .sico{color:var(--mut);font-size:16px}
+.dsearch input{border:none;background:none;outline:none;flex:1;font:inherit;font-size:14px;color:var(--txt)}
+.disctools{margin-bottom:14px}
+.threadcard{border:1px solid var(--line);border-radius:16px;padding:22px 24px;background:var(--bg);margin-bottom:18px;
+  box-shadow:0 1px 4px rgba(26,26,26,.05)}
+.threadcard.empty{text-align:center;padding:34px}
+.tcmeta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--txt2);margin-bottom:8px}
+.tcdot{width:10px;height:10px;border-radius:50%;background:var(--coral);flex:none}
+.tcauthor{font-weight:700;color:var(--txt)}
+.tctime{color:var(--mut)}
+.tcreplies{margin-left:auto;background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px}
+.tctitle{font-size:21px;margin:0 0 8px;line-height:1.2}
+.tcbody{color:var(--txt2);line-height:1.55;margin:0;white-space:pre-wrap}
 .replies{margin-top:18px;border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:14px}
 .reply{border-left:3px solid var(--line);padding:2px 0 2px 14px}
 .rhead{display:flex;align-items:center;gap:8px;font-size:14px}
@@ -399,7 +412,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
 .modal .err{color:var(--coral);font-size:13px;margin-top:8px;min-height:16px}
 .x{float:right;cursor:pointer;color:var(--mut);font-size:20px;line-height:1}
 </style></head><body>
-<nav><a class="brand" href="/" style="text-decoration:none;color:inherit">⬡ MoonshotHunt</a>
+<nav><a class="brand" href="/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px"><img class="brandlogo" src="/static/logo.png" alt="MoonshotHunt"> <span>MoonshotHunt</span></a>
 <a href="/directory">Directory</a><a href="/whitespace">Whitespace</a><a href="/discussion">Discussion</a><a href="/submit">Submit</a>
 <span class="navspacer"></span>
 {% if user_email %}<span class="pill">Hi, {{ (user_name.split(' ')[0] if user_name else user_email.split('@')[0]) }}</span>
@@ -604,17 +617,6 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
   </div>
 </div>
 
-<!-- Persistent search + filters (clean single bar, SS1 style) -->
-<form class="filterbar" id="dirForm" method="get" action="/directory">
-  <input type="hidden" name="group" value="{{ filters.group }}">
-  <input type="hidden" name="segment" value="{{ filters.segment }}">
-  <div class="search"><span class="sico">⌕</span><input name="q" value="{{ filters.q }}" placeholder="Search startups, problems, tags…" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('dirForm').requestSubmit();}"></div>
-  <select class="fsel" name="stage"><option value="">All stages</option>{% for s in stages %}<option value="{{ s }}" {% if s==filters.stage %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
-  <select class="fsel" name="verify"><option value="">Any verification</option><option value="verified" {% if filters.verify=='verified' %}selected{% endif %}>Verified</option><option value="unverified" {% if filters.verify=='unverified' %}selected{% endif %}>Unverified</option></select>
-  <button class="cta" type="submit">Apply</button>
-  {% if filters.group or filters.segment or filters.q or filters.stage or filters.verify %}<a class="pill" href="/directory">Clear ✕</a>{% endif %}
-</form>
-
 <!-- Nucleated bubble map (single entry point; click a sub-sector to reveal its sub-segments) -->
 {% if active_segment_name %}<div class="activepill"><span class="pill" style="background:var(--coral-bg);color:var(--coral)">Segment: {{ active_segment_name }} <a href="/directory?group={{ active_group }}" style="margin-left:6px;color:inherit">✕</a></span></div>
 {% elif active_group_name %}<div class="activepill"><span class="pill" style="background:var(--coral-bg);color:var(--coral)">Sub-sector: {{ active_group_name }} <a href="/directory" style="margin-left:6px;color:inherit">✕</a></span></div>{% endif %}
@@ -650,6 +652,17 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
   </div>
 </div>
 <button class="nucbtn showmap" id="showMap" style="display:none" onclick="showMap()">Show map</button>
+
+<!-- Persistent search + filters (clean single bar, SS1 style) — sits above the card grid -->
+<form class="filterbar" id="dirForm" method="get" action="/directory">
+  <input type="hidden" name="group" value="{{ filters.group }}">
+  <input type="hidden" name="segment" value="{{ filters.segment }}">
+  <div class="search"><span class="sico">⌕</span><input name="q" value="{{ filters.q }}" placeholder="Search startups, problems, tags…" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('dirForm').requestSubmit();}"></div>
+  <select class="fsel" name="stage"><option value="">All stages</option>{% for s in stages %}<option value="{{ s }}" {% if s==filters.stage %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <select class="fsel" name="verify"><option value="">Any verification</option><option value="verified" {% if filters.verify=='verified' %}selected{% endif %}>Verified</option><option value="unverified" {% if filters.verify=='unverified' %}selected{% endif %}>Unverified</option></select>
+  <button class="cta" type="submit">Apply</button>
+  {% if filters.group or filters.segment or filters.q or filters.stage or filters.verify %}<a class="pill" href="/directory">Clear ✕</a>{% endif %}
+</form>
 
 <div class="gridwrap">
   <div class="gridhead">
@@ -1709,18 +1722,28 @@ TPL_DISCUSSION = _page("Discussion — MoonshotHunt", """\
 </div>
 
 <div class="disc">
+  <!-- search bar above the thread card -->
+  <div class="dsearch">
+    <span class="sico">⌕</span><input id="dSearch" placeholder="Search this discussion…" oninput="filterReplies()">
+  </div>
+
+  {% if is_admin %}<div class="disctools"><button class="cta" onclick="newTopic()">+ Write new thread</button></div>{% endif %}
+
   {% if thread %}
-    <div class="thread">
-      <div class="threadhead">
-        <h2 style="margin:0">{{ thread.title }}</h2>
-        {% if is_admin %}<button class="pill" onclick="newTopic()">New topic</button>{% endif %}
+    <div class="threadcard">
+      <div class="tcmeta">
+        <span class="tcdot"></span>
+        <span class="tcauthor">{{ thread.author_name or 'MoonshotHunt' }}</span>
+        <span class="tctime">{{ thread.created_at[:10] }}</span>
+        <span class="tcreplies">{{ thread.replies|length }} repl{{ '' if thread.replies|length==1 else 'ies' }}</span>
       </div>
-      <p class="threadbody">{{ thread.body }}</p>
+      <h2 class="tctitle">{{ thread.title }}</h2>
+      <p class="tcbody">{{ thread.body }}</p>
       <div class="replies">
         {% for r in thread.replies %}
         <div class="reply">
           <div class="rhead"><b>{{ r.name or 'Anonymous' }}</b>
-            <span class="rolebadge {{ r.role }}">{{ 'VC' if r.role=='vc' else 'Founder' if r.role=='founder' else r.role }}</span></div>
+            <span class="rolebadge {{ r.role }}">{{ 'VC' if r.role=='vc' else 'Founder' if r.role=='founder' else (r.role or '') }}</span></div>
           <p>{{ r.body }}</p>
         </div>
         {% else %}
@@ -1729,7 +1752,7 @@ TPL_DISCUSSION = _page("Discussion — MoonshotHunt", """\
       </div>
     </div>
   {% else %}
-    <div class="thread empty">
+    <div class="threadcard empty">
       <p class="muted">No active thread right now.</p>
       {% if is_admin %}<button class="cta" onclick="newTopic()">Post the first topic</button>{% endif %}
     </div>
@@ -1755,6 +1778,13 @@ TPL_DISCUSSION = _page("Discussion — MoonshotHunt", """\
 
 <script>
 function newTopic(){ document.getElementById('topicForm').style.display='block'; }
+function filterReplies(){
+  const q=(document.getElementById('dSearch').value||'').toLowerCase();
+  document.querySelectorAll('.reply').forEach(function(el){
+    const t=el.textContent.toLowerCase();
+    el.style.display = (!q || t.includes(q)) ? '' : 'none';
+  });
+}
 async function postTopic(){
   const title=document.getElementById('tp_title').value.trim();
   const body=document.getElementById('tp_body').value.trim();
