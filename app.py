@@ -237,7 +237,10 @@ nav a:hover{color:var(--coral);text-decoration:none}
 
 .activepill{margin:6px 0 12px}
 .nuc{position:relative;border-radius:16px;overflow:hidden;margin:8px 0 22px;border:1px solid var(--line)}
-.nucbg{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 0%,#eef3fb 0%,#f6f1f7 45%,#f3edf8 100%)}
+.nucbg{position:absolute;inset:0;
+  background-color:#FBFBFD;
+  background-image:linear-gradient(#F0F0F0 1px,transparent 1px),linear-gradient(90deg,#F0F0F0 1px,transparent 1px);
+  background-size:28px 28px}
 .nuctools{position:absolute;top:12px;right:14px;z-index:6;display:flex;gap:8px}
 .nucbtn{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer;color:var(--txt)}
 .nucbtn:hover{border-color:var(--blue);color:var(--blue)}
@@ -249,10 +252,16 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .zonetag.zt-1{top:18px;right:24px;text-align:right}
 /* organic, non-overlapping stagger (flow reserves space; expansion never collides) */
 .bubwrap{display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2}
-.bubwrap:nth-child(3n+1){transform:translateY(14px)}
-.bubwrap:nth-child(3n+2){transform:translateY(-8px)}
-.bubwrap:nth-child(4n+3){transform:translateY(22px)}
-.bubwrap:nth-child(5n){transform:translateY(-4px)}
+.bubwrap.big .bub{width:150px;height:150px}
+.bubwrap.mid .bub{width:118px;height:118px}
+.bubwrap.sm .bub{width:92px;height:92px}
+.bubwrap.big .bname{font-size:14px}
+.bubwrap.sm .bname{font-size:11.5px}
+.bubwrap.sm .bcount{font-size:15px}
+.bubwrap:nth-child(3n+1){transform:translateY(18px)}
+.bubwrap:nth-child(3n+2){transform:translateY(-10px)}
+.bubwrap:nth-child(4n+3){transform:translateY(30px)}
+.bubwrap:nth-child(5n){transform:translateY(-6px)}
 .bub{width:118px;height:118px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-decoration:none;color:#fff;font-family:"Space Grotesk",sans-serif;border:2px solid rgba(255,255,255,.6);cursor:pointer;
   box-shadow:0 6px 22px rgba(26,26,26,.12),inset 0 0 18px rgba(255,255,255,.18);
@@ -498,11 +507,42 @@ def _spec_code(sid, color):
     return f"MH·{prefix}·2026·{short}"
 
 
-TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
+def _abs_url(u):
+    """Ensure an absolute http(s) URL so profile links don't resolve relative."""
+    if not u:
+        return ""
+    u = u.strip()
+    if u.startswith(("http://", "https://")):
+        return u
+    if u.startswith("//"):
+        return "https:" + u
+    return "https://" + u
+
+
+def _logo_for(rec):
+    """Best-effort logo from the startup website domain (Clearbit, no key).
+    Falls back to None so the card keeps its generated motif."""
+    raw = (rec.get("raw") or {}) if isinstance(rec, dict) else {}
+    site = raw.get("website") or ""
+    site = _abs_url(site)
+    if not site:
+        return None
+    try:
+        from urllib.parse import urlparse
+        host = urlparse(site).netloc or ""
+        if host.startswith("www."):
+            host = host[4:]
+        if not host:
+            return None
+        return f"https://logo.clearbit.com/{host}?size=128"
+    except Exception:
+        return None
+
+
+TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
 <div class="hero">
   <h1>Building the future of <span style="color:var(--coral)">climate</span> &amp; <span style="color:var(--blue)">deep tech</span> — pre-funding?</h1>
   <p class="lead">You're early. So are the people who should back you. MoonshotHunt is where pre-seed climate &amp; deep-tech founders get structured, VC-legible, and discovered — before the deck polish.</p>
-  <div class="btnrow"><a class="cta" href="/submit">Submit your startup <span class="arw">→</span></a>
   <span class="pill">{{ metrics.startups }} startups live</span>
   <span class="pill">{{ stats.visits }} visits · {{ stats.uniques }} unique visitors</span></div>
   <div class="stats" aria-label="platform metrics">
@@ -522,10 +562,10 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
 </div>
 
 <!-- Persistent search + filters (clean single bar, SS1 style) -->
-<form class="filterbar" method="get" action="/directory">
+<form class="filterbar" id="dirForm" method="get" action="/directory">
   <input type="hidden" name="group" value="{{ filters.group }}">
   <input type="hidden" name="segment" value="{{ filters.segment }}">
-  <div class="search"><span class="sico">⌕</span><input name="q" value="{{ filters.q }}" placeholder="Search startups, problems, tags…"></div>
+  <div class="search"><span class="sico">⌕</span><input name="q" value="{{ filters.q }}" placeholder="Search startups, problems, tags…" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('dirForm').requestSubmit();}"></div>
   <select class="fsel" name="stage"><option value="">All stages</option>{% for s in stages %}<option value="{{ s }}" {% if s==filters.stage %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
   <select class="fsel" name="verify"><option value="">Any verification</option><option value="verified" {% if filters.verify=='verified' %}selected{% endif %}>Verified</option><option value="unverified" {% if filters.verify=='unverified' %}selected{% endif %}>Unverified</option></select>
   <button class="cta" type="submit">Apply</button>
@@ -547,7 +587,8 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
     <span class="zonetag zt-{{ loop.index0 % 2 }}">{{ z.name }}</span>
     {% endfor %}
     {% for z in zones %}{% for g in z.groups %}
-    <div class="bubwrap">
+    {% set _n = counts.get(g.key, 0) %}
+    <div class="bubwrap {% if _n>=6 %}big{% elif _n>=3 %}mid{% else %}sm{% endif %}">
       <button class="bub bub-{{ loop.index0 % 3 }}" type="button"
               onclick="toggleSeg('{{ g.key }}')">
         <span class="bname">{{ g.name }}</span><span class="bcount">{{ counts.get(g.key, 0) }}</span>
@@ -578,14 +619,13 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
   {% set pc = c.published_card if c.published_card else {} %}
   {% set badges = _lower_badges(c.published_card.badges if c.published_card else c.badges) %}
   {% set tcol = ['blue','beige','red'][loop.index0 % 3] %}
-  <div class="tk {{ 'light' if tcol=='beige' else '' }} {{ tcol }}">
-    <div class="shot"><span class="art"></span></div>
+  {% set logo = _logo_for(c) %}
+  <a class="tk {{ 'light' if tcol=='beige' else '' }} {{ tcol }}" href="/profile/{{ c.id }}" style="text-decoration:none;color:inherit;display:block">
+    <div class="shot"{% if logo %} style="background-image:url('{{ logo }}');background-size:cover;background-position:center"{% endif %}><span class="art"></span></div>
     <div class="dots"><i></i><i></i><i></i></div>
     <div class="info {{ tcol }}">
       <div class="date"><span class="ln"></span><span class="yr">2026</span></div>
-      <a href="/profile/{{ c.id }}" style="color:inherit;text-decoration:none">
-        <div class="title">{{ (pc.startup_name or c.raw.startup_name or 'untitled') | lower }}</div>
-      </a>
+      <div class="title">{{ (pc.startup_name or c.raw.startup_name or 'untitled') | lower }}</div>
       <p class="tagline">{{ pc.tagline or c.structured.tagline or '' }}</p>
       {% if pc.impact_line %}<p class="impact">✦ {{ pc.impact_line }}</p>{% endif %}
       <div class="ticket"><span class="o"></span> TICKET</div>
@@ -596,13 +636,13 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
       <div class="vrow">
         {% for b in badges %}<span class="vdot {{ b.status }}"></span>{% endfor %}
         <span class="vtxt">{% for b in badges %}{{ b.label }}{% if not loop.last %}, {% endif %}{% endfor %}</span>
-        <span class="vote {% if c.id in voted %}active{% endif %}" onclick="vote('{{ c.id }}')"
+        <span class="vote {% if c.id in voted %}active{% endif %}" onclick="event.stopPropagation();vote('{{ c.id }}')"
               title="{% if c.id in voted %}you upvoted this{% else %}upvote{% endif %}">
           <span class="arr">▲</span><span class="cnt">{{ c.voters|length }}</span></span>
       </div>
       <div class="vbar"></div><div class="bcnum">{{ _spec_code(c.id, tcol) }}</div>
     </div>
-  </div>
+  </a>
 {% endfor %}
   </div>
   {% if not cards %}<p class="muted">No startups match these filters. <a href="/directory">Reset</a></p>{% endif %}
@@ -810,8 +850,8 @@ TPL_PROFILE = _page("VC profile — MoonshotHunt", """
   <div class="card" style="margin-top:18px">
     <div class="seclabel">Founder</div>
     <div class="small"><b>Name:</b> {{ rec.raw.founder_names or 'Not specified' }}</div>
-    {% if rec.raw.founder_linkedin %}<div class="small"><b>LinkedIn:</b> <a href="{{ rec.raw.founder_linkedin }}" style="color:var(--coral)">{{ rec.raw.founder_linkedin }}</a></div>{% endif %}
-    {% if rec.raw.website %}<div class="small"><b>Website:</b> <a href="{{ rec.raw.website }}" style="color:var(--coral)">{{ rec.raw.website }}</a></div>{% endif %}
+    {% if rec.raw.founder_linkedin %}<div class="small"><b>LinkedIn:</b> <a href="{{ _abs_url(rec.raw.founder_linkedin) }}" target="_blank" rel="noopener" style="color:var(--coral)">{{ rec.raw.founder_linkedin }}</a></div>{% endif %}
+    {% if rec.raw.website %}<div class="small"><b>Website:</b> <a href="{{ _abs_url(rec.raw.website) }}" target="_blank" rel="noopener" style="color:var(--coral)">{{ _abs_url(rec.raw.website) }}</a></div>{% endif %}
   </div>
 
   <div class="btnrow" style="margin-top:18px">
@@ -1117,6 +1157,8 @@ load();
 app.jinja_env.globals["_lower_badges"] = _lower_badges
 app.jinja_env.globals["_monogram"] = _monogram
 app.jinja_env.globals["_spec_code"] = _spec_code
+app.jinja_env.globals["_abs_url"] = _abs_url
+app.jinja_env.globals["_logo_for"] = _logo_for
 
 
 # ---------------------------------------------------------------------------
