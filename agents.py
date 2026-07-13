@@ -160,6 +160,8 @@ VC_SYSTEM = (
     "  stage          : exactly one of idea|prototype|pilot|early revenue|scaling\n"
     "  subtheme_tags  : array of 2-4 lowercase hyphenated tags (see allowed list)\n"
     "  ask            : one line, what they want (funding/partners/pilots/visibility). <= 18 words\n"
+    "  impact_line    : ONE high-emotion sentence, mission-legible, starting 'If this wins, '. "
+    "What changes in the world if this startup succeeds. <= 18 words. No metrics, no valuation.\n"
     "  conflicts      : array of {field, note} for any cross-source discrepancies you resolved "
     "(empty array if none)\n"
 )

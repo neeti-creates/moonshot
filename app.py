@@ -27,13 +27,15 @@ SUBTHEMES = [
 # ---------------------------------------------------------------------------
 TPL_LAYOUT = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <title>{% block title %}MoonshotHunt{% endblock %}</title>
 <style>
 :root{
   --bg:#FFFFFF; --bg2:#F8F7F4; --txt:#1A1A1A; --txt2:#6B6B6B; --mut:#9B9B9B;
   --line:#EAEAEA; --coral:#5B3A8E; --coral-bg:#F1EBFA; --teal:#1D9E75; --teal2:#0F6E56;
-  --amber-bg:#FAEEDA; --amber-tx:#854F0B; --black:#111111; --black2:#2A2A2A;
-  --gray:#9B9B9B;
+  --amber-bg:#FAEEDA; --amber-tx:#854F0B; --black:#111111;
+  --blue:#2F7FE0; --blue2:#1E5FB8; --beige:#F6F1E7; --coral-accent:#F87060; --tan:#C9A36B;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--txt);
@@ -70,7 +72,56 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .card{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0;
   box-shadow:0 1px 3px rgba(26,26,26,.06);transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease}
 .card:hover{box-shadow:0 6px 16px rgba(91,58,142,.12);border-color:var(--coral);transform:translateY(-2px)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+
+/* ===== TICKET CARD (blue / beige / coral) ===== */
+.tk{background:var(--beige);border-radius:16px;overflow:hidden;box-shadow:0 10px 28px rgba(26,26,26,.16);
+  border:1px solid #e7ddc9;position:relative;font-family:"Space Grotesk",-apple-system,BlinkMacSystemFont,sans-serif}
+.tk .shot{height:120px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#3a342e,#211d18)}
+.tk.light .shot{background:linear-gradient(160deg,#d9cfbd,#b6a890)}
+.tk .shot .art{width:92px;height:92px;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%, rgba(255,255,255,.30), rgba(255,255,255,.02) 62%);
+  box-shadow:inset 0 0 22px rgba(0,0,0,.4)}
+.tk .dots{position:absolute;left:0;right:0;top:78px;height:54px;pointer-events:none}
+.tk .dots i{position:absolute;width:10px;height:10px;border-radius:50%}
+.tk .dots i:nth-child(1){left:20px;top:4px}
+.tk .dots i:nth-child(2){left:50%;top:22px;transform:translateX(-50%)}
+.tk .dots i:nth-child(3){right:20px;top:44px}
+.info{padding:15px 16px 14px;color:#fff;position:relative}
+.info.blue{background:linear-gradient(160deg,#4F9BF2,#1E5FB8)}
+.info.coral{background:linear-gradient(160deg,#FA8A66,#F87060)}
+.info.beige{background:linear-gradient(160deg,#E9DCC2,#D8C6A4);color:#1A1A1A}
+.tk.blue .dots i{background:var(--blue)}
+.tk.coral .dots i{background:#F87060}
+.tk.beige .dots i{background:#C9A36B}
+.info .date{display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;opacity:.8}
+.info .date .ln{flex:1;height:1.5px;background:currentColor;opacity:.45}
+.info .title{font-weight:700;font-size:26px;letter-spacing:-.5px;text-transform:lowercase;margin:6px 0 4px;line-height:1}
+.info .tagline{font-size:12.5px;line-height:1.3;margin:0 0 8px;opacity:.95}
+.info .impact{font-size:11.5px;line-height:1.3;margin:0 0 9px;font-style:italic;opacity:.92}
+.info .ticket{display:flex;align-items:center;gap:7px;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+.info .ticket .o{width:12px;height:12px;border-radius:50%;background:#1A1A1A;display:flex;align-items:center;justify-content:center}
+.info .ticket .o::after{content:"";width:4px;height:4px;border-radius:50%;background:#fff}
+.info .rows{margin-top:9px;border-top:1px solid rgba(255,255,255,.32);padding-top:8px}
+.info.beige .rows{border-top-color:rgba(26,26,26,.22)}
+.info .frow{display:flex;gap:8px;font-size:11px;padding:2px 0}
+.info .fk{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:9px;min-width:48px;padding-top:1px;opacity:.85}
+.info .fv{font-family:var(--mono);font-size:10.5px}
+.info .vrow{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:10px;flex-wrap:wrap}
+.info .vdot{width:8px;height:8px;border-radius:50%;flex:none;background:rgba(255,255,255,.5)}
+.info .vdot.verified{background:#0F6E56}
+.info.beige .vdot.verified{background:#0F6E56}
+.info .vtxt{opacity:.85;font-size:9.5px;text-transform:uppercase;letter-spacing:.04em}
+.info .vote{margin-left:auto;display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);
+  color:#fff;border:none;border-radius:999px;padding:5px 11px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+.info.beige .vote{background:rgba(26,26,26,.12);color:#1A1A1A}
+.info .vote.active{background:#fff;color:var(--blue)}
+.info.beige .vote.active{background:#1A1A1A;color:#fff}
+.info .vbar{height:26px;width:48px;margin-top:12px;
+  background:repeating-linear-gradient(0deg,#1A1A1A 0 2px,transparent 2px 4px,#1A1A1A 4px 5px,transparent 5px 9px);opacity:.8}
+.info.beige .vbar{opacity:.55}
+.info .bcnum{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;margin-top:2px;opacity:.7}
 .section{background:var(--bg2)}
 
 label{display:block;font-weight:600;margin:14px 0 5px;color:var(--txt);font-size:14px}
@@ -230,6 +281,29 @@ def _monogram(name):
     return (name or "?")[0].upper()
 
 
+# Subtheme -> ticket color (blue / coral / beige), per locked 3-color palette.
+_BLUE = {"energy-storage", "grid-tech", "green-hydrogen", "climate-ai",
+         "industrial-decarbonization", "carbon-capture", "sustainable-mobility", "water-tech"}
+_BEIGE = {"agritech-climate", "nanorobotics", "robotics-in-healthcare", "materials-science",
+          "biotech", "space-tech", "deep-tech-other"}
+# everything else -> coral
+
+
+def _ticket_color(subthemes):
+    tags = [t for t in (subthemes or []) if t]
+    if any(t in _BLUE for t in tags):
+        return "blue"
+    if any(t in _BEIGE for t in tags):
+        return "beige"
+    return "coral"
+
+
+def _spec_code(sid, color):
+    short = (sid or "0000000000")[:4].upper()
+    prefix = {"blue": "BL", "coral": "CO", "beige": "BE"}.get(color, "MH")
+    return f"MH·{prefix}·2026·{short}"
+
+
 TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
 <div class="hero">
   <h1>India's <span style="color:var(--coral)">pre-funding</span> climate &amp; deep-tech radar</h1>
@@ -249,35 +323,31 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
 {% for c in cards %}
   {% set pc = c.published_card if c.published_card else {} %}
   {% set badges = _lower_badges(c.published_card.badges if c.published_card else c.badges) %}
-  <div class="card">
-    <div style="display:flex;gap:12px;align-items:flex-start">
-      <div style="width:48px;height:48px;border-radius:8px;background:var(--bg2);
-        border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
-        font-weight:700;font-size:20px;color:var(--coral);flex:none">{{ _monogram(pc.startup_name or c.raw.startup_name) }}</div>
-      <div style="flex:1;min-width:0">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-          <strong style="font-size:17px"><a href="/profile/{{ c.id }}" style="color:inherit;text-decoration:none">{{ pc.startup_name or c.raw.startup_name }}</a></strong>
-          <span class="stage">{{ pc.stage or c.structured.stage or c.raw.stage }}</span>
-        </div>
-        <p style="margin:4px 0 8px;color:var(--coral)">{{ pc.tagline or c.structured.tagline }}</p>
+  {% set tcol = _ticket_color(pc.subtheme_tags or c.structured.subtheme_tags or c.raw.subtheme_tags or []) %}
+  <div class="tk {{ 'light' if tcol=='beige' else '' }} {{ tcol }}">
+    <div class="shot"><span class="art"></span></div>
+    <div class="dots"><i></i><i></i><i></i></div>
+    <div class="info {{ tcol }}">
+      <div class="date"><span class="ln"></span><span class="yr">2026</span></div>
+      <a href="/profile/{{ c.id }}" style="color:inherit;text-decoration:none">
+        <div class="title">{{ (pc.startup_name or c.raw.startup_name or 'untitled') | lower }}</div>
+      </a>
+      <p class="tagline">{{ pc.tagline or c.structured.tagline or '' }}</p>
+      {% if pc.impact_line %}<p class="impact">✦ {{ pc.impact_line }}</p>{% endif %}
+      <div class="ticket"><span class="o"></span> TICKET</div>
+      <div class="rows">
+        <div class="frow"><span class="fk">Stage</span><span class="fv">{{ pc.stage or c.structured.stage or c.raw.stage or '—' }}</span></div>
+        <div class="frow"><span class="fk">Theme</span><span class="fv">{{ (pc.subtheme_tags or c.structured.subtheme_tags or c.raw.subtheme_tags or [])|join(' · ') }}</span></div>
       </div>
-      <div class="vote {% if c.id in voted %}active{% endif %}" onclick="vote('{{ c.id }}')"
-           title="{% if c.id in voted %}you upvoted this{% else %}upvote{% endif %}">
-        <span class="arr">▲</span><span class="cnt">{{ c.voters|length }}</span>
+      <div class="vrow">
+        {% for b in badges %}<span class="vdot {{ b.status }}"></span>{% endfor %}
+        <span class="vtxt">{% for b in badges %}{{ b.label }}{% if not loop.last %}, {% endif %}{% endfor %}</span>
+        <span class="vote {% if c.id in voted %}active{% endif %}" onclick="vote('{{ c.id }}')"
+              title="{% if c.id in voted %}you upvoted this{% else %}upvote{% endif %}">
+          <span class="arr">▲</span><span class="cnt">{{ c.voters|length }}</span></span>
       </div>
+      <div class="vbar"></div><div class="bcnum">{{ _spec_code(c.id, tcol) }}</div>
     </div>
-    <div class="small" style="margin-top:4px"><b>Problem:</b> {{ pc.problem or c.structured.problem }}</div>
-    <div class="small"><b>Opportunity:</b> {{ pc.opportunity_size or c.structured.opportunity_size }}</div>
-    <div class="small"><b>Differentiator:</b> {{ pc.differentiator or c.structured.differentiator }}</div>
-    <div class="small"><b>Ask:</b> {{ pc.ask or c.structured.ask }}</div>
-    <div style="margin-top:14px">
-      {% for b in badges %}<span class="vbadge {{ b.status }}"><span class="ck">✓</span>{{ b.label }} · {{ b.status }}</span>{% endfor %}
-    </div>
-    <div style="margin-top:12px">
-      {% for t in (pc.subtheme_tags or c.structured.subtheme_tags or c.raw.subtheme_tags or []) %}<span class="tag">{{ t }}</span>{% endfor %}
-    </div>
-    <div class="btnrow"><a class="cta" href="/profile/{{ c.id }}">View VC profile <span class="arw">→</span></a>
-      <a class="pill" href="/trace/{{ c.id }}" style="color:var(--txt2)">agent trace</a></div>
   </div>
 {% endfor %}
 </div>
@@ -398,6 +468,7 @@ were inferred by the agent — edit anything before publishing. You — the huma
     <label>Differentiator (one line)</label><textarea name="differentiator">{{ sc.differentiator }}</textarea>
     <label>Solution (one line)</label><textarea name="solution">{{ sc.solution }}</textarea>
     <label>Ask (one line)</label><textarea name="ask">{{ sc.ask }}</textarea>
+    <label>"If this wins" — impact line <span class="sub">one high-emotion sentence, mission-legible</span></label><textarea name="impact_line">{{ sc.impact_line }}</textarea>
     <label>Sub-theme tags <span class="sub">auto-inferred — adjust</span></label>
     <div class="seg">{% for s in subthemes %}
       <label><input type="checkbox" name="subtheme_tags" value="{{ s }}" {% if s in sc.subtheme_tags %}checked{% endif %}><span>{{ s }}</span></label>
@@ -473,6 +544,7 @@ TPL_PROFILE = _page("VC profile — MoonshotHunt", """
   </div>
 
   <div class="memo">
+    {% if pc.impact_line %}<div class="mrow" style="background:var(--coral-bg)"><div class="mlabel">If this wins</div><div class="mval"><b>{{ pc.impact_line }}</b></div></div>{% endif %}
     <div class="mrow"><div class="mlabel">Problem</div><div class="mval">{{ pc.problem or 'Not specified by founder' }}</div></div>
     <div class="mrow"><div class="mlabel">Opportunity size</div><div class="mval">{{ pc.opportunity_size or 'Not specified by founder' }}</div></div>
     <div class="mrow"><div class="mlabel">Differentiator</div><div class="mval">{{ pc.differentiator or 'Not specified by founder' }}</div></div>
@@ -762,12 +834,9 @@ async function openPanel(id){
       'font-weight:700;font-size:20px;color:var(--coral)">'+(s.startup_name||'?')[0]+'</div>'+
     '<div><h3 style="margin:0">'+s.startup_name+'</h3><span class="stage">'+s.stage+'</span></div></div>'+
     '<p style="color:var(--coral);margin:10px 0 4px">'+(s.tagline||'')+'</p>'+
-    '<div class="small"><b>Problem:</b> '+(s.problem||'')+'</div>'+
-    '<div class="small"><b>Opportunity:</b> '+(s.opportunity_size||'')+'</div>'+
-    '<div class="small"><b>Differentiator:</b> '+(s.differentiator||'')+'</div>'+
-    '<div class="small"><b>Ask:</b> '+(s.ask||'')+'</div>'+
+    (s.impact_line?'<div class="small" style="font-style:italic;opacity:.9">✦ '+(s.impact_line||'')+'</div>':'')+
     '<div style="margin-top:10px">'+badges+'</div><div style="margin-top:6px">'+tags+'</div>'+
-    '<div class="btnrow"><a class="pill" style="color:var(--txt2)" href="'+s.trace_url+'">view agent trace →</a>'+
+    '<div class="btnrow"><a class="cta" href="'+s.profile_url+'" style="color:#fff">VC profile →</a>'+
     '<span class="pill">▲ '+s.votes+' upvotes</span></div>';
   document.getElementById('panelOverlay').style.display='block';
 }
@@ -792,6 +861,8 @@ load();
 # Register template helpers (defined above)
 app.jinja_env.globals["_lower_badges"] = _lower_badges
 app.jinja_env.globals["_monogram"] = _monogram
+app.jinja_env.globals["_ticket_color"] = _ticket_color
+app.jinja_env.globals["_spec_code"] = _spec_code
 
 
 # ---------------------------------------------------------------------------
@@ -964,7 +1035,7 @@ def review(sid):
     if not sc:
         return "Pipeline hasn't completed yet. <a href='/processing/" + sid + "'>Check status</a>", 202
     for k in ["startup_name", "tagline", "problem", "opportunity_size",
-              "differentiator", "solution", "ask", "stage"]:
+              "differentiator", "solution", "ask", "stage", "impact_line"]:
         sc.setdefault(k, "")
     sc.setdefault("subtheme_tags", [])
     sc.setdefault("conflicts", [])
@@ -1000,6 +1071,7 @@ def publish(sid):
         "differentiator": request.form.get("differentiator", ""),
         "solution": request.form.get("solution", ""),
         "ask": request.form.get("ask", ""),
+        "impact_line": (request.form.get("impact_line") or "").strip(),
         "subtheme_tags": request.form.getlist("subtheme_tags") or rec.get("raw", {}).get("subtheme_tags", []),
         "badges": rec.get("badges", []),
         "published_at": store.now_iso(),
@@ -1171,8 +1243,10 @@ def api_startup(sid):
         "differentiator": pc.get("differentiator", ""), "ask": pc.get("ask", ""),
         "subtheme_tags": pc.get("subtheme_tags") or rec.get("raw", {}).get("subtheme_tags", []),
         "badges": _lower_badges(pc.get("badges", [])),
+        "impact_line": pc.get("impact_line", ""),
         "votes": len(rec.get("voters", [])),
         "trace_url": "/trace/" + sid,
+        "profile_url": "/profile/" + sid,
     })
 
 
