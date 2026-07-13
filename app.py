@@ -219,24 +219,30 @@ nav a:hover{color:var(--coral);text-decoration:none}
 
 /* ===== NUCLEATED DIRECTORY ===== */
 .filterbar{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;position:sticky;top:64px;z-index:15;
-  background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--line);
-  border-radius:999px;padding:8px 12px;margin:18px 0;box-shadow:0 4px 16px rgba(26,26,26,.06)}
-.filterbar .search{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px;background:var(--bg2);
-  border:1px solid var(--line);border-radius:999px;padding:7px 14px}
+  background:#F4F5F7;border:1px solid var(--line);
+  border-radius:14px;padding:8px 12px;margin:18px 0;box-shadow:0 1px 4px rgba(26,26,26,.05)}
+.filterbar .search{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px;background:#fff;
+  border:1px solid var(--line);border-radius:10px;padding:8px 14px}
 .filterbar .search .sico{color:var(--mut);font-size:16px;flex:none}
 .filterbar .search input{border:none;background:none;outline:none;flex:1;min-width:0;font:inherit;font-size:14px}
-.filterbar select{flex:none;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font:inherit;background:var(--bg);color:var(--txt)}
+.filterbar .fsel{flex:none;border:1px solid var(--line);border-radius:999px;padding:8px 30px 8px 14px;font:inherit;
+  background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B6B6B'/%3E%3C/svg%3E") no-repeat right 12px center;
+  -webkit-appearance:none;appearance:none;color:var(--txt);cursor:pointer}
 .filterbar .cta{flex:none;padding:8px 16px}
 .filterbar .pill{flex:none;white-space:nowrap}
 
 .activepill{margin:6px 0 12px}
 .nuc{position:relative;border-radius:16px;overflow:hidden;margin:8px 0 22px;border:1px solid var(--line)}
 .nucbg{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 0%,#eef3fb 0%,#f6f1f7 45%,#f3edf8 100%)}
-.nucinner{position:relative;display:flex;flex-wrap:wrap;gap:22px 26px;align-items:flex-start;justify-content:center;
-  padding:34px 20px;min-height:300px}
-.nuczone{flex-basis:100%;text-align:center;margin-top:6px}
-.nuczonelbl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);font-weight:600}
-.bubwrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+.nuctools{position:absolute;top:12px;right:14px;z-index:6;display:flex;gap:8px}
+.nucbtn{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer;color:var(--txt)}
+.nucbtn:hover{border-color:var(--blue);color:var(--blue)}
+.showmap{margin:0 0 18px}
+.nucinner{position:relative;padding:24px 10px 30px;min-height:560px}
+.zonetag{position:absolute;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(107,107,107,.28);font-weight:700;pointer-events:none;z-index:0}
+.zonetag.zt-0{top:18px;left:24px}
+.zonetag.zt-1{top:18px;right:24px;text-align:right}
+.bubwrap{position:absolute;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2}
 .bub{width:118px;height:118px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-decoration:none;color:#fff;font-family:"Space Grotesk",sans-serif;border:2px solid rgba(255,255,255,.6);cursor:pointer;
   box-shadow:0 6px 22px rgba(26,26,26,.12),inset 0 0 18px rgba(255,255,255,.18);
@@ -261,8 +267,6 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .segcircle.seg-2{background:linear-gradient(150deg,#F6C9CB,#F1B0B3)}
 .segall{font-size:11px;color:var(--mut);text-decoration:none;align-self:center;white-space:nowrap}
 .segall:hover{color:var(--blue)}
-.nucclose{position:absolute;top:12px;right:14px;border:1px solid var(--line);background:var(--bg);
-  border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer;color:var(--txt)}
 
 .gridwrap{margin-top:8px}
 .gridhead{font-size:13px;color:var(--txt2);margin:6px 2px 12px;font-weight:600}
@@ -330,8 +334,15 @@ textarea{min-height:72px;resize:vertical}
 .muted{color:var(--mut)}.small{font-size:13px}.meta{font-size:13px;color:var(--txt2)}
 .disclaimer{background:var(--amber-bg);border:1px solid #EAD9BE;color:var(--amber-tx);
   border-radius:10px;padding:10px 12px;font-size:13px;margin:10px 0}
-.hero{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:8px}
+.hero{background:linear-gradient(135deg,#F3EDFB 0%,#EEF3FB 55%,#FBF1EE 100%);border:1px solid var(--line);border-radius:16px;padding:30px 30px 24px;margin-bottom:8px}
+.hero h1{font-size:30px;line-height:1.15;margin:0 0 10px;letter-spacing:-.01em}
 .lead{color:var(--txt2);max-width:680px}
+.chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px}
+.chiplbl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);font-weight:600;margin-right:2px}
+.funpill{font-size:13px;text-decoration:none;color:var(--txt);background:var(--bg);border:1px solid var(--line);
+  border-radius:999px;padding:6px 13px;transition:border-color .12s,color .12s,transform .12s}
+.funpill:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-1px)}
+
 .fieldrow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:640px){.fieldrow{grid-template-columns:1fr}}
 
@@ -364,7 +375,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
 <nav><a class="brand" href="/" style="text-decoration:none;color:inherit">⬡ MoonshotHunt</a>
 <a href="/directory">Directory</a><a href="/whitespace">Whitespace</a><a href="/discussion">Discussion</a><a href="/submit">Submit</a>
 <span class="navspacer"></span>
-{% if user_email %}<span class="pill">{{ user_name or user_email }}</span>
+{% if user_email %}<span class="pill">Hi, {{ (user_name.split(' ')[0] if user_name else user_email.split('@')[0]) }}</span>
 {% else %}<a class="pill" href="#" onclick="return openLogin()">sign in to vote</a>{% endif %}
 </nav>
 <div class="wrap">{% block body %}{% endblock %}</div>
@@ -403,18 +414,37 @@ async function castVote(sid,email){
   const d=await r.json();
   if(d.ok!==undefined){ location.reload(); }
 }
-function toggleNuc(){
-  const n=document.getElementById('nuc');
-  if(n) n.style.display = (n.style.display==='none' || !n.style.display) ? 'none' : 'block';
-  const t=document.getElementById('toggleNuc');
-  if(t) t.textContent = (n && n.style.display==='none') ? 'Nucleated view' : 'Show map';
-}
+function hideMap(){ const n=document.getElementById('nuc'); if(n) n.style.display='none';
+  const s=document.getElementById('showMap'); if(s) s.style.display='inline-block'; }
+function showMap(){ const n=document.getElementById('nuc'); if(n) n.style.display='block';
+  const s=document.getElementById('showMap'); if(s) s.style.display='none'; }
+function expandAll(){ document.querySelectorAll('.segs').forEach(e=>e.classList.add('open')); }
+function collapseAll(){ document.querySelectorAll('.segs.open').forEach(e=>e.classList.remove('open')); }
 function toggleSeg(key){
   const el=document.getElementById('segs-'+key);
   if(!el) return;
   const open=el.classList.toggle('open');
-  document.querySelectorAll('.segs.open').forEach(o=>{ if(o!==el) o.classList.remove('open'); });
+  if(open) collapseAllExcept(el);
 }
+function collapseAllExcept(keep){ document.querySelectorAll('.segs.open').forEach(o=>{ if(o!==keep) o.classList.remove('open'); }); }
+// Organic scatter: stable pseudo-random placement of bubbles (no rigid rows)
+function layoutNuc(){
+  const inner=document.getElementById('nucinner'); if(!inner) return;
+  const wraps=[...inner.querySelectorAll('.bubwrap')];
+  const W=inner.clientWidth||900, H=Math.max(560, inner.clientHeight||560);
+  // deterministic pseudo-random from index
+  const rnd=(i)=>{ const x=Math.sin(i*127.1+311.7)*43758.5453; return x-Math.floor(x); };
+  wraps.forEach((w,i)=>{
+    const x=40 + rnd(i)* (W-200);
+    const y=70 + rnd(i+99)* (H-220);
+    w.style.position='absolute';
+    w.style.left=x+'px'; w.style.top=y+'px';
+  });
+  inner.style.minHeight=H+'px';
+}
+window.addEventListener('load', layoutNuc);
+window.addEventListener('resize', layoutNuc);
+
 async function submitLogin(){
   const name=document.getElementById('lm_name').value.trim();
   const email=document.getElementById('lm_email').value.trim();
@@ -465,10 +495,8 @@ def _spec_code(sid, color):
 
 TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
 <div class="hero">
-  <h1>India's <span style="color:var(--coral)">pre-funding</span> climate &amp; deep-tech radar</h1>
-  <p class="lead">Founders submit raw. Our agents structure it into VC-legible cards, run a
-  lightweight public-signal check, and the founder approves before anything goes live.
-  Self-reported, not due diligence.</p>
+  <h1>Building the future of <span style="color:var(--coral)">climate</span> &amp; <span style="color:var(--blue)">deep tech</span> — pre-funding?</h1>
+  <p class="lead">You're early. So are the people who should back you. MoonshotHunt is where pre-seed climate &amp; deep-tech founders get structured, VC-legible, and discovered — before the deck polish.</p>
   <div class="btnrow"><a class="cta" href="/submit">Submit your startup <span class="arw">→</span></a>
   <span class="pill">{{ metrics.startups }} startups live</span>
   <span class="pill">{{ stats.visits }} visits · {{ stats.uniques }} unique visitors</span></div>
@@ -477,15 +505,24 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
     <div class="stat"><b>{{ metrics.builders }}</b><span>builders on platform</span></div>
     <div class="stat"><b>{{ metrics.vcs }}</b><span>VCs on platform</span></div>
   </div>
+  <div class="chips">
+    <span class="chiplbl">Explore:</span>
+    <a class="funpill" href="/directory?group=energy-grid">⚡ Clean Energy</a>
+    <a class="funpill" href="/directory?group=carbon">🌍 Carbon Removal</a>
+    <a class="funpill" href="/directory?group=circular">♻️ Circular Economy</a>
+    <a class="funpill" href="/directory?group=robotics">🤖 Robotics</a>
+    <a class="funpill" href="/directory?group=ai">🧠 AI &amp; ML</a>
+    <a class="funpill" href="/directory?group=biotech">🧬 Biotech</a>
+  </div>
 </div>
 
-<!-- Persistent search + filters (single neat row) -->
+<!-- Persistent search + filters (clean single bar, SS1 style) -->
 <form class="filterbar" method="get" action="/directory">
   <input type="hidden" name="group" value="{{ filters.group }}">
   <input type="hidden" name="segment" value="{{ filters.segment }}">
   <div class="search"><span class="sico">⌕</span><input name="q" value="{{ filters.q }}" placeholder="Search startups, problems, tags…"></div>
-  <select name="stage"><option value="">All stages</option>{% for s in stages %}<option value="{{ s }}" {% if s==filters.stage %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
-  <select name="verify"><option value="">Any verification</option><option value="verified" {% if filters.verify=='verified' %}selected{% endif %}>Verified</option><option value="unverified" {% if filters.verify=='unverified' %}selected{% endif %}>Unverified</option></select>
+  <select class="fsel" name="stage"><option value="">All stages</option>{% for s in stages %}<option value="{{ s }}" {% if s==filters.stage %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <select class="fsel" name="verify"><option value="">Any verification</option><option value="verified" {% if filters.verify=='verified' %}selected{% endif %}>Verified</option><option value="unverified" {% if filters.verify=='unverified' %}selected{% endif %}>Unverified</option></select>
   <button class="cta" type="submit">Apply</button>
   {% if filters.group or filters.segment or filters.q or filters.stage or filters.verify %}<a class="pill" href="/directory">Clear ✕</a>{% endif %}
 </form>
@@ -496,12 +533,17 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
 
 <div class="nuc" id="nuc" style="display:{% if active_group or active_segment %}none{% else %}block{% endif %}">
   <div class="nucbg"></div>
-  <div class="nucinner">
+  <div class="nuctools">
+    <button class="nucbtn" type="button" onclick="expandAll()">Expand all</button>
+    <button class="nucbtn" type="button" id="hideMap" onclick="hideMap()">Hide map</button>
+  </div>
+  <div class="nucinner" id="nucinner">
     {% for z in zones %}
-    <div class="nuczone"><span class="nuczonelbl">{{ z.name }}</span></div>
-    {% for g in z.groups %}
-    <div class="bubwrap">
-      <button class="bub bub-{{ loop.index0 % 3 }}" type="button" style="--i:{{ loop.index0 }}"
+    <span class="zonetag zt-{{ loop.index0 % 2 }}">{{ z.name }}</span>
+    {% endfor %}
+    {% for z in zones %}{% for g in z.groups %}
+    <div class="bubwrap" data-i="{{ loop.index0 }}">
+      <button class="bub bub-{{ loop.index0 % 3 }}" type="button"
               onclick="toggleSeg('{{ g.key }}')">
         <span class="bname">{{ g.name }}</span><span class="bcount">{{ counts.get(g.key, 0) }}</span>
       </button>
@@ -515,11 +557,10 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
         <a class="segall" href="/directory?group={{ g.key }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">view all →</a>
       </div>
     </div>
-    {% endfor %}
-    {% endfor %}
-    <button class="nucclose" onclick="toggleNuc()">{% if active_group or active_segment %}Show map{% else %}Hide map{% endif %}</button>
+    {% endfor %}{% endfor %}
   </div>
 </div>
+<button class="nucbtn showmap" id="showMap" style="display:none" onclick="showMap()">Show map</button>
 
 <div class="gridwrap">
   <div class="gridhead">
@@ -562,11 +603,6 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
   {% if not cards %}<p class="muted">No startups match these filters. <a href="/directory">Reset</a></p>{% endif %}
 </div>
 """)
-
-
-def toggleNuc():
-    """client helper (kept for template reference; real toggle is inline JS)"""
-    return None
 
 
 TPL_SUBMIT = _page("Submit — MoonshotHunt", """
