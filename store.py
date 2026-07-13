@@ -187,7 +187,54 @@ def vote_count(sid):
     return len(rec.get("voters", [])) if rec else 0
 
 
-# --- Visit / unique-visitor counter (same cookie approach as voting) ---
+# --- Single active Discussion thread (manual, no archive yet) ---
+THREAD_PATH = None
+
+
+def _thread_path():
+    global THREAD_PATH
+    if THREAD_PATH is None:
+        THREAD_PATH = os.path.join(DATA_DIR, "thread.json")
+    return THREAD_PATH
+
+
+def get_thread():
+    """Return the single active thread dict, or None if none posted yet."""
+    p = _thread_path()
+    if not os.path.exists(p):
+        return None
+    return json.load(open(p))
+
+
+def set_thread(title, body, author_email, author_name):
+    """Create/replace the single active thread. One at a time, no history."""
+    t = {
+        "title": (title or "").strip(),
+        "body": (body or "").strip(),
+        "author_email": author_email,
+        "author_name": author_name,
+        "created_at": datetime.datetime.utcnow().isoformat() + "Z",
+        "replies": [],
+    }
+    with _lock:
+        json.dump(t, open(_thread_path(), "w"), indent=2)
+    return t
+
+
+def add_reply(thread, name, role, body):
+    """Append a reply to the in-memory thread dict and persist it."""
+    thread.setdefault("replies", []).append({
+        "name": (name or "").strip(),
+        "role": (role or "").strip(),
+        "body": (body or "").strip(),
+        "created_at": datetime.datetime.utcnow().isoformat() + "Z",
+    })
+    with _lock:
+        json.dump(thread, open(_thread_path(), "w"), indent=2)
+    return thread
+
+
+
 STATS_PATH = None
 
 
