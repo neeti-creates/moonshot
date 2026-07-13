@@ -22,6 +22,45 @@ SUBTHEMES = [
     "nanorobotics", "space-tech", "materials-science", "deep-tech-other",
 ]
 
+# Two-level theme taxonomy for the nucleated Directory (zones -> broader groups -> subthemes).
+# Bubbles in the nucleated view are GROUPS (not individual startups); each shows its count.
+THEME_ZONES = [
+    {"key": "climate", "name": "Climate Tech", "groups": [
+        {"key": "circular", "name": "Circular Economy", "sub": ["circular-economy"]},
+        {"key": "waste", "name": "Waste Management", "sub": ["waste-to-value"]},
+        {"key": "decarbon", "name": "Decarbonization", "sub": ["industrial-decarbonization", "carbon-capture", "climate-ai"]},
+        {"key": "energy", "name": "Energy", "sub": ["energy-storage", "grid-tech", "green-hydrogen", "water-tech"]},
+        {"key": "mobility", "name": "Mobility", "sub": ["sustainable-mobility"]},
+        {"key": "agri", "name": "Agriculture", "sub": ["agritech-climate"]},
+        {"key": "built", "name": "Built Environment", "sub": []},
+    ]},
+    {"key": "deep", "name": "Deep Tech", "groups": [
+        {"key": "robotics", "name": "Robotics", "sub": ["nanorobotics", "robotics-in-healthcare"]},
+        {"key": "space", "name": "Space Tech", "sub": ["space-tech"]},
+        {"key": "biotech", "name": "Biotech", "sub": ["biotech"]},
+        {"key": "materials", "name": "New Materials", "sub": ["materials-science"]},
+        {"key": "ai", "name": "AI Infrastructure", "sub": []},
+        {"key": "semi", "name": "Semiconductors", "sub": []},
+        {"key": "quantum", "name": "Quantum", "sub": ["quantum"]},
+    ]},
+]
+_SUB_TO_GROUP = {s: (z["key"], g["key"]) for z in THEME_ZONES for g in z["groups"] for s in g["sub"]}
+
+
+def group_counts(cards):
+    """Count published startups per group key across all cards (stable counts)."""
+    counts = {}
+    for c in cards:
+        pc = c.get("published_card") or {}
+        tags = pc.get("subtheme_tags") or c.get("structured", {}).get("subtheme_tags") or c.get("raw", {}).get("subtheme_tags", []) or []
+        seen = set()
+        for t in tags:
+            gk = _SUB_TO_GROUP.get(t, (None, None))[1]
+            if gk and gk not in seen:
+                counts[gk] = counts.get(gk, 0) + 1
+                seen.add(gk)
+    return counts
+
 # ---------------------------------------------------------------------------
 # Design system (light, Product-Hunt-style) — applied to ALL templates
 # ---------------------------------------------------------------------------
@@ -35,7 +74,7 @@ TPL_LAYOUT = """<!doctype html><html lang="en"><head><meta charset="utf-8">
   --bg:#FFFFFF; --bg2:#F8F7F4; --txt:#1A1A1A; --txt2:#6B6B6B; --mut:#9B9B9B;
   --line:#EAEAEA; --coral:#5B3A8E; --coral-bg:#F1EBFA; --teal:#1D9E75; --teal2:#0F6E56;
   --amber-bg:#FAEEDA; --amber-tx:#854F0B; --black:#111111;
-  --blue:#2F7FE0; --blue2:#1E5FB8; --beige:#F6F1E7; --coral-accent:#F87060; --tan:#C9A36B;
+  --blue:#2F7FE0; --blue2:#1E5FB8; --beige:#F6F1E7; --red:#E5484D; --tan:#C9A36B;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--txt);
@@ -91,9 +130,11 @@ nav a:hover{color:var(--coral);text-decoration:none}
 .info{padding:15px 16px 14px;color:#fff;position:relative}
 .info.blue{background:linear-gradient(160deg,#4F9BF2,#1E5FB8)}
 .info.coral{background:linear-gradient(160deg,#FA8A66,#F87060)}
+.info.red{background:linear-gradient(160deg,#EE6A6E,#E5484D)}
 .info.beige{background:linear-gradient(160deg,#E9DCC2,#D8C6A4);color:#1A1A1A}
 .tk.blue .dots i{background:var(--blue)}
 .tk.coral .dots i{background:#F87060}
+.tk.red .dots i{background:#E5484D}
 .tk.beige .dots i{background:#C9A36B}
 .info .date{display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;opacity:.8}
 .info .date .ln{flex:1;height:1.5px;background:currentColor;opacity:.45}
@@ -122,6 +163,52 @@ nav a:hover{color:var(--coral);text-decoration:none}
   background:repeating-linear-gradient(0deg,#1A1A1A 0 2px,transparent 2px 4px,#1A1A1A 4px 5px,transparent 5px 9px);opacity:.8}
 .info.beige .vbar{opacity:.55}
 .info .bcnum{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;margin-top:2px;opacity:.7}
+
+/* ===== NUCLEATED DIRECTORY ===== */
+.filterbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:64px;z-index:15;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--line);
+  border-radius:999px;padding:8px 12px;margin:18px 0;box-shadow:0 4px 16px rgba(26,26,26,.06)}
+.filterbar .search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--bg2);
+  border:1px solid var(--line);border-radius:999px;padding:7px 14px}
+.filterbar .search .sico{color:var(--mut);font-size:16px}
+.filterbar .search input{border:none;background:none;outline:none;flex:1;font:inherit;font-size:14px}
+.filterbar select{border:1px solid var(--line);border-radius:999px;padding:8px 14px;font:inherit;background:var(--bg);color:var(--txt)}
+.filterbar .cta{padding:8px 16px}
+
+.themepick{margin:6px 0 22px}
+.tphead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.tphead h2{font-size:20px}
+.zone{margin-bottom:16px}
+.zonelbl{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:8px}
+.tiles{display:flex;flex-wrap:wrap;gap:12px}
+.tile{display:flex;flex-direction:column;gap:2px;min-width:150px;background:var(--bg);border:1px solid var(--line);
+  border-radius:14px;padding:14px 16px;text-decoration:none;color:var(--txt);transition:border-color .15s,box-shadow .15s,transform .15s}
+.tile:hover{border-color:var(--blue);box-shadow:0 6px 18px rgba(47,127,224,.14);transform:translateY(-2px)}
+.tile .tname{font-weight:600;font-size:15px}
+.tile .tcount{font-family:var(--mono);font-size:12px;color:var(--mut)}
+
+.nuc{position:relative;border-radius:16px;overflow:hidden;margin:8px 0 22px;border:1px solid var(--line)}
+.nucbg{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 0%,#eef3fb 0%,#f6f1f7 45%,#f3edf8 100%)}
+.nucinner{position:relative;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center;
+  padding:34px 20px;min-height:300px}
+.nuczone{flex-basis:100%;text-align:center;margin-top:6px}
+.nuczonelbl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);font-weight:600}
+.bub{width:118px;height:118px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-decoration:none;color:#fff;font-family:"Space Grotesk",sans-serif;border:2px solid rgba(255,255,255,.6);
+  box-shadow:0 6px 22px rgba(26,26,26,.12),inset 0 0 18px rgba(255,255,255,.18);
+  transition:transform .15s ease,box-shadow .15s ease}
+.bub:hover{transform:scale(1.06);box-shadow:0 10px 30px rgba(26,26,26,.18)}
+.bub .bname{font-weight:600;font-size:13px;text-align:center;padding:0 8px;line-height:1.1}
+.bub .bcount{font-family:var(--mono);font-size:18px;font-weight:700;margin-top:3px}
+.bub-0{background:linear-gradient(150deg,#4F9BF2,#1E5FB8)}      /* blue */
+.bub-1{background:linear-gradient(150deg,#E9DCC2,#C9A36B);color:#1A1A1A}  /* beige */
+.bub-2{background:linear-gradient(150deg,#EE6A6E,#E5484D)}      /* red */
+.nucclose{position:absolute;top:12px;right:14px;border:1px solid var(--line);background:var(--bg);
+  border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer;color:var(--txt)}
+
+.gridwrap{margin-top:8px}
+.gridhead{font-size:13px;color:var(--txt2);margin:6px 2px 12px;font-weight:600}
+
 .section{background:var(--bg2)}
 
 label{display:block;font-weight:600;margin:14px 0 5px;color:var(--txt);font-size:14px}
@@ -240,6 +327,12 @@ async function castVote(sid,email){
   const d=await r.json();
   if(d.ok!==undefined){ location.reload(); }
 }
+function toggleNuc(){
+  const n=document.getElementById('nuc');
+  if(n) n.style.display = (n.style.display==='none' || !n.style.display) ? 'none' : 'block';
+  const t=document.getElementById('toggleNuc');
+  if(t) t.textContent = (n && n.style.display==='none') ? 'Nucleated view' : 'Show map';
+}
 async function submitLogin(){
   const name=document.getElementById('lm_name').value.trim();
   const email=document.getElementById('lm_email').value.trim();
@@ -281,37 +374,21 @@ def _monogram(name):
     return (name or "?")[0].upper()
 
 
-# Subtheme -> ticket color (blue / coral / beige), per locked 3-color palette.
-_BLUE = {"energy-storage", "grid-tech", "green-hydrogen", "climate-ai",
-         "industrial-decarbonization", "carbon-capture", "sustainable-mobility", "water-tech"}
-_BEIGE = {"agritech-climate", "nanorobotics", "robotics-in-healthcare", "materials-science",
-          "biotech", "space-tech", "deep-tech-other"}
-# everything else -> coral
-
-
-def _ticket_color(subthemes):
-    tags = [t for t in (subthemes or []) if t]
-    if any(t in _BLUE for t in tags):
-        return "blue"
-    if any(t in _BEIGE for t in tags):
-        return "beige"
-    return "coral"
-
 
 def _spec_code(sid, color):
     short = (sid or "0000000000")[:4].upper()
-    prefix = {"blue": "BL", "coral": "CO", "beige": "BE"}.get(color, "MH")
+    prefix = {"blue": "BL", "red": "RE", "beige": "BE"}.get(color, "MH")
     return f"MH·{prefix}·2026·{short}"
 
 
-TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
+TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
 <div class="hero">
   <h1>India's <span style="color:var(--coral)">pre-funding</span> climate &amp; deep-tech radar</h1>
   <p class="lead">Founders submit raw. Our agents structure it into VC-legible cards, run a
   lightweight public-signal check, and the founder approves before anything goes live.
   Self-reported, not due diligence.</p>
   <div class="btnrow"><a class="cta" href="/submit">Submit your startup <span class="arw">→</span></a>
-  <span class="pill">{{ cards|length }} startups live</span>
+  <span class="pill">{{ metrics.startups }} startups live</span>
   <span class="pill">{{ stats.visits }} visits · {{ stats.uniques }} unique visitors</span></div>
   <div class="stats" aria-label="platform metrics">
     <div class="stat"><b>{{ metrics.startups }}</b><span>startups tracked</span></div>
@@ -319,11 +396,65 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
     <div class="stat"><b>{{ metrics.vcs }}</b><span>VCs on platform</span></div>
   </div>
 </div>
-<div class="grid">
+
+<!-- Persistent search + filters (floating bar) -->
+<form class="filterbar" method="get" action="/directory">
+  <input type="hidden" name="group" value="{{ filters.group }}">
+  <div class="search"><span class="sico">⌕</span><input name="q" value="{{ filters.q }}" placeholder="Search startups, problems, tags…"></div>
+  <select name="stage"><option value="">All stages</option>{% for s in stages %}<option value="{{ s }}" {% if s==filters.stage %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+  <select name="verify"><option value="">Any verification</option><option value="verified" {% if filters.verify=='verified' %}selected{% endif %}>Verified</option><option value="unverified" {% if filters.verify=='unverified' %}selected{% endif %}>Unverified</option></select>
+  <button class="cta" type="submit">Apply</button>
+  {% if filters.group or filters.q or filters.stage or filters.verify %}<a class="pill" href="/directory">Clear ✕</a>{% endif %}
+</form>
+
+<!-- Theme picker entry (calm "pick a theme" step) -->
+<div class="themepick">
+  <div class="tphead">
+    <h2 style="margin:0">Pick a theme</h2>
+    {% if active_group_name %}<span class="pill" style="background:var(--coral-bg);color:var(--coral)">Filtered: {{ active_group_name }} <a href="/directory" style="margin-left:6px;color:inherit">✕</a></span>{% endif %}
+    <button class="pill" id="toggleNuc" onclick="toggleNuc()">{% if active_group %}Show map{% else %}Nucleated view{% endif %}</button>
+  </div>
+  {% for z in zones %}
+  <div class="zone">
+    <div class="zonelbl">{{ z.name }}</div>
+    <div class="tiles">
+      {% for g in z.groups %}
+      <a class="tile" href="/directory?group={{ g.key }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">
+        <span class="tname">{{ g.name }}</span>
+        <span class="tcount">{{ counts.get(g.key, 0) }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Nucleated bubble overlay (collapsible; theme filter tool, not per-startup) -->
+<div class="nuc" id="nuc" style="display:{% if active_group %}none{% else %}block{% endif %}">
+  <div class="nucbg"></div>
+  <div class="nucinner">
+    {% for z in zones %}
+    <div class="nuczone"><span class="nuczonelbl">{{ z.name }}</span></div>
+    {% for g in z.groups %}
+    <a class="bub bub-{{ loop.index0 % 3 }}" style="--i:{{ loop.index0 }}"
+       href="/directory?group={{ g.key }}{% if filters.stage %}&stage={{ filters.stage }}{% endif %}{% if filters.verify %}&verify={{ filters.verify }}{% endif %}{% if filters.q %}&q={{ filters.q }}{% endif %}">
+      <span class="bname">{{ g.name }}</span><span class="bcount">{{ counts.get(g.key, 0) }}</span>
+    </a>
+    {% endfor %}
+    {% endfor %}
+    <button class="nucclose" onclick="toggleNuc()">Collapse ✕</button>
+  </div>
+</div>
+
+<div class="gridwrap">
+  <div class="gridhead">
+    <span>{% if active_group_name %}{{ active_group_name }} — {{ cards|length }} startup{{ '' if cards|length==1 else 's' }}{% else %}{{ cards|length }} startups{% endif %}</span>
+  </div>
+  <div class="grid">
 {% for c in cards %}
   {% set pc = c.published_card if c.published_card else {} %}
   {% set badges = _lower_badges(c.published_card.badges if c.published_card else c.badges) %}
-  {% set tcol = _ticket_color(pc.subtheme_tags or c.structured.subtheme_tags or c.raw.subtheme_tags or []) %}
+  {% set tcol = ['blue','beige','red'][loop.index0 % 3] %}
   <div class="tk {{ 'light' if tcol=='beige' else '' }} {{ tcol }}">
     <div class="shot"><span class="art"></span></div>
     <div class="dots"><i></i><i></i><i></i></div>
@@ -350,9 +481,15 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """
     </div>
   </div>
 {% endfor %}
+  </div>
+  {% if not cards %}<p class="muted">No startups match these filters. <a href="/directory">Reset</a></p>{% endif %}
 </div>
-{% if not cards %}<p class="muted">No published startups yet. <a href="/submit">Submit one →</a></p>{% endif %}
 """)
+
+
+def toggleNuc():
+    """client helper (kept for template reference; real toggle is inline JS)"""
+    return None
 
 
 TPL_SUBMIT = _page("Submit — MoonshotHunt", """
@@ -861,7 +998,6 @@ load();
 # Register template helpers (defined above)
 app.jinja_env.globals["_lower_badges"] = _lower_badges
 app.jinja_env.globals["_monogram"] = _monogram
-app.jinja_env.globals["_ticket_color"] = _ticket_color
 app.jinja_env.globals["_spec_code"] = _spec_code
 
 
@@ -893,11 +1029,49 @@ def home():
 
 @app.route("/directory")
 def directory():
-    cards = []
-    for s in store.published():
-        rec = store.get(s["id"])
-        if rec:
-            cards.append(rec)
+    all_cards = [store.get(s["id"]) for s in store.published()]
+    all_cards = [c for c in all_cards if c]
+    # stable group counts (over all published, independent of active filters)
+    counts = group_counts(all_cards)
+
+    q = (request.args.get("q") or "").strip().lower()
+    stage_f = (request.args.get("stage") or "").strip()
+    verify_f = (request.args.get("verify") or "").strip()
+    group_f = (request.args.get("group") or "").strip()
+
+    # map active group -> its subthemes, for filtering the gallery
+    active_sub = set()
+    active_group_name = None
+    if group_f:
+        for z in THEME_ZONES:
+            for g in z["groups"]:
+                if g["key"] == group_f:
+                    active_sub = set(g["sub"])
+                    active_group_name = g["name"]
+                    break
+
+    def matches(c):
+        pc = c.get("published_card") or {}
+        tags = pc.get("subtheme_tags") or c.get("structured", {}).get("subtheme_tags") or c.get("raw", {}).get("subtheme_tags", []) or []
+        if active_sub and not (set(tags) & active_sub):
+            return False
+        if stage_f and (pc.get("stage") or c.get("structured", {}).get("stage") or c.get("raw", {}).get("stage", "")) != stage_f:
+            return False
+        if verify_f:
+            badges = c.get("published_card", {}).get("badges", []) if c.get("published_card") else c.get("badges", [])
+            ok = any(b.get("status") == "verified" for b in badges)
+            if verify_f == "verified" and not ok:
+                return False
+            if verify_f == "unverified" and ok:
+                return False
+        if q:
+            hay = " ".join(str(x) for x in [pc.get("startup_name"), pc.get("tagline"),
+                                            pc.get("problem"), " ".join(tags)]).lower()
+            if q not in hay:
+                return False
+        return True
+
+    cards = [c for c in all_cards if matches(c)]
     cards.sort(key=lambda c: (len(c.get("voters", [])), c.get("created_at", "")), reverse=True)
     user = _current_user()
     stats = store.record_visit(_visitor_id())
@@ -907,9 +1081,13 @@ def directory():
             if user["email"] in c.get("voters", []):
                 voted.add(c["id"])
     return render_template_string(TPL_HOME, cards=cards, voted=voted, stats=stats,
-                                  metrics={"startups": len(cards),
+                                  zones=THEME_ZONES, counts=counts,
+                                  active_group=group_f, active_group_name=active_group_name,
+                                  filters={"q": q, "stage": stage_f, "verify": verify_f, "group": group_f},
+                                  metrics={"startups": len(all_cards),
                                            "builders": store.builder_count(),
                                            "vcs": store.role_counts()["vc"]},
+                                  stages=STAGES, subthemes=SUBTHEMES,
                                   user_email=user["email"] if user else "",
                                   user_name=user["name"] if user else "")
 
