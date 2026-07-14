@@ -777,7 +777,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
   {% set badges = _lower_badges(c.published_card.badges if c.published_card else c.badges) %}
   {% set tcol = ['blue','beige','red'][loop.index0 % 3] %}
   {% set logo = _logo_for(c) %}
-  <a class="tk {{ 'light' if tcol=='beige' else '' }} {{ tcol }}" href="/profile/{{ c.id }}" style="text-decoration:none;color:inherit;display:block">
+  <a class="tk {{ 'light' if tcol=='beige' else '' }} {{ tcol }}" href="/onepager/{{ c.id }}" style="text-decoration:none;color:inherit;display:block">
     <div class="shot"{% if logo %} style="background-image:url('{{ logo }}');background-size:cover;background-position:center"{% endif %}><span class="art"></span></div>
     <div class="dots"><i></i><i></i><i></i></div>
     <div class="info {{ tcol }}">
@@ -798,7 +798,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
           <span class="arr">▲</span><span class="cnt">{{ c.voters|length }}</span></span>
       </div>
       <div class="vbar"></div><div class="bcnum">{{ _spec_code(c.id, tcol) }}</div>
-      <span class="opx" onclick="event.stopPropagation();location.href='/onepager/{{ c.id }}'" style="cursor:pointer">View one-pager →</span>
+      <span class="opx" onclick="event.stopPropagation();location.href='/profile/{{ c.id }}'" style="cursor:pointer">Founder profile →</span>
     </div>
   </a>
 {% endfor %}
