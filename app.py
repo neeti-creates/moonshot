@@ -1116,6 +1116,7 @@ TPL_PROFILE = _page("VC profile — MoonshotHunt", """
   </div>
 
   <div class="btnrow" style="margin-top:18px">
+    <a class="pill" href="/onepager/{{ sid }}" style="color:var(--coral)">View one-pager →</a>
     <a class="pill" href="/trace/{{ sid }}" style="color:var(--txt2)">View agent trace →</a>
     <span class="muted small" style="margin-left:auto">Self-reported · not due diligence · drafted by the MoonshotHunt VC Agent</span>
   </div>
@@ -1126,6 +1127,183 @@ TPL_PROFILE = _page("VC profile — MoonshotHunt", """
 .mrow:last-child{border-bottom:none}
 .mlabel{width:160px;flex:none;font-weight:600;color:var(--txt2);font-size:13px;text-transform:uppercase;letter-spacing:.04em}
 .mval{flex:1;color:var(--txt);line-height:1.5}
+</style>
+""")
+
+
+def _build_onepager(rec):
+    """Bind the VC/Verifier one-pager format to a real submission record.
+
+    Drives B's visual format from whatever the pipeline has produced so far.
+    Analytical sections the agents haven't synthesized yet fall back to a
+    neutral placeholder (never fabricated content)."""
+    pc = rec.get("onepager") or {}
+    sc = rec.get("structured") or {}
+    raw = rec.get("raw") or {}
+    name = pc.get("name") or sc.get("startup_name") or raw.get("startup_name") or "Unnamed startup"
+    thesis = pc.get("thesis") or sc.get("tagline") or raw.get("tagline") or "—"
+    tags = []
+    if pc.get("sector"):
+        tags.append({"label": pc["sector"], "acc": False})
+    if pc.get("archetype"):
+        tags.append({"label": pc["archetype"], "acc": True})
+    if sc.get("stage"):
+        tags.append({"label": "Stage · " + str(sc["stage"]).title(), "acc": False})
+    if pc.get("trl"):
+        tags.append({"label": "TRL " + str(pc["trl"]), "acc": False})
+    if pc.get("road_to_commercialisation"):
+        tags.append({"label": "Road · " + pc["road_to_commercialisation"], "acc": False})
+    if pc.get("round_size"):
+        tags.append({"label": pc["round_size"], "acc": False})
+    vd = (pc.get("verified_at") or (rec.get("created_at") or "")[:10] or "—")
+    pend = "Awaiting VC Agent synthesis."
+    return {
+        "name": name, "thesis": thesis, "tags": tags, "verified_date": vd,
+        "archetype": pc.get("archetype") or "Archetype TBD",
+        "bet": pc.get("bet") or pend,
+        "why_now": pc.get("why_now") or pend,
+        "proof_title": "Proof Block · " + (pc.get("archetype") or "Archetype TBD"),
+        "proof_note": pc.get("proof_note")
+        or "Archetype-selected → renders the proof fields for this startup's type.",
+        "proof_facts": pc.get("proof_facts") or [],
+        "proof_work": pc.get("proof_work") or [],
+        "path_cash": pc.get("path_to_cash_flow") or pend,
+        "moat": pc.get("moat") or pend,
+        "market": pc.get("market") or pend,
+        "team": pc.get("team") or pend,
+        "ask": pc.get("the_ask") or pend,
+        "founder_line": pc.get("founder_line") or "",
+        "founder_cite": pc.get("founder_cite") or "",
+    }
+
+
+TPL_ONEPAGER = _page("One-pager — MoonshotHunt", """\
+<div class="sheet">
+  <!-- MASTHEAD -->
+  <div class="top">
+    <div>
+      <div class="eyebrow"><span class="emblem">M</span> MoonshotHunt · Verified One-Pager</div>
+      <div class="co">{{ op.name }}</div>
+      <p class="thesis">{{ op.thesis }}</p>
+    </div>
+    <div class="key">
+      <div class="kh">Verifier Key</div>
+      <div class="row"><span class="ic v">✓</span> Independently verified</div>
+      <div class="row"><span class="ic c">•</span> Founder-claimed</div>
+      <div class="date">Claims verified as of {{ op.verified_date }}</div>
+    </div>
+  </div>
+
+  <div class="tags">
+    {% for t in op.tags %}<span class="pill{% if t.acc %} on{% endif %}">{{ t.label }}</span>{% endfor %}
+  </div>
+
+  <div class="body">
+    <div class="sec"><div class="node"><div class="dot">2</div><div class="line"></div></div>
+      <div><div class="bar"><h2>The Bet</h2></div>
+      <div class="content"><p>{{ op.bet }}</p></div></div></div>
+
+    <div class="sec"><div class="node"><div class="dot">3</div><div class="line"></div></div>
+      <div><div class="bar"><h2>Why Now</h2></div>
+      <div class="content"><p>{{ op.why_now }}</p></div></div></div>
+
+    <div class="sec"><div class="node"><div class="dot">4</div><div class="line"></div></div>
+      <div><div class="bar"><h2>{{ op.proof_title }}</h2></div>
+      <div class="content">
+        <p class="mono" style="font-size:11.5px;color:var(--mut)">{{ op.proof_note }}</p>
+        {% if op.proof_facts %}
+        <div class="facts">
+          {% for f in op.proof_facts %}<div class="fact"><div class="k">{{ f.k }}</div><div class="v">{{ f.v }}</div></div>{% endfor %}
+        </div>
+        {% else %}<p class="pending">Awaiting archetype-conditional synthesis.</p>{% endif %}
+      </div></div></div>
+
+    <div class="sec"><div class="node"><div class="dot">5</div><div class="line"></div></div>
+      <div><div class="bar"><h2>Proof of Work</h2></div>
+      <div class="content">
+        {% if op.proof_work %}
+          {% for pw in op.proof_work %}
+          <p><span class="vf {{ 'ver' if pw.verdict=='verified' else 'clm' }}"><span class="ic">{{ '✓' if pw.verdict=='verified' else '•' }}</span> {{ 'Verified' if pw.verdict=='verified' else 'Claimed' }}</span>{{ pw.text }}</p>
+          {% endfor %}
+        {% else %}<p class="pending">Awaiting VC Agent synthesis.</p>{% endif %}
+      </div></div></div>
+
+    <div class="sec"><div class="node"><div class="dot">6</div><div class="line"></div></div>
+      <div><div class="bar"><h2>Path to Cash Flow</h2></div>
+      <div class="content"><p>{{ op.path_cash }}</p></div></div></div>
+
+    <div class="sec"><div class="node"><div class="dot">7</div><div class="line"></div></div>
+      <div><div class="bar"><h2>Moat</h2></div>
+      <div class="content"><p>{{ op.moat }}</p></div></div></div>
+
+    <div class="sec"><div class="node"><div class="dot">8</div><div class="line"></div></div>
+      <div><div class="bar"><h2>Market</h2></div>
+      <div class="content"><p>{{ op.market }}</p></div></div></div>
+
+    <div class="sec"><div class="node"><div class="dot">9</div><div class="line"></div></div>
+      <div><div class="bar"><h2>Team</h2></div>
+      <div class="content"><p>{{ op.team }}</p></div></div></div>
+
+    <div class="sec"><div class="node"><div class="dot">10</div><div class="line"></div></div>
+      <div><div class="bar"><h2>The Ask</h2></div>
+      <div class="content"><p>{{ op.ask }}</p></div></div></div>
+
+    <div class="sec"><div class="node"><div class="dot">11</div><div class="line"></div></div>
+      <div><div class="bar"><h2>Founder Line</h2></div>
+      <div class="content">
+        {% if op.founder_line %}
+        <blockquote class="quote">"{{ op.founder_line }}"<cite>— {{ op.founder_cite }}</cite></blockquote>
+        {% else %}<p class="pending">Optional — not provided.</p>{% endif %}
+      </div></div></div>
+  </div>
+
+  <div class="foot">
+    <div>Generated by <b>MoonshotHunt VC Agent</b> · verified by <b>Verifier Agent</b><br>
+    Claims self-reported, not due diligence.</div>
+    <div style="text-align:right">Format v1 · Archetype: {{ op.archetype }}<br>
+    Fields reconfigure per archetype.</div>
+  </div>
+</div>
+<style>
+.sheet{position:relative;max-width:900px;margin:8px auto;background:var(--bg);
+  border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 28px rgba(26,26,26,.14);overflow:hidden}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:24px 32px 18px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--coral);font-weight:600;display:flex;align-items:center;gap:9px}
+.emblem{width:26px;height:26px;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:12px}
+.co{font-family:"Space Grotesk",sans-serif;margin:12px 0 0;font-size:44px;line-height:.95;letter-spacing:-1px;font-weight:700}
+.thesis{margin:12px 0 0;font-size:16px;line-height:1.45;max-width:560px;color:var(--txt2)}
+.thesis b{color:var(--coral)}
+.key{width:212px;flex:none;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 13px;box-shadow:0 10px 28px rgba(26,26,26,.10)}
+.key .kh{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:8px;color:var(--txt2)}
+.key .row{display:flex;align-items:center;gap:9px;font-size:12.5px;margin:6px 0;color:var(--txt)}
+.key .ic{width:18px;height:18px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.key .ic.v{background:var(--teal)} .key .ic.c{background:var(--red)}
+.key .date{margin-top:9px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;color:var(--mut);border-top:1px solid var(--line);padding-top:8px}
+.tags{display:flex;flex-wrap:wrap;gap:7px;padding:14px 32px 4px}
+.pill.on{background:var(--coral-bg);border-color:var(--coral);color:var(--coral)}
+.body{padding:6px 32px 30px}
+.sec{display:grid;grid-template-columns:32px 1fr;gap:14px;margin-top:22px}
+.node{display:flex;flex-direction:column;align-items:center}
+.node .dot{width:28px;height:28px;border-radius:50%;background:var(--coral);color:#fff;font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.node .line{width:2px;flex:1;background:var(--line);margin-top:6px}
+.sec:last-child .node .line{display:none}
+.bar{background:var(--black);color:#fff;padding:8px 14px;display:flex;align-items:baseline;gap:10px;border-radius:8px}
+.bar h2{margin:0;font-family:"Space Grotesk",sans-serif;font-size:13.5px;letter-spacing:.4px;text-transform:uppercase;font-weight:600;color:#fff}
+.content{padding:12px 2px 2px;font-size:15px;line-height:1.52;color:var(--txt)}
+.content p{margin:0 0 9px}
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:4px}
+.fact{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 13px;box-shadow:0 10px 28px rgba(26,26,26,.08)}
+.fact .k{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut)}
+.fact .v{font-size:15px;font-weight:700;margin-top:3px;color:var(--txt)}
+.vf{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;margin:0 6px 4px 0}
+.vf.ver{background:#E6F5EF;color:var(--teal2)} .vf.clm{background:#FBE9EA;color:var(--red)}
+.vf .ic{width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
+.vf.ver .ic{background:var(--teal)} .vf.clm .ic{background:var(--red)}
+.quote{border-left:3px solid var(--coral);padding:4px 0 4px 16px;font-size:19px;line-height:1.36;font-style:italic;margin:0;color:var(--txt)}
+.quote cite{display:block;font-style:normal;font-size:13px;color:var(--mut);margin-top:8px;font-family:"IBM Plex Mono",ui-monospace,monospace}
+.foot{border-top:1px solid var(--line);padding:12px 32px;font-size:10.5px;color:var(--mut);display:flex;justify-content:space-between;gap:14px;background:var(--bg2)}
+.foot b{color:var(--txt)}
+.pending{color:var(--mut);font-style:italic}
 </style>
 """)
 
@@ -1734,7 +1912,7 @@ def profile(sid):
     if rec.get("status") != "published":
         # not published yet — still let founders/preview see the draft memo
         if not rec.get("structured") and not rec.get("published_card"):
-            return "Nothing to show yet. <a href='/processing/" + sid + "'>Check status</a>", 202
+            return "Nothing to show yet. <a href='/processing/" + sid + "'>Check status</a> · <a href='/onepager/" + sid + "'>View one-pager</a>", 202
     user = _current_user()
     pc = rec.get("published_card") or rec.get("structured") or {}
     pc.setdefault("startup_name", rec.get("raw", {}).get("startup_name", ""))
@@ -1744,6 +1922,15 @@ def profile(sid):
                                   subthemes=(pc.get("subtheme_tags") or rec.get("raw", {}).get("subtheme_tags", []) or []),
                                   user_email=user["email"] if user else "",
                                   user_name=user["name"] if user else "")
+
+
+@app.route("/onepager/<sid>")
+def onepager(sid):
+    rec = store.get(sid)
+    if not rec:
+        return "not found", 404
+    op = _build_onepager(rec)
+    return render_template_string(TPL_ONEPAGER, sid=sid, op=op)
 
 
 @app.route("/trace/<sid>")
