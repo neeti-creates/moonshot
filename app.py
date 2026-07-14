@@ -149,7 +149,7 @@ nav{display:flex;gap:14px;align-items:center;padding:12px 24px;
   border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
 nav .brand{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--txt);
   letter-spacing:-.3px;padding:2px 2px;border-radius:10px}
-.brandlogo{height:58px;width:auto;display:block}
+.brandlogo{height:29px;width:auto;display:block}
 nav .navlinks{display:flex;gap:6px;align-items:center}
 nav .navlinks a{color:var(--txt2);font-weight:600;padding:8px 14px;border-radius:999px;
   border:1px solid transparent;transition:background .15s,border-color .15s,color .15s}
@@ -280,7 +280,7 @@ nav .navlinks a.active{color:var(--coral);background:#fff;border-color:var(--lin
 .nucbtn{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer;color:var(--txt)}
 .nucbtn:hover{border-color:var(--blue);color:var(--blue)}
 .showmap{margin:0 0 18px}
-.rnucinner{position:relative;display:flex;flex-wrap:wrap;gap:26px 30px;align-items:flex-start;justify-content:center;
+.nucinner{position:relative;display:flex;flex-wrap:wrap;gap:26px 30px;align-items:flex-start;justify-content:center;
   max-width:1080px;margin:0 auto;padding:34px 36px 44px}
 .zonetag{position:absolute;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(107,107,107,.28);font-weight:700;pointer-events:none;z-index:0}
 .zonetag.zt-0{top:18px;left:24px}
@@ -501,7 +501,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
 .siteft .ftcol a{display:block;color:var(--txt2);text-decoration:none;
   font-size:13.5px;padding:4px 0;font-weight:500}
 .siteft .ftcol a:hover{color:var(--coral)}
-.siteft .ftlogo{height:40px;width:auto;margin-bottom:12px}
+.siteft .ftlogo{height:20px;width:auto;margin-bottom:12px}
 .siteft .ftag{color:var(--txt2);font-size:13px;line-height:1.45;max-width:280px;margin:0}
 .siteft .ftlegal p{color:var(--txt2);font-size:12.5px;line-height:1.5;margin:0}
 .siteft .ftlegal b{color:var(--ink)}
@@ -708,7 +708,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
 <div class="hero">
   <div class="heroL">
     <div class="eyebrow">MoonshotHunt · Discovery</div>
-    <h1>Building the future of <span style="color:var(--coral)">climate</span> &amp; <span style="color:var(--blue)">deep tech</span> — pre-funding<span class="dot">?</span></h1>
+    <h1>early signal on <span style="color:var(--coral)">climate</span> &amp; <span style="color:var(--blue)">deep-tech</span> founders — before the deck polish<span class="dot">?</span></h1>
     <p class="lead">You're early. So are the people who should back you. MoonshotHunt is where pre-seed climate &amp; deep-tech founders get structured, VC-legible, and discovered — before the deck polish.</p>
     <div class="heroact">
       <div class="hfield grow"><label>Search</label>
