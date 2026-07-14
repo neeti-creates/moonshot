@@ -96,8 +96,46 @@ def llm(messages, model=DEF_MODEL, json_mode=False, max_tokens=900, temperature=
             "model": model, "latency": None}
 
 
+def _repair_truncated_json(text):
+    """Best-effort recovery of a JSON object cut off mid-stream (free-model truncation).
+
+    Closes an unterminated string, then appends missing ']' / '}' to balance brackets,
+    and re-parses. Recovers the valid prefix (everything before the cut) without
+    inventing field *values*. Returns {} if still unparseable."""
+    s = text.find("{")
+    if s == -1:
+        return {}
+    body = text[s:]
+    # close an unterminated string literal (heuristic: odd number of unescaped quotes)
+    if body.count('"') % 2 == 1:
+        # drop a trailing dangling comma/whitespace, then close the string
+        body = body.rstrip().rstrip(",").rstrip()
+        if body.endswith('"'):
+            body = body[:-1]
+        body += '"'
+    # balance brackets
+    depth = {"{": 0, "[": 0}
+    for ch in body:
+        if ch == "{":
+            depth["{"] += 1
+        elif ch == "}":
+            depth["{"] = max(0, depth["{"] - 1)
+        elif ch == "[":
+            depth["["] += 1
+        elif ch == "]":
+            depth["["] = max(0, depth["["] - 1)
+    # trim a trailing dangling comma before closing
+    body = body.rstrip().rstrip(",").rstrip()
+    body += "]" * depth["["] + "}" * depth["{"]
+    try:
+        return json.loads(body)
+    except Exception:
+        return {}
+
+
 def _safe_json(text):
-    """Extract the first JSON object from an LLM reply, tolerating prose/fences."""
+    """Extract the first JSON object from an LLM reply, tolerating prose/fences
+    and truncated output (common with the free model)."""
     if not text:
         return {}
     if isinstance(text, dict):
@@ -117,6 +155,10 @@ def _safe_json(text):
             return json.loads(text[s:e + 1])
         except Exception:
             pass
+    # truncated output: try to recover the valid prefix
+    repaired = _repair_truncated_json(text)
+    if repaired:
+        return repaired
     return {"_raw": text}
 
 
