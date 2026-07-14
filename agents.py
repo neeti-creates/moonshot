@@ -285,6 +285,87 @@ def run_verifier(raw, structured):
 # ---------------------------------------------------------------------------
 # Pipeline orchestration
 # ---------------------------------------------------------------------------
+def run_onepager_agent(raw, structured):
+    """Synthesize the VC/Verifier one-pager body (rec["onepager"]).
+
+    Produces the 11-field format the /onepager/<sid> page renders. The Verifier
+    Agent's job here is to flag each Proof-of-Work line as verified vs founder-claimed
+    where a checkable public signal exists; everything else is self-reported.
+    Uses the same watchdog-capped llm() as the other agents (no foreground hang)."""
+    arch = (structured.get("archetype")
+            or raw.get("archetype")
+            or _infer_archetype(structured, raw))
+    sys_p = (
+        "You are the MoonshotHunt VC Agent writing the startup's ONE-PAGER — a crisp, "
+        "VC-legible discovery document generated from the founder's uploaded material "
+        "(deck, site, docs). This is SYNTHESIS, never investment due diligence; you are "
+        "organizing founder-provided claims, not certifying their truth.\n\n"
+        "RULES:\n"
+        "1. Every line must reflect THIS founder's actual words/claims from the sources. "
+        "No generic filler. If a field isn't supported, write a short honest 'Not specified'.\n"
+        "2. The masthead thesis is a BET, not a description: 'Betting that X becomes "
+        "structurally necessary because Y.' <= 18 words.\n"
+        "3. 'proof_work' is an array of {verdict, text}. verdict is 'verified' ONLY when a "
+        "publicly checkable signal supports it (live site, granted patent number, published "
+        "result, named pilot partner); otherwise 'claimed'. Be conservative — most lines are "
+        "'claimed'. Each text <= 20 words.\n"
+        "4. ARCHETYPE drives the proof block. The founder's archetype is: "
+        f"'{arch}'.\n"
+        "   - Hardware / Deep Tech: proof_note='TRL / IP / pilot / cost-down / capex'; "
+        "proof_facts cover trl, patents, pilot result, cost-down target, capex to scale.\n"
+        "   - Climate Infra: proof_note='bankability / project pipeline / offtake / policy'; "
+        "proof_facts cover pipeline size, offtake/LOIs, unit economics at scale, policy dependency.\n"
+        "   - Software / Platform: proof_note='distribution / usage / retention / data moat'; "
+        "proof_facts cover users, retention, integration depth, data moat.\n"
+        "   - Services-enabled: proof_note='team / repeatability / margin'; "
+        "proof_facts cover founder authority, delivery track record, margin structure.\n"
+        "5. Keep each analytical field to 2 sentences max. The Ask names amount, use of funds, "
+        "and the milestone it unlocks.\n\n"
+        "Return STRICT JSON with exactly these keys:\n"
+        "  thesis, sector, archetype, trl, road_to_commercialisation, round_size,\n"
+        "  bet, why_now, proof_note, proof_facts (array of {k,v}), proof_work (array of "
+        "{verdict,text}), path_to_cash_flow, moat, market, team, the_ask, founder_line, "
+        "founder_cite.\n"
+        "sector/archetype/trl/road_to_commercialisation/round_size may be '' if unknown.\n"
+    )
+    def msgs():
+        parts = []
+        if raw.get("extracted_context"):
+            parts.append("SOURCE MATERIAL:\n" + raw["extracted_context"])
+        parts.append("STRUCTURED (from VC Agent):\n" +
+                     json.dumps(structured, indent=2, ensure_ascii=False))
+        parts.append("IDENTITY:\n" + json.dumps(
+            {k: raw.get(k, "") for k in
+             ["startup_name", "founder_names", "founder_linkedin", "founder_email"]},
+            indent=2, ensure_ascii=False))
+        user = ("Return ONLY a JSON object (no markdown) for this startup's one-pager:\n\n"
+                + "\n\n".join(parts))
+        return [{"role": "system", "content": sys_p},
+                {"role": "user", "content": user}]
+    out = _call_with_retry(msgs, max_tokens=2600)
+    if "error" in out or not out.get("content"):
+        return {"ok": False, "error": out.get("error", "empty"), "onepager": {}}
+    op = _safe_json(out["content"])
+    op["archetype"] = op.get("archetype") or arch
+    op["name"] = structured.get("startup_name") or raw.get("startup_name", "")
+    # normalise proof_work verdicts
+    for pw in op.get("proof_work", []) or []:
+        pw["verdict"] = "verified" if str(pw.get("verdict", "")).lower().startswith("ver") else "claimed"
+    return {"ok": True, "onepager": op, "llm": out}
+
+
+def _infer_archetype(structured, raw):
+    """Best-effort archetype inference from available signals (agent can override)."""
+    text = " ".join(str(v) for v in (list(structured.values()) + list(raw.values()))).lower()
+    if any(w in text for w in ["saas", "platform", "software", "api", "app", "ml model"]):
+        return "Software / Platform"
+    if any(w in text for w in ["consult", "services", "retainer", "agency"]):
+        return "Services-enabled"
+    if any(w in text for w in ["grid", "plant", "infra", "generation", "pipeline", "offtake"]):
+        return "Climate Infra"
+    return "Hardware / Deep Tech"
+
+
 def run_pipeline(sub):
     raw = sub["raw"]
     trace = []
@@ -318,12 +399,27 @@ def run_pipeline(sub):
         "disclaimer": ver["disclaimer"],
     })
 
+    # One-pager synthesis (VC Agent, archetype-conditional). Tolerant: a failure
+    # here must NOT block review or publishing — the page degrades to placeholders.
+    op = run_onepager_agent(raw, structured)
+    trace.append({
+        "agent": "VC Agent (One-pager)",
+        "role": "Synthesizes the 11-field one-pager body + archetype-conditional proof block",
+        "model": op.get("llm", {}).get("model"),
+        "latency": op.get("llm", {}).get("latency"),
+        "ok": op.get("ok", False),
+        "error": op.get("error"),
+        "raw_output": op.get("llm", {}).get("content"),
+    })
+    onepager = op.get("onepager", {}) if op.get("ok") else {}
+
     # If the VC agent failed or returned nothing usable, mark the submission as
     # errored so the founder sees a clear retry state instead of a blank review form.
     vc_ok = bool(vc.get("ok")) and bool(structured.get("startup_name"))
     status = "review" if vc_ok else "error"
     return {"status": status, "structured": structured,
             "badges": ver["badges"], "disclaimer": ver["disclaimer"],
+            "onepager": onepager,
             "trace": trace, "vc_error": None if vc_ok else vc.get("error")}
 
 

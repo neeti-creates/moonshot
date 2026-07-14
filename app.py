@@ -246,6 +246,9 @@ nav .navlinks a.active{color:var(--coral);background:#fff;border-color:var(--lin
   background:repeating-linear-gradient(0deg,#1A1A1A 0 2px,transparent 2px 4px,#1A1A1A 4px 5px,transparent 5px 9px);opacity:.8}
 .info.beige .vbar{opacity:.55}
 .info .bcnum{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;margin-top:2px;opacity:.7}
+.info .opx{display:inline-block;margin-top:9px;font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:.02em;color:var(--coral);text-decoration:none;opacity:.85}
+.info .opx:hover{opacity:1;text-decoration:underline}
 
 /* ===== NUCLEATED DIRECTORY ===== */
 .filterbar{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;position:sticky;top:64px;z-index:15;
@@ -793,6 +796,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
           <span class="arr">▲</span><span class="cnt">{{ c.voters|length }}</span></span>
       </div>
       <div class="vbar"></div><div class="bcnum">{{ _spec_code(c.id, tcol) }}</div>
+      <a class="opx" href="/onepager/{{ c.id }}" onclick="event.stopPropagation()">One-pager →</a>
     </div>
   </a>
 {% endfor %}
@@ -1818,6 +1822,7 @@ def _run_pipeline_bg(sid, upload_dir=None):
     rec["badges"] = res["badges"]
     rec["disclaimer"] = res["disclaimer"]
     rec["trace"] = res["trace"]
+    rec["onepager"] = res.get("onepager", {}) or {}
     rec["status"] = res["status"]          # trust the pipeline's own ok/fail decision
     rec["vc_error"] = res.get("vc_error")
     rec["log"] = "done"
