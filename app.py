@@ -246,9 +246,11 @@ nav .navlinks a.active{color:var(--coral);background:#fff;border-color:var(--lin
   background:repeating-linear-gradient(0deg,#1A1A1A 0 2px,transparent 2px 4px,#1A1A1A 4px 5px,transparent 5px 9px);opacity:.8}
 .info.beige .vbar{opacity:.55}
 .info .bcnum{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;margin-top:2px;opacity:.7}
-.info .opx{display:inline-block;margin-top:9px;font-family:var(--mono);font-size:10px;font-weight:600;
-  letter-spacing:.02em;color:var(--coral);text-decoration:none;opacity:.85}
-.info .opx:hover{opacity:1;text-decoration:underline}
+.info .opx{display:block;margin-top:11px;padding-top:9px;border-top:1px solid rgba(255,255,255,.28);
+  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.02em;
+  color:#fff;text-decoration:underline;text-underline-offset:2px;opacity:.92}
+.info.beige .opx{color:var(--coral);border-top-color:rgba(26,26,26,.22)}
+.info .opx:hover{opacity:1}
 
 /* ===== NUCLEATED DIRECTORY ===== */
 .filterbar{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;position:sticky;top:64px;z-index:15;
@@ -796,7 +798,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
           <span class="arr">▲</span><span class="cnt">{{ c.voters|length }}</span></span>
       </div>
       <div class="vbar"></div><div class="bcnum">{{ _spec_code(c.id, tcol) }}</div>
-      <a class="opx" href="/onepager/{{ c.id }}" onclick="event.stopPropagation()">One-pager →</a>
+      <span class="opx" onclick="event.stopPropagation();location.href='/onepager/{{ c.id }}'" style="cursor:pointer">View one-pager →</span>
     </div>
   </a>
 {% endfor %}
