@@ -281,7 +281,7 @@ nav .navlinks a.active{color:var(--coral);background:#fff;border-color:var(--lin
 .nucbtn:hover{border-color:var(--blue);color:var(--blue)}
 .showmap{margin:0 0 18px}
 .nucinner{position:relative;display:flex;flex-wrap:wrap;gap:26px 30px;align-items:flex-start;justify-content:center;
-  max-width:1080px;margin:0 auto;padding:34px 36px 44px}
+  padding:34px 0}
 .zonetag{position:absolute;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(107,107,107,.28);font-weight:700;pointer-events:none;z-index:0}
 .zonetag.zt-0{top:18px;left:24px}
 .zonetag.zt-1{top:18px;right:24px;text-align:right}
@@ -413,7 +413,7 @@ textarea{min-height:72px;resize:vertical}
 .disclaimer{background:var(--amber-bg);border:1px solid #EAD9BE;color:var(--amber-tx);
   border-radius:10px;padding:10px 12px;font-size:13px;margin:10px 0}
 .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;
-  padding:56px 36px 34px;margin:0 auto;max-width:1080px;border:none}
+  padding:56px 0 34px;border:none}
 .hero .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:700;margin-bottom:16px}
 .hero h1{font-size:56px;line-height:1.0;font-weight:800;letter-spacing:-2px;margin:0}
 .hero h1 .dot{color:var(--coral)}
@@ -708,7 +708,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
 <div class="hero">
   <div class="heroL">
     <div class="eyebrow">MoonshotHunt · Discovery</div>
-    <h1>early signal on <span style="color:var(--coral)">climate</span> &amp; <span style="color:var(--blue)">deep-tech</span> founders — before the deck polish<span class="dot">?</span></h1>
+    <h1><span style="color:var(--coral)">climate</span> &amp; <span style="color:var(--blue)">deep-tech</span> founders, caught early — before the deck polish<span class="dot">?</span></h1>
     <p class="lead">You're early. So are the people who should back you. MoonshotHunt is where pre-seed climate &amp; deep-tech founders get structured, VC-legible, and discovered — before the deck polish.</p>
     <div class="heroact">
       <div class="hfield grow"><label>Search</label>
@@ -735,7 +735,6 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
     <div class="stats" aria-label="platform metrics">
       <div class="stat"><b>{{ metrics.startups }}</b><span>startups tracked</span></div>
       <div class="stat"><b>{{ metrics.builders }}</b><span>builders on platform</span></div>
-      <div class="stat"><b>{{ metrics.vcs }}</b><span>VCs on platform</span></div>
     </div>
   </div>
   <div class="heroR">
