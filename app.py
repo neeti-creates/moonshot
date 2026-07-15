@@ -128,6 +128,7 @@ TPL_LAYOUT = """<!doctype html><html lang="en"><head><meta charset="utf-8">
   --line:#EAEAEA; --coral:#5B3A8E; --coral-bg:#F1EBFA; --teal:#1D9E75; --teal2:#0F6E56;
   --amber-bg:#FAEEDA; --amber-tx:#854F0B; --black:#111111; --black2:#2B2B2B;
   --blue:#2F7FE0; --blue2:#1E5FB8; --beige:#F6F1E7; --red:#E5484D; --tan:#C9A36B;
+  --sage:#E4EDE4; --sage-line:#CFE0CF;
 }
 *{box-sizing:border-box}
 html{background:var(--bg)}
@@ -434,6 +435,8 @@ textarea{min-height:72px;resize:vertical}
 .dots{display:flex;gap:8px}.dot{width:9px;height:9px;border-radius:50%;background:var(--line)}.dot.on{background:var(--coral);width:26px;border-radius:999px}
 .ft{font-size:13px;color:var(--mut);font-weight:600}
 .stage{overflow:hidden;border-radius:22px}
+/* submit swipe panel: sage-green panel behind the white card */
+.flow .stage{background:var(--sage);border:1px solid var(--sage-line);padding:26px}
 .track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1)}
 .step{flex:0 0 100%;padding:4px}
 .stp{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--coral);border-radius:999px;padding:4px 12px;margin-bottom:10px}
