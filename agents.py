@@ -451,14 +451,14 @@ def run_pipeline(sub, on_log=None):
 
     # One-pager synthesis (VC Agent, archetype-conditional). Tolerant: a failure
     # here must NOT block review or publishing — the page degrades to placeholders.
-    if on_log: on_log("VC Agent: synthesizing your one-pager…")
+    if on_log: on_log("VC Agent: synthesizing your VC memo…")
     try:
         op = run_onepager_agent(raw, structured)
     except Exception as e:
         op = {"ok": False, "error": f"{type(e).__name__}: {str(e)[:160]}", "onepager": {}, "llm": {}}
     trace.append({
-        "agent": "VC Agent (One-pager)",
-        "role": "Synthesizes the 11-field one-pager body + archetype-conditional proof block",
+        "agent": "VC Agent (VC memo)",
+        "role": "Synthesizes the 11-field VC memo body + archetype-conditional proof block",
         "model": op.get("llm", {}).get("model"),
         "latency": op.get("llm", {}).get("latency"),
         "ok": op.get("ok", False),

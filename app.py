@@ -510,7 +510,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
 <nav>
   <a class="brand" href="/" style="text-decoration:none;color:inherit"><img class="brandlogo" src="/static/logo.png" alt="MoonshotHunt"></a>
   <div class="navlinks">
-    <a href="/directory" class="{% if request.path.startswith('/directory') or request.path.startswith('/profile') or request.path.startswith('/onepager') %}active{% endif %}">Directory</a>
+    <a href="/directory" class="{% if request.path.startswith('/directory') or request.path.startswith('/profile') or request.path.startswith('/memo') or request.path.startswith('/onepager') %}active{% endif %}">Directory</a>
     <a href="/whitespace" class="{% if request.path.startswith('/whitespace') %}active{% endif %}">Whitespace</a>
     <a href="/discussion" class="{% if request.path.startswith('/discussion') %}active{% endif %}">Discussion</a>
     <a href="/submit" class="{% if request.path.startswith('/submit') %}active{% endif %}">Submit</a>
@@ -535,7 +535,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:var(--bg2);border:1px 
     </div>
     <div class="ftcol">
       <h4>How it works</h4>
-      <a href="/directory">Browse one-pagers</a>
+      <a href="/directory">Browse VC memos</a>
       <a href="/submit">Founder upload</a>
       <a href="/discussion">Community topics</a>
     </div>
@@ -805,7 +805,7 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
   {% set badges = _lower_badges(c.published_card.badges if c.published_card else c.badges) %}
   {% set tcol = ['blue','beige','red'][loop.index0 % 3] %}
   {% set logo = _logo_for(c) %}
-  <a class="tk {{ 'light' if tcol=='beige' else '' }} {{ tcol }}" href="/onepager/{{ c.id }}" style="text-decoration:none;color:inherit;display:block">
+  <a class="tk {{ 'light' if tcol=='beige' else '' }} {{ tcol }}" href="/memo/{{ c.id }}" style="text-decoration:none;color:inherit;display:block">
     <div class="shot"{% if logo %} style="background-image:url('{{ logo }}');background-size:cover;background-position:center"{% endif %}><span class="art"></span></div>
     <div class="dots"><i></i><i></i><i></i></div>
     <div class="info {{ tcol }}">
@@ -920,7 +920,7 @@ TPL_SUBMIT = _page("Submit — MoonshotHunt", """\
         <div class="card">
           <span class="stp">Step 3 · Show your work</span>
           <h3>Drop what you have.</h3>
-          <p class="cheer">Deck, one-pager, spec, doc — the agent reads it like a VC would. Max 5 files.</p>
+          <p class="cheer">Deck, memo, spec, doc — the agent reads it like a VC would. Max 5 files.</p>
           <div id="drop" style="border:2px dashed var(--coral);border-radius:12px;padding:24px;text-align:center;color:var(--txt2);background:var(--bg2);cursor:pointer;transition:background .15s">
             <div style="font-size:28px">⬆</div>
             <div style="font-weight:600;color:var(--txt)">Drag &amp; drop files here</div>
@@ -1037,23 +1037,23 @@ TPL_PROCESSING = _page("Processing — MoonshotHunt", """\
 <div class="card" style="max-width:560px;margin:40px auto;text-align:center">
   <div style="font-size:34px;margin-bottom:6px">📖</div>
   <h2 style="margin:0 0 6px">Our expert VC agent is reading your deck…</h2>
-  <p class="muted" style="margin:0 0 18px">Two real agents are working on your uploads — one drafts your one-pager, one lightly checks what's mechanically verifiable. This usually takes a minute or two.</p>
+  <p class="muted" style="margin:0 0 18px">Two real agents are working on your uploads — one drafts your VC memo, one lightly checks what's mechanically verifiable. This usually takes a minute or two.</p>
   <div id="stage" style="font-weight:700;color:var(--coral);margin-bottom:6px">Reading your uploads…</div>
   <div id="bar" style="height:8px;border-radius:999px;background:var(--bg2);overflow:hidden;margin:0 auto 14px;max-width:340px">
     <div id="fill" style="height:100%;width:12%;background:linear-gradient(90deg,var(--coral),var(--teal));border-radius:999px;transition:width .6s"></div>
   </div>
   <pre id="log" style="text-align:left;font-size:12px;color:var(--mut);background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:20px;margin:0"></pre>
-  <p class="muted" style="margin:16px 0 0;font-size:13px">Until then — drink some water, breathe, and we'll have your one-pager ready 🌱</p>
+  <p class="muted" style="margin:16px 0 0;font-size:13px">Until then — drink some water, breathe, and we'll have your VC memo ready 🌱</p>
   <p id="slow" class="muted" style="margin:10px 0 0;font-size:12px;color:var(--coral);display:none">Taking longer than usual — the free model is slow right now. You can <a href="#" onclick="location.reload();return false">refresh</a> to check, or come back in a minute.</p>
 </div>
 <script>
 const sid="{{ sid }}";
-const STAGES={reading:"Reading your uploads…",vc:"The VC agent is drafting your bet…",verifier:"The Verifier is checking your claims…",onepager:"Synthesizing your one-pager…",done:"Almost there…"};
+const STAGES={reading:"Reading your uploads…",vc:"The VC agent is drafting your bet…",verifier:"The Verifier is checking your claims…",onepager:"Synthesizing your VC memo…",done:"Almost there…"};
 let last=Date.now(), stuck=0;
 function friendly(log){
   if(!log) return STAGES.reading;
   const l=log.toLowerCase();
-  if(l.includes("onepager")||l.includes("one-pager")) return STAGES.onepager;
+  if(l.includes("memo")) return STAGES.onepager;
   if(l.includes("verif")) return STAGES.verifier;
   if(l.includes("vc")||l.includes("agent")||l.includes("draft")) return STAGES.vc;
   if(l.includes("done")||l.includes("reading")) return STAGES.reading;
@@ -1061,7 +1061,7 @@ function friendly(log){
 }
 function pct(log){
   const l=(log||"").toLowerCase();
-  if(l.includes("onepager")||l.includes("one-pager")) return 80;
+  if(l.includes("memo")) return 80;
   if(l.includes("verif")) return 60;
   if(l.includes("vc")||l.includes("agent")||l.includes("draft")) return 35;
   return 12;
@@ -1214,7 +1214,7 @@ TPL_PROFILE = _page("VC profile — MoonshotHunt", """\
   </div>
 
   <div class="btnrow" style="margin-top:18px">
-    <a class="pill" href="/onepager/{{ sid }}" style="color:var(--coral)">View one-pager →</a>
+    <a class="pill" href="/memo/{{ sid }}" style="color:var(--coral)">View VC memo →</a>
     <a class="pill" href="/trace/{{ sid }}" style="color:var(--txt2)">View agent trace →</a>
     <span class="muted small" style="margin-left:auto">Self-reported · not due diligence · drafted by the MoonshotHunt VC Agent</span>
   </div>
@@ -1275,12 +1275,12 @@ def _build_onepager(rec):
     }
 
 
-TPL_ONEPAGER = _page("One-pager — MoonshotHunt", """\
+TPL_ONEPAGER = _page("VC Memo — MoonshotHunt", """\
 <div class="sheet">
   <!-- MASTHEAD -->
   <div class="top">
     <div>
-      <div class="eyebrow"><span class="emblem">M</span> MoonshotHunt · Verified One-Pager</div>
+      <div class="eyebrow"><span class="emblem">M</span> MoonshotHunt · Verified VC Memo</div>
       <div class="co">{{ op.name }}</div>
       <p class="thesis">{{ op.thesis }}</p>
     </div>
@@ -2036,7 +2036,7 @@ def profile(sid):
     if rec.get("status") != "published":
         # not published yet — still let founders/preview see the draft memo
         if not rec.get("structured") and not rec.get("published_card"):
-            return "Nothing to show yet. <a href='/processing/" + sid + "'>Check status</a> · <a href='/onepager/" + sid + "'>View one-pager</a>", 202
+            return "Nothing to show yet. <a href='/processing/" + sid + "'>Check status</a> · <a href='/memo/" + sid + "'>View VC memo</a>", 202
     user = _current_user()
     pc = rec.get("published_card") or rec.get("structured") or {}
     pc.setdefault("startup_name", rec.get("raw", {}).get("startup_name", ""))
@@ -2048,6 +2048,7 @@ def profile(sid):
                                   user_name=user["name"] if user else "")
 
 
+@app.route("/memo/<sid>")
 @app.route("/onepager/<sid>")
 def onepager(sid):
     rec = store.get(sid)

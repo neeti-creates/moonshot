@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MoonshotHunt · Submit (Direction A — Editorial Bold)</title>
+<style>
+:root{--bg:#F8F7F4;--ink:#1A1A1A;--mut:#6B6B6B;--line:#E7E4DE;--coral:#E5484D;--blue:#2F7FE0;--purple:#5B3A8E;--grid:#F0F0F0}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px}
+a{color:var(--coral);text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+nav{display:flex;align-items:center;gap:18px;padding:16px 24px;border-bottom:1px solid var(--line);background:rgba(248,247,244,.82);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20}
+.logo{font-weight:800;letter-spacing:-.5px;font-size:20px}
+.logo b{color:var(--coral)}
+.navlinks{margin-left:auto;display:flex;gap:6px}
+.navlinks a{padding:8px 14px;border-radius:999px;color:var(--mut);font-weight:600}
+.navlinks a.active{color:var(--coral);background:#fff;border:1px solid var(--line)}
+
+/* HERO — awards/editorial style (Ref 1) */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:64px 0 40px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:700;margin-bottom:18px}
+.hero h1{font-size:84px;line-height:.92;font-weight:800;letter-spacing:-3px;margin:0}
+.hero h1 .dot{color:var(--coral)}
+.lede{font-size:19px;color:var(--mut);max-width:440px;margin:26px 0 30px}
+.herocta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cta{display:inline-flex;align-items:center;gap:8px;background:#111;color:#fff;border:none;border-radius:999px;padding:15px 30px;font-weight:700;font-size:16px;cursor:pointer}
+.herohint{font-size:13px;color:var(--mut)}
+/* circle cluster */
+.cluster{position:relative;height:380px}
+.c{position:absolute;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.c.lg{background:#fff;border:1px solid var(--line)}
+.c.ghost{background:var(--grid)}
+.c .n{font-weight:800;font-size:26px}
+.c .t{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.badge{position:absolute;background:#111;color:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700}
+.ring{position:absolute;border-radius:50%;border:1.5px dashed var(--line)}
+
+/* FLOW — swipe steps */
+.flow{margin:30px 0}
+.flowhead{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.flowhead .ft{font-size:13px;color:var(--mut);font-weight:600}
+.dots{display:flex;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.dot.on{background:var(--coral);width:26px;border-radius:999px}
+.stage{overflow:hidden;border-radius:22px}
+.track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.step{flex:0 0 100%;padding:38px;background:rgba(255,255,255,.86);backdrop-filter:blur(6px);border:1px solid var(--line);min-height:420px}
+.step .stp{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--coral);border-radius:999px;padding:4px 12px;margin-bottom:10px}
+.step h3{font-size:30px;margin:0 0 6px}
+.step .cheer{color:var(--mut);margin:0 0 26px;font-size:15px}
+.field{margin-bottom:18px}
+.field label{display:block;font-weight:700;font-size:14px;margin-bottom:6px}
+.field .sub{font-weight:400;color:var(--mut);font-size:12px}
+.field input{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:12px;font:inherit;background:#fff}
+.drop{border:2px dashed var(--coral);border-radius:14px;padding:26px;text-align:center;color:var(--mut);background:#fff;cursor:pointer}
+.flownav{display:flex;justify-content:space-between;margin-top:18px}
+.flownav .ghostbtn{background:none;border:1px solid var(--line);border-radius:999px;padding:12px 24px;font-weight:700;cursor:pointer;color:var(--ink)}
+/* INSIGHTS */
+.insights{padding:50px 0 80px}
+.inshead{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--coral);font-weight:700;margin-bottom:6px}
+.insub{font-size:26px;font-weight:800;margin:0 0 26px;letter-spacing:-.5px}
+.insgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.ins{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px}
+.ins .ic{width:38px;height:38px;border-radius:10px;background:#F1EBFA;color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.ins h4{margin:0 0 8px;font-size:18px}
+.ins p{margin:0;color:var(--mut);font-size:14px}
+@media(max-width:820px){.hero{grid-template-columns:1fr}.hero h1{font-size:60px}.cluster{height:300px}.insgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav><div class="logo">moonshot<b>.</b>hunt</div>
+  <div class="navlinks"><a href="/directory">Directory</a><a href="/whitespace">Whitespace</a><a class="active" href="/submit">Submit</a></div>
+</nav>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="heroL">
+      <div class="eyebrow">MoonshotHunt · for founders</div>
+      <h1>ideas<br>worth<br>backing<span class="dot">.</span></h1>
+      <p class="lede">You're pre-funding. Early. Unproven on paper. That's exactly why you belong here — we read the builder, not just the deck.</p>
+      <div class="herocta">
+        <button class="cta" onclick="go(0)">Start your listing →</button>
+        <span class="herohint">takes ~2 min · no deck required</span>
+      </div>
+    </div>
+    <div class="heroR">
+      <div class="cluster">
+        <div class="ring" style="width:340px;height:340px;left:30px;top:20px"></div>
+        <div class="c lg" style="width:140px;height:140px;left:60px;top:30px"><span class="n">MH</span><span class="t">the hunt</span></div>
+        <div class="c ghost" style="width:96px;height:96px;left:210px;top:0"><span class="n">18</span><span class="t">sectors</span></div>
+        <div class="c lg" style="width:110px;height:110px;left:0;top:200px"><span class="n">120+</span><span class="t">founders</span></div>
+        <div class="c ghost" style="width:80px;height:80px;left:250px;top:150px"><span class="n">1</span><span class="t">mission</span></div>
+        <div class="badge" style="left:150px;top:120px">idea → pilot</div>
+        <div class="badge" style="left:30px;top:330px">pre-seed first</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="flow">
+    <div class="flowhead">
+      <div class="dots" id="dots"></div>
+      <div class="ft" id="ft">Step 1 of 4</div>
+    </div>
+    <div class="stage"><div class="track" id="track">
+      <div class="step">
+        <span class="stp">Step 1 · Your startup</span>
+        <h3>Tell us what you're building.</h3>
+        <p class="cheer">No polish needed. A working name and a sentence is enough to start.</p>
+        <div class="field"><label>Startup name *</label><input placeholder="e.g. GridWeave"></div>
+        <div class="field"><label>Founder name(s) *</label><input placeholder="You and any co-founders"></div>
+        <div class="field"><label>Website / product link</label><input placeholder="https://"></div>
+      </div>
+      <div class="step">
+        <span class="stp">Step 2 · You</span>
+        <h3>Where can we reach you?</h3>
+        <p class="cheer">This stays yours — your session, your listing, your call on what goes live.</p>
+        <div class="field"><label>Founder LinkedIn * <span class="sub">for the mechanical verifier check</span></label><input placeholder="https://linkedin.com/in/..."></div>
+        <div class="field"><label>Founder email * <span class="sub">we won't spam</span></label><input type="email" placeholder="you@startup.com"></div>
+      </div>
+      <div class="step">
+        <span class="stp">Step 3 · Show your work</span>
+        <h3>Drop what you have.</h3>
+        <p class="cheer">Deck, memo, spec, doc — the agent reads it like a VC would. Max 5 files.</p>
+        <div class="drop">⬆ Drag &amp; drop files here<br><span style="font-size:13px">or click to browse</span></div>
+        <div class="field" style="margin-top:18px"><label>Press / article / extra links</label><input placeholder="https://"></div>
+      </div>
+      <div class="step">
+        <span class="stp">Step 4 · Launch</span>
+        <h3>You're ready. Let's hunt.</h3>
+        <p class="cheer">We'll draft your card, you review everything, nothing goes live until you say so.</p>
+        <div class="field"><label>Anything you want VCs to know?</label><input placeholder="Optional note to reviewers"></div>
+      </div>
+    </div></div>
+    <div class="flownav">
+      <button class="ghostbtn" id="back" onclick="move(-1)">← Back</button>
+      <button class="cta" id="next" onclick="move(1)">Next →</button>
+    </div>
+  </section>
+
+  <section class="insights">
+    <div class="inshead">Why we built this</div>
+    <div class="insub">Three reasons this exists.</div>
+    <div class="insgrid">
+      <div class="ins"><div class="ic">🌱</div><h4>Founders build in the dark</h4><p>Pre-seed climate &amp; deep-tech founders have no stage to be seen before traction. We made one.</p></div>
+      <div class="ins"><div class="ic">🔭</div><h4>VCs miss the earliest signal</h4><p>The best bets look like nothing on paper at pre-funding. A place for the idea, not the deck, changes that.</p></div>
+      <div class="ins"><div class="ic">🛠️</div><h4>We're builders too</h4><p>We wanted a hunt where the person and the problem get the first look — and the founder stays in control.</p></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const TOTAL=4; let i=0;
+const track=document.getElementById('track'),dots=document.getElementById('dots'),ft=document.getElementById('ft'),
+      back=document.getElementById('back'),next=document.getElementById('next');
+for(let k=0;k<TOTAL;k++){const d=document.createElement('div');d.className='dot';dots.appendChild(d);}
+function go(n){i=n;render();document.querySelector('.flow').scrollIntoView({behavior:'smooth'});}
+function move(d){i=Math.max(0,Math.min(TOTAL-1,i+d));render();}
+function render(){
+  track.style.transform='translateX('+(-i*100)+'%)';
+  [...dots.children].forEach((d,k)=>d.className='dot'+(k===i?' on':''));
+  ft.textContent='Step '+(i+1)+' of '+TOTAL;
+  back.style.visibility=i===0?'hidden':'visible';
+  next.textContent=i===TOTAL-1?'Run agent pipeline →':'Next →';
+}
+render();
+</script>
+</body></html>

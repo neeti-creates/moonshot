@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One-Pager C2 — Editorial (ref-exact, SAMPLE)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF; --bg2:#F8F7F4; --txt:#1A1A1A; --txt2:#6B6B6B; --mut:#9B9B9B;
+    --line:#EAEAEA; --coral:#5B3A8E; --coral-bg:#F1EBFA; --teal:#1D9E75; --teal2:#0F6E56;
+    --black:#111111; --black2:#2B2B2B; --red:#E5484D;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--txt)}
+  h1,h2,h3{font-family:"Space Grotesk",sans-serif;font-weight:700;color:var(--txt);margin:0}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+
+  .sheet{max-width:900px;margin:26px auto;background:#fff;border:1px solid #ddd;
+    box-shadow:0 8px 30px rgba(0,0,0,.08)}
+
+  /* ── masthead exactly like the ref: huge word + subhead + intro paragraph ── */
+  .mast{padding:26px 34px 16px;border-bottom:2px solid var(--black)}
+  .mast .word{font-size:62px;line-height:.86;letter-spacing:-3px;font-weight:700;color:var(--black)}
+  .mast .sub{font-size:22px;font-weight:700;margin-top:4px;color:var(--black)}
+  .mast .intro{font-size:13.5px;line-height:1.5;color:var(--txt2);max-width:640px;margin-top:14px}
+  .mast .intro .by{color:var(--mut);font-style:italic}
+
+  /* verifier key — top-right callout (ref: numbered callout box) */
+  .vkey{position:absolute;top:24px;right:34px;width:150px;border:1.5px solid var(--black);
+    border-radius:6px;padding:9px 11px;background:#fff}
+  .vkey .vk{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.1em;
+    text-transform:uppercase;font-weight:600;color:var(--mut);margin-bottom:6px}
+  .vkey .r{display:flex;align-items:center;gap:7px;font-size:11.5px;margin:4px 0;color:var(--txt)}
+  .vkey .i{width:15px;height:15px;border-radius:50%;flex:none;display:flex;align-items:center;
+    justify-content:center;font-size:9px;font-weight:700;color:#fff}
+  .vkey .i.v{background:var(--teal)} .vkey .i.c{background:var(--red)}
+  .vkey .d{margin-top:6px;font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--mut);
+    border-top:1px solid var(--line);padding-top:5px}
+
+  /* Innovation-scale legend bar (ref: horizontal gradient legend) */
+  .legend{display:flex;align-items:center;gap:12px;padding:12px 34px;border-bottom:1px solid var(--line)}
+  .legend .lab{font-family:"IBM Plex Mono",monospace;font-size:10px;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--mut);font-weight:600}
+  .scale{display:flex;height:14px;border-radius:3px;overflow:hidden;border:1px solid var(--line)}
+  .scale span{flex:1}
+  .scale .s1{background:#E8833A} .scale .s2{background:#E7B24A} .scale .s3{background:#CBDC6A}
+  .scale .s4{background:#7CB342} .scale .s5{background:#3FA78C} .scale .s6{background:#2F7FE0}
+  .scale .s7{background:#BFBFBF}
+  .legend .ends{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;
+    font-size:9.5px;color:var(--mut);margin-top:3px}
+
+  /* tag row */
+  .tags{display:flex;flex-wrap:wrap;gap:7px;padding:12px 34px 2px}
+  .pill{font-size:11px;padding:4px 12px;border-radius:999px;background:var(--bg2);
+    border:1px solid var(--line);color:var(--mut);font-weight:600}
+  .pill.acc{background:var(--coral-bg);border-color:var(--coral);color:var(--coral)}
+
+  /* ── the two "maps": dotted-circle canvases (ref: circular map projections) ── */
+  .maps{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 34px}
+  .map{border:1px solid var(--line);border-radius:10px;height:240px;position:relative;
+    background-color:#F4F8FC;
+    background-image:radial-gradient(#9CC0E6 1.4px, transparent 1.5px);
+    background-size:11px 11px;overflow:hidden}
+  .map .cap{position:absolute;top:8px;left:10px;font-family:"IBM Plex Mono",monospace;
+    font-size:9.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+  /* ping markers (ref: country dots) */
+  .ping{position:absolute;width:14px;height:14px;border-radius:50%;border:2px solid #fff;
+    box-shadow:0 0 0 1.5px rgba(0,0,0,.25)}
+  .ping.y{background:#E7B24A} .ping.g{background:#7CB342} .ping.b{background:#2F7FE0}
+  .ping.t{background:#3FA78C} .ping.o{background:#E8833A}
+
+  .body{padding:6px 34px 22px}
+  /* vertical credit (ref: left-margin vertical text) */
+  .credit{position:absolute;left:8px;top:10px;writing-mode:vertical-rl;transform:rotate(180deg);
+    font-family:"IBM Plex Mono",monospace;font-size:8.5px;letter-spacing:.06em;color:var(--mut);
+    text-transform:uppercase}
+
+  /* numbered callout boxes w/ connector (ref: country callouts) */
+  .callouts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .co{border:1.5px solid var(--black);border-radius:6px;background:#fff;padding:10px 12px;
+    position:relative}
+  .co .num{font-family:"Space Grotesk",sans-serif;font-size:15px;font-weight:700;color:var(--black);
+    display:inline-block;border:1.5px solid var(--black);border-radius:5px;padding:0 7px;margin-right:7px}
+  .co .ttl{font-family:"Space Grotesk",sans-serif;font-size:13.5px;font-weight:700;
+    display:inline;color:var(--black)}
+  .co .pt{font-size:12.5px;line-height:1.4;color:var(--txt);margin-top:6px}
+  .co .pt b{color:var(--coral)}
+  .co .pt .rk{color:var(--mut);font-family:"IBM Plex Mono",monospace;font-size:11px}
+
+  .quote{border-left:3px solid var(--coral);padding:4px 0 4px 14px;font-size:17px;line-height:1.34;
+    font-style:italic;margin:0}
+  .quote cite{display:block;font-style:normal;font-size:12px;color:var(--mut);margin-top:7px;
+    font-family:"IBM Plex Mono",monospace}
+
+  .foot{border-top:2px solid var(--black);padding:11px 34px;font-size:10px;color:var(--mut);
+    display:flex;justify-content:space-between;gap:14px;background:var(--bg2)}
+  .foot b{color:var(--txt)}
+  .mockflag{background:var(--coral-bg);border-bottom:1px solid var(--coral);color:var(--coral);
+    font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;text-align:center;
+    padding:7px;letter-spacing:.3px}
+  .pos{position:relative}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="mockflag">MOCK · SAMPLE DATA (TerraFlux) — format + visual direction only. Replace with real founder upload.</div>
+
+  <!-- MASTHEAD: exactly the ref structure -->
+  <div class="mast pos">
+    <div class="word">TerraFlux</div>
+    <div class="sub">The verified VC memo</div>
+    <p class="intro"><b>Betting that thermal energy storage becomes structurally necessary</b>
+    because intermittent renewables need 24-hour dispatch without lithium.</p>
+    <div class="vkey">
+      <div class="vk">Verifier Key</div>
+      <div class="r"><span class="i v">✓</span> Independently verified</div>
+      <div class="r"><span class="i c">•</span> Founder-claimed</div>
+      <div class="d">Claims verified as of Jul 2026</div>
+    </div>
+  </div>
+
+  <div class="body pos">
+    <div class="credit">GRAPHIC: MOONSHOTHUNT VC AGENT · DATA: FOUNDER UPLOAD + VERIFIER AGENT</div>
+
+    <!-- numbered callouts (ref: country callout boxes) -->
+    <div class="callouts">
+      <div class="co"><span class="num">2</span><span class="ttl">The Bet</span>
+        <div class="pt">The grid is buying flexibility it cannot store. As renewables cross 40%
+        penetration, dispatchable non-lithium storage flips from optional to mandated — and
+        TerraFlux owns the cheapest dispatchable joule on the curve.</div></div>
+
+      <div class="co"><span class="num">3</span><span class="ttl">Why Now</span>
+        <div class="pt">Liquid-metal heat-exchanger unit cost fell <b>60% since 2021</b> (IEA),
+        and the first grid codes now pay for 6h+ duration. Fundable this year.</div></div>
+
+      <div class="co"><span class="num">4</span><span class="ttl">Proof · Hardware/Deep Tech</span>
+        <div class="pt"><span class="rk">TRL 6</span> · 4 granted patents · 94% RT @ $28/kWh ·
+        cost-down to $18/kWh @ 10MW · $22M capex to scale. <span class="rk">archetype-selected fields</span></div></div>
+
+      <div class="co"><span class="num">5</span><span class="ttl">Proof of Work</span>
+        <div class="pt"><span style="color:var(--teal);font-weight:700">✓</span> 200kW pilot live (3rd-party test).
+        <span style="color:var(--red);font-weight:700">•</span> LOI w/ municipal utility (founder-provided).
+        <span style="color:var(--teal);font-weight:700">✓</span> pilot shipped · <span style="color:var(--red);font-weight:700">•</span> 10MW plant unbuilt.</div></div>
+
+      <div class="co"><span class="num">6</span><span class="ttl">Path to Cash Flow</span>
+        <div class="pt">Pre-revenue on the plant; <b>cash-flow-positive</b> on pilot-as-a-service from Q3.
+        Full breakeven Year 4 post first 10MW plant.</div></div>
+
+      <div class="co"><span class="num">7</span><span class="ttl">Moat</span>
+        <div class="pt"><b>IP position</b> — 4 granted patents on heat-exchanger geometry.
+        <b>Technical defensibility</b> — proprietary alloy. Not distribution.</div></div>
+
+      <div class="co"><span class="num">8</span><span class="ttl">Market</span>
+        <div class="pt">Long-duration storage is a <b>$120B-by-2035</b> gap. Incumbents (lithium,
+        hydrogen) can't hit $20/kWh at 10h — wrong axis. That's the whitespace.</div></div>
+
+      <div class="co"><span class="num">9</span><span class="ttl">Team</span>
+        <div class="pt">Two ex-GE thermal engineers + a grid-regulatory veteran. Unfair advantage =
+        <b>scars</b>: a failed 2019 flow-battery startup taught them what not to build.</div></div>
+
+      <div class="co"><span class="num">10</span><span class="ttl">The Ask</span>
+        <div class="pt"><b>$8M seed.</b> Build first 10MW plant + close 3 utility LOIs. Unlocks
+        revenue-grade pilot + Series A readiness.</div></div>
+
+      <div class="co"><span class="num">11</span><span class="ttl">Founder Line</span>
+        <div class="pt"><blockquote class="quote">"We didn't set out to build a battery. We set out
+        to make the sun dispatchable at 3am."<cite>— Jane Okoro, CEO &amp; Co-founder</cite></blockquote></div></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div>Generated by <b>MoonshotHunt VC Agent</b> · verified by <b>Verifier Agent</b><br>
+    Claims self-reported, not due diligence.</div>
+    <div style="text-align:right">Format v1 · Archetype: Hardware/Deep Tech<br>
+    Fields reconfigure per archetype.</div>
+  </div>
+</div>
+</body>
+</html>
