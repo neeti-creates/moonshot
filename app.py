@@ -447,13 +447,6 @@ textarea{min-height:72px;resize:vertical}
 .herohint{font-size:13px;color:var(--mut)}
 .flownav{display:flex;justify-content:flex-end;gap:12px;margin-top:16px}
 .ghostbtn{background:none;border:1px solid var(--line);border-radius:999px;padding:12px 24px;font-weight:700;cursor:pointer;color:var(--ink)}
-.chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px}
-.chipswide{margin-top:8px;gap:9px 10px;max-height:78px;overflow:hidden}
-.chipswide .funpill{font-size:13.5px;padding:7px 14px}
-.chiplbl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);font-weight:600;margin-right:2px}
-.funpill{font-size:13px;text-decoration:none;color:var(--txt);background:var(--bg);border:1px solid var(--line);
-  border-radius:999px;padding:6px 13px;transition:border-color .12s,color .12s,transform .12s}
-.funpill:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-1px)}
 .heroact{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-top:16px}
 .heroact .hfield{display:flex;flex-direction:column;gap:5px}
 .heroact .hfield.grow{flex:1 1 260px;min-width:0}
@@ -749,22 +742,6 @@ TPL_HOME = _page("MoonshotHunt — Discovery for climate & deep tech", """\
     </div>
   </div>
 </div>
-</div>
-
-<div class="chips chipswide">
-<span class="chiplbl">Popular themes:</span>
-<a class="funpill" href="/directory?group=energy-grid">⚡ Clean Energy</a>
-<a class="funpill" href="/directory?group=carbon">🌍 Carbon Removal</a>
-<a class="funpill" href="/directory?group=circular">♻️ Circular Economy</a>
-<a class="funpill" href="/directory?group=mobility">🚗 Mobility</a>
-<a class="funpill" href="/directory?group=robotics">🤖 Robotics</a>
-<a class="funpill" href="/directory?group=ai">🧠 AI &amp; ML</a>
-<a class="funpill" href="/directory?group=materials">🔬 Materials</a>
-<a class="funpill" href="/directory?group=biotech">🧬 Biotech</a>
-<a class="funpill" href="/directory?group=water">💧 Water</a>
-<a class="funpill" href="/directory?group=web3">🔗 Web3</a>
-<a class="funpill" href="/directory?group=food-ag">🌱 Food &amp; Ag</a>
-<a class="funpill" href="/directory?group=built">🏗️ Built Env</a>
 </div>
 
 {% if active_segment_name %}<div class="activepill"><span class="pill" style="background:var(--coral-bg);color:var(--coral)">Segment: {{ active_segment_name }} <a href="/directory?group={{ active_group }}" style="margin-left:6px;color:inherit">✕</a></span></div>
