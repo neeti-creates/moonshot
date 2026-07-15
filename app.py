@@ -946,7 +946,7 @@ TPL_SUBMIT = _page("Submit — MoonshotHunt", """\
             <textarea name="why3" rows="2" placeholder="The future you're pulling toward…" required></textarea></div>
           <div class="field"><label>Anything else for the reviewers? <span class="sub">optional</span></label>
             <input name="note" placeholder="Optional note"></div>
-          <div class="btnrow"><button type="submit" class="cta">Run agent pipeline <span class="arw">→</span></button></div>
+          <div class="btnrow"><button type="button" class="cta" onclick="submitForm()">Run agent pipeline <span class="arw">→</span></button><span id="subErr" class="muted small" style="color:var(--coral);margin-left:12px"></span></div>
         </div>
       </div>
 
@@ -989,17 +989,16 @@ function renderChips(){
     c.innerHTML='<span style="font-weight:600;color:var(--coral)">📎</span>'+f.name+' <span class="muted small">'+sz+'</span> <span style="cursor:pointer;color:var(--mut)" onclick="rmFile('+i+')">✕</span>';
     chips.appendChild(c);
   });
-  const dt=new DataTransfer(); files.forEach(function(f){dt.items.add(f);}); fi.files=dt.files;
 }
 function rmFile(i){ files.splice(i,1); renderChips(); }
 drop.onclick=function(){fi.click();};
 fi.onchange=function(e){ addFiles(e.target.files); };
 ['dragover','dragenter'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.style.background='#F1EBFA';});});
-['dragleave','drop'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.style.background='var(--bg2)';});});
-drop.addEventListener('drop',function(e){ addFiles(e.dataTransfer.files); });
+['dragleave','dragend'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.style.background='var(--bg2)';});});
+drop.addEventListener('drop',function(e){ e.preventDefault(); drop.style.background='var(--bg2)'; addFiles(e.dataTransfer.files); });
 function addFiles(list){
   for(const f of list){ if(files.length>=MAXF) break;
-    const ext=f.name.rsplit('.',1)[-1].toLowerCase();
+    const ext=f.name.split('.').pop().toLowerCase();
     if(['pdf','pptx','docx'].includes(ext) && f.size<=20*1024*1024) files.push(f); }
   files=files.slice(0,MAXF); renderChips();
 }
@@ -1008,6 +1007,23 @@ document.getElementById('addLink').onclick=function(){ if(links>=MAXL) return;
   links++; const inp=document.createElement('input'); inp.className='linkinp';
   inp.name='url'+links; inp.placeholder='https://article-or-press-link';
   document.getElementById('linkRows').appendChild(inp); };
+
+/* Robust submit: build FormData from the real files[] array (not the fragile
+   hidden-input sync) and POST via fetch. Server returns a 302 to /processing. */
+function submitForm(){
+  const err=document.getElementById('subErr'); err.textContent='';
+  if(!document.querySelector('[name=startup_name]').value.trim()){
+    err.textContent='Startup name is required.'; return; }
+  const fd=new FormData(document.getElementById('subForm'));
+  fd.delete('files');            // drop any stale native files
+  files.forEach(function(f){ fd.append('files', f, f.name); });
+  const lf=document.querySelector('[name=logo_file]');
+  if(lf && lf.files && lf.files[0]){ /* logo_file already in fd via form */ }
+  fetch('/submit', {method:'POST', body: fd})
+    .then(function(r){ if(r.redirected || r.status===302 || r.status===200){ window.location=r.url; }
+      else { return r.text().then(function(t){ err.textContent=t || 'Upload failed.'; }); } })
+    .catch(function(e){ err.textContent='Network error: '+e.message; });
+}
 </script>
 """)
 
@@ -1809,7 +1825,7 @@ def submit_post():
         lf = request.files.get("logo_file")
         if lf and lf.filename:
             lext = lf.filename.rsplit(".", 1)[-1].lower()
-            if lext == "png" and lf.content_length is None or (lf.content_length or 0) <= 5 * 1024 * 1024:
+            if lext == "png" and (lf.content_length is None or (lf.content_length or 0) <= 5 * 1024 * 1024):
                 lname = "logo_" + os.urandom(4).hex() + ".png"
                 lpath = os.path.join(upload_dir, lname)
                 lf.save(lpath)
