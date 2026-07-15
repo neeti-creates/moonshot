@@ -408,11 +408,15 @@ def _infer_archetype(structured, raw):
     return "Hardware / Deep Tech"
 
 
-def run_pipeline(sub):
-    raw = sub["raw"]
+def run_pipeline(sub, on_log=None):
+    raw = sub.get("raw") or {}
     trace = []
 
-    vc = run_vc_agent(raw, context=raw.get("extracted_context", ""))
+    if on_log: on_log("VC Agent: reading your uploads…")
+    try:
+        vc = run_vc_agent(raw, context=raw.get("extracted_context", ""))
+    except Exception as e:
+        vc = {"ok": False, "error": f"{type(e).__name__}: {str(e)[:160]}", "structured": {}, "llm": {}}
     trace.append({
         "agent": "VC Agent (Synthesis)",
         "role": "Reads uploaded sources + identity, drafts card fields, infers stage/subthemes, flags conflicts",
@@ -428,7 +432,11 @@ def run_pipeline(sub):
     })
     structured = vc.get("structured", {}) if vc.get("ok") else {}
 
-    ver = run_verifier(raw, structured)
+    if on_log: on_log("Verifier: checking what's mechanically verifiable…")
+    try:
+        ver = run_verifier(raw, structured)
+    except Exception as e:
+        ver = {"badges": [], "disclaimer": "", "checks": {}, "llm": {}}
     trace.append({
         "agent": "Verifier Agent (Lightweight)",
         "role": "Checks what is mechanically checkable (LinkedIn, website liveness)",
@@ -443,7 +451,11 @@ def run_pipeline(sub):
 
     # One-pager synthesis (VC Agent, archetype-conditional). Tolerant: a failure
     # here must NOT block review or publishing — the page degrades to placeholders.
-    op = run_onepager_agent(raw, structured)
+    if on_log: on_log("VC Agent: synthesizing your one-pager…")
+    try:
+        op = run_onepager_agent(raw, structured)
+    except Exception as e:
+        op = {"ok": False, "error": f"{type(e).__name__}: {str(e)[:160]}", "onepager": {}, "llm": {}}
     trace.append({
         "agent": "VC Agent (One-pager)",
         "role": "Synthesizes the 11-field one-pager body + archetype-conditional proof block",

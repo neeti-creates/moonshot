@@ -4,7 +4,7 @@ Agents make REAL live LLM calls to the Nous Research inference endpoint.
 
 Design system: light, Product-Hunt-style (see DESIGN_SPEC.md).
 """
-import os, json, threading, uuid, tempfile, shutil
+import os, json, threading, uuid, tempfile, shutil, time
 from flask import (Flask, request, render_template_string, redirect, url_for,
                    jsonify, session)
 import store, agents, extract
@@ -1015,8 +1015,10 @@ document.getElementById('addLink').onclick=function(){ if(links>=MAXL) return;
    hidden-input sync) and POST via fetch. Server returns a 302 to /processing. */
 function submitForm(){
   const err=document.getElementById('subErr'); err.textContent='';
+  const btn=document.querySelector('#subForm button.cta');
   if(!document.querySelector('[name=startup_name]').value.trim()){
     err.textContent='Startup name is required.'; return; }
+  if(btn){ btn.disabled=true; btn.style.opacity=.6; btn.innerHTML='Submitting… <span class="arw">→</span>'; }
   const fd=new FormData(document.getElementById('subForm'));
   fd.delete('files');            // drop any stale native files
   files.forEach(function(f){ fd.append('files', f, f.name); });
@@ -1024,26 +1026,58 @@ function submitForm(){
   if(lf && lf.files && lf.files[0]){ /* logo_file already in fd via form */ }
   fetch('/submit', {method:'POST', body: fd})
     .then(function(r){ if(r.redirected || r.status===302 || r.status===200){ window.location=r.url; }
-      else { return r.text().then(function(t){ err.textContent=t || 'Upload failed.'; }); } })
-    .catch(function(e){ err.textContent='Network error: '+e.message; });
+      else { return r.text().then(function(t){ err.textContent=t || 'Upload failed.'; if(btn){btn.disabled=false;btn.style.opacity=1;btn.innerHTML='Run agent pipeline <span class="arw">→</span>';} }); } })
+    .catch(function(e){ err.textContent='Network error: '+e.message; if(btn){btn.disabled=false;btn.style.opacity=1;btn.innerHTML='Run agent pipeline <span class="arw">→</span>';} });
 }
 </script>
 """)
 
 
 TPL_PROCESSING = _page("Processing — MoonshotHunt", """\
-<div class="card"><h2>Running the agent pipeline…</h2>
-<p class="muted">This runs two real LLM agents on your uploads. Please wait, it takes ~30–60s.</p>
-<pre id="log">Initializing…</pre></div>
+<div class="card" style="max-width:560px;margin:40px auto;text-align:center">
+  <div style="font-size:34px;margin-bottom:6px">📖</div>
+  <h2 style="margin:0 0 6px">Our expert VC agent is reading your deck…</h2>
+  <p class="muted" style="margin:0 0 18px">Two real agents are working on your uploads — one drafts your one-pager, one lightly checks what's mechanically verifiable. This usually takes a minute or two.</p>
+  <div id="stage" style="font-weight:700;color:var(--coral);margin-bottom:6px">Reading your uploads…</div>
+  <div id="bar" style="height:8px;border-radius:999px;background:var(--bg2);overflow:hidden;margin:0 auto 14px;max-width:340px">
+    <div id="fill" style="height:100%;width:12%;background:linear-gradient(90deg,var(--coral),var(--teal));border-radius:999px;transition:width .6s"></div>
+  </div>
+  <pre id="log" style="text-align:left;font-size:12px;color:var(--mut);background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:20px;margin:0"></pre>
+  <p class="muted" style="margin:16px 0 0;font-size:13px">Until then — drink some water, breathe, and we'll have your one-pager ready 🌱</p>
+  <p id="slow" class="muted" style="margin:10px 0 0;font-size:12px;color:var(--coral);display:none">Taking longer than usual — the free model is slow right now. You can <a href="#" onclick="location.reload();return false">refresh</a> to check, or come back in a minute.</p>
+</div>
 <script>
 const sid="{{ sid }}";
+const STAGES={reading:"Reading your uploads…",vc:"The VC agent is drafting your bet…",verifier:"The Verifier is checking your claims…",onepager:"Synthesizing your one-pager…",done:"Almost there…"};
+let last=Date.now(), stuck=0;
+function friendly(log){
+  if(!log) return STAGES.reading;
+  const l=log.toLowerCase();
+  if(l.includes("onepager")||l.includes("one-pager")) return STAGES.onepager;
+  if(l.includes("verif")) return STAGES.verifier;
+  if(l.includes("vc")||l.includes("agent")||l.includes("draft")) return STAGES.vc;
+  if(l.includes("done")||l.includes("reading")) return STAGES.reading;
+  return STAGES.reading;
+}
+function pct(log){
+  const l=(log||"").toLowerCase();
+  if(l.includes("onepager")||l.includes("one-pager")) return 80;
+  if(l.includes("verif")) return 60;
+  if(l.includes("vc")||l.includes("agent")||l.includes("draft")) return 35;
+  return 12;
+}
 async function poll(){
-  const r=await fetch("/api/status/"+sid); const d=await r.json();
-  const log=document.getElementById("log");
-  log.textContent="STATUS: "+d.status+"\n"+(d.log||"");
-  if(d.status==="review"||d.status==="error"){ window.location="/review/"+sid; return; }
+  try{
+    const r=await fetch("/api/status/"+sid); const d=await r.json();
+    const log=document.getElementById("log"), stage=document.getElementById("stage"), fill=document.getElementById("fill");
+    log.textContent=(d.log&&d.log!=="done")?d.log:"";
+    stage.textContent=friendly(d.log); fill.style.width=pct(d.log)+"%";
+    if(d.status==="review"||d.status==="error"){ window.location="/review/"+sid; return; }
+    last=Date.now(); stuck=0; document.getElementById("slow").style.display="none";
+  }catch(e){ /* network blip — keep polling */ }
   setTimeout(poll,1500);
 }
+setInterval(function(){ if(Date.now()-last>90000){ stuck++; document.getElementById("slow").style.display="block"; } },15000);
 poll();
 </script>
 """)
@@ -1111,22 +1145,36 @@ were inferred by the agent — edit anything before publishing. You — the huma
 </form>
 """)
 
-TPL_REVIEW_ERR = _page("Draft failed — MoonshotHunt", """
+TPL_REVIEW_ERR = _page("Draft failed — MoonshotHunt", """\
 <h2>Draft couldn't be generated</h2>
 <p class="muted">Our agent didn't return a usable draft for your submission this time. This is usually
-a transient model timeout — your uploads were received fine. You can retry, or submit again shortly.</p>
+a transient model timeout — your uploads were received fine. You can retry with the same files, or start over.</p>
 <div class="card">
   <div class="seclabel">What happened</div>
   <div class="disclaimer">{{ err }}</div>
 </div>
 <div class="btnrow">
-  <a class="cta" href="/submit">Try again <span class="arw">→</span></a>
+  <a class="cta" href="/retry/{{ sid }}">Retry with same uploads <span class="arw">→</span></a>
   <a class="pill" href="/trace/{{ sid }}" style="color:var(--txt2)">View agent trace</a>
+  <a class="pill" href="/submit" style="color:var(--txt2)">Start over</a>
 </div>
 """)
 
 
-TPL_PROFILE = _page("VC profile — MoonshotHunt", """
+@app.route("/retry/<sid>")
+def retry(sid):
+    rec = store.get(sid)
+    if not rec:
+        return "not found", 404
+    # reuse the already-extracted context — no re-upload needed
+    store.update(sid, {"status": "processing", "log": "Retrying… VC Agent: reading uploads…",
+                       "vc_error": None})
+    threading.Thread(target=_run_pipeline_bg, args=(sid, rec.get("upload_dir")), daemon=True).start()
+    threading.Thread(target=_pipeline_watchdog, args=(sid,), daemon=True).start()
+    return redirect(url_for("processing", sid=sid))
+
+
+TPL_PROFILE = _page("VC profile — MoonshotHunt", """\
 <div style="max-width:760px;margin:0 auto">
   <a class="pill" href="/directory" style="color:var(--txt2)">← Directory</a>
   <div style="display:flex;align-items:center;gap:14px;margin:14px 0 6px">
@@ -1856,13 +1904,38 @@ def submit_post():
     store.update(rec["id"], {"log": "queued", "upload_dir": upload_dir,
                              "logo_path": logo_path, "why_built": raw.get("why_built", "")})
     threading.Thread(target=_run_pipeline_bg, args=(rec["id"], upload_dir), daemon=True).start()
+    threading.Thread(target=_pipeline_watchdog, args=(rec["id"],), daemon=True).start()
     return redirect(url_for("processing", sid=rec["id"]))
 
 
+PIPELINE_HARD_CAP = 9 * 60  # seconds — if the free model is this slow, give up cleanly
+
+def _pipeline_watchdog(sid):
+    """If the pipeline hasn't finished within the hard cap, flip the record to a
+    clear error state so the screen stops saying 'Initializing…' forever and the
+    founder gets a retry path (the free model is occasionally very slow)."""
+    time.sleep(PIPELINE_HARD_CAP)
+    rec = store.get(sid) or {}
+    if rec.get("status") in ("review", "error", "published"):
+        return
+    store.update(sid, {"status": "error",
+                       "log": "The model took too long to respond.",
+                       "vc_error": "Pipeline exceeded the %d-minute cap (free model was too slow). You can retry — your uploads are saved." % (PIPELINE_HARD_CAP // 60)})
+
+
 def _run_pipeline_bg(sid, upload_dir=None):
+    def on_log(msg):
+        store.update(sid, {"log": msg})
     rec = store.get(sid)
     store.update(sid, {"log": "VC Agent: reading uploads…"})
-    res = agents.run_pipeline(rec)
+    try:
+        res = agents.run_pipeline(rec, on_log=on_log)
+    except Exception as e:
+        store.update(sid, {"status": "error", "log": "Pipeline crashed.",
+                           "vc_error": f"{type(e).__name__}: {str(e)[:200]}"})
+        if upload_dir:
+            shutil.rmtree(upload_dir, ignore_errors=True)
+        return
     rec = store.get(sid)
     rec["structured"] = res["structured"]
     rec["badges"] = res["badges"]
