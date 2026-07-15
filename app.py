@@ -143,7 +143,7 @@ h2{font-size:22px;margin:0 0 10px}
 h3{font-size:16px;margin:0 0 10px}
 a{color:var(--coral);text-decoration:none}
 a:hover{text-decoration:underline}
-.wrap{max-width:1080px;margin:0 auto;padding:28px 36px}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 56px}
 .wrap-full{max-width:none;margin:0;padding:0}
 nav{display:flex;gap:14px;align-items:center;padding:12px 24px;
   background:rgba(248,247,244,.82);backdrop-filter:saturate(140%) blur(8px);
