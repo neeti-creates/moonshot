@@ -2015,11 +2015,16 @@ def review(sid):
                                   user_name=user["name"] if user else "")
 
 
-@app.route("/publish/<sid>", methods=["POST"])
+@app.route("/publish/<sid>", methods=["GET", "POST"])
 def publish(sid):
     rec = store.get(sid)
     if not rec:
         return "not found", 404
+    # GET (direct link / refresh): show the review & approve page so the founder
+    # can actually click Publish — a POST-only route 404s on GET, which is what
+    # produced the blank "not found" page at /publish/<sid>.
+    if request.method == "GET":
+        return redirect(url_for("review", sid=sid))
     if not request.form.get("attest"):
         return "Attestation required.", 400
     published_card = {
@@ -2039,7 +2044,7 @@ def publish(sid):
     rec["published_card"] = published_card
     rec["status"] = "published"
     store.update(sid, rec)
-    return redirect(url_for("home"))
+    return redirect(url_for("profile", sid=sid))
 
 
 @app.route("/profile/<sid>")
