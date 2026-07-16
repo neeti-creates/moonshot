@@ -26,6 +26,14 @@ def _load_creds():
 
 BASE_URL, API_KEY = _load_creds()
 BASE_URL = BASE_URL.rstrip("/")
+
+# Creds can rotate (Hermes rotates agent keys; Render reads NOUS_API_KEY from env).
+# We used to read API_KEY once at import, which meant a running process kept a
+# dead key until restart. Now refresh per-request so a rotated local key or a
+# freshly-set Render env var is picked up without a deploy/restart.
+def _creds():
+    base, key = _load_creds()
+    return base.rstrip("/"), key
 DEF_MODEL = os.environ.get("MOONSHOT_MODEL", "tencent/hy3:free")
 
 
@@ -55,16 +63,19 @@ def _timed_request(req, cap):
 
 def llm(messages, model=DEF_MODEL, json_mode=False, max_tokens=900, temperature=0.2):
     import urllib.error as _ue
+    # refresh creds per call — a rotated key / freshly-set env var is picked up
+    # without restarting the process (Hermes rotates agent keys; Render uses env)
+    _base, _key = _creds()
     last_err = None
     CAP = 90  # hard wall-clock cap per attempt (free tier is slow but must not hang)
     for attempt in range(4):
         body = {"model": model, "messages": messages,
                 "max_tokens": max_tokens, "temperature": temperature}
         req = urllib.request.Request(
-            BASE_URL + "/chat/completions",
+            _base + "/chat/completions",
             data=json.dumps(body).encode(),
             headers={"Content-Type": "application/json",
-                     "Authorization": f"Bearer {API_KEY}"})
+                     "Authorization": f"Bearer {_key}"})
         t0 = time.time()
         try:
             r = _timed_request(req, CAP)

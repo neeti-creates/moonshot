@@ -1146,9 +1146,17 @@ were inferred by the agent — edit anything before publishing. You — the huma
 """)
 
 TPL_REVIEW_ERR = _page("Draft failed — MoonshotHunt", """\
+{% if auth_err %}
+<h2>API key needs attention</h2>
+<p class="muted">The AI provider rejected our request with an authentication error (HTTP 401) — the API
+key is invalid, blocked, or out of funds. This is <b>not</b> a transient timeout, so retrying won't help
+until the key is fixed. Please contact the site admin (Neeti) to update the <code>NOUS_API_KEY</code>
+on the hosting platform. Your uploads are saved.</p>
+{% else %}
 <h2>Draft couldn't be generated</h2>
 <p class="muted">Our agent didn't return a usable draft for your submission this time. This is usually
 a transient model timeout — your uploads were received fine. You can retry with the same files, or start over.</p>
+{% endif %}
 <div class="card">
   <div class="seclabel">What happened</div>
   <div class="disclaimer">{{ err }}</div>
@@ -1159,6 +1167,11 @@ a transient model timeout — your uploads were received fine. You can retry wit
   <a class="pill" href="/submit" style="color:var(--txt2)">Start over</a>
 </div>
 """)
+
+
+def _is_auth_error(err):
+    """True if the recorded error is an auth failure (401), not a transient timeout."""
+    return bool(err) and "401" in str(err)
 
 
 @app.route("/retry/<sid>")
@@ -1976,6 +1989,7 @@ def review(sid):
         user = _current_user()
         return render_template_string(TPL_REVIEW_ERR, sid=sid,
                                       err=rec.get("vc_error") or "The agent didn't return a draft.",
+                                      auth_err=_is_auth_error(rec.get("vc_error")),
                                       user_email=user["email"] if user else "",
                                       user_name=user["name"] if user else "")
     if not sc:
